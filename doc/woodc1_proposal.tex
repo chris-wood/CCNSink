@@ -42,13 +42,14 @@ Consequently, the primary objective of this project is to aid the integration of
 \section{Overview}
 The NDN architecture enables relevant content to be pushed and stored throughout the network to minimize overall bandwidth consumption. Network caches and addressable content, rather than addressable hosts or interfaces, promote reduced network congestion and latency by keeping content closer to its intended recipients. The process by which content is requested is through the issuance of an \emph{interest}. Routers that have cached content matching the interest name, or producers who advertise that they provide content matching the name, may respond with the corresponding (cryptogrpahically signed) piece of content. As such, content flows through the same network path from which the interest originated. 
 
-This type of content retrieval strategy is fundamentally distinct from IP-based content distribution. Therefore, this NDN gateway is a server and middleware software stack designed to support the translation from IP-based to NDN-based communication and messages. For example, HTTP GET requests would be intercepted and translated into an interest for the same piece of content. The procedure for doing this translation 
+This type of content retrieval strategy is fundamentally distinct from IP-based content distribution. Therefore, this NDN gateway is a server and middleware software stack designed to support the translation from IP-based to NDN-based communication and messages. For example, HTTP GET requests would be intercepted and translated into an interest for the same piece of content. The procedure for doing this translation consists of an IP-to-NDN resolution lookup (similar to a DNS query), message creation and transmission (e.g., HTTP GET to NDN interest), and response transformation (e.g., NDN content response to HTTP response). For application-layer protocols that maintain transport-layer state (e.g., persistent HTTP connections), TCP connection management will be automatically maintained at the gateway. This flow of messages is illustrated in Figure 1. 
 
-% \begin{figure}
-% \begin{center}
-% \includegraphics[scale=0.5]{images/gateway_highlevel.pdf}
-% \end{center}
-% \end{figure}
+\begin{figure}
+\begin{center}
+\includegraphics[scale=0.5]{../sketches/gateway_highlevel.pdf}
+\caption{System context diagram for the IP-to-NDN gateway.}
+\end{center}
+\end{figure}
 
 \section{Implementation Highlights and Milestones}
 The implementation of this project will be done using both C/C++ and Java libraries, and will rely on the open-source CCNx \cite{ccnx} library for development. Architecturally, the middleware will be partitioned among a Java-based front-end for intercepting all IP-based traffic and performing application-layer protocol translation, and a C-based backend utilizing the CCNx library to interface with NDN network resources, and a web interface that can be used to configure the gateway. Consequently, the deliverables for this project is a software design and architecture document, application gateway source code, and web interface (for gateway configuration). A preliminary timeline for the major milestones of this project is given below.
