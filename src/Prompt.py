@@ -32,3 +32,10 @@ class Prompt(threading.Thread):
 			print("?> Killing all services...")
 			self.gateway.stop()
 			self.running = False
+		else:
+			print("?> Command " + str(usrInput) + " unknown")
+			self.printHelp()
+
+
+	def printHelp(self):
+		print("TODO")
