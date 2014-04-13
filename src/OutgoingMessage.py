@@ -5,3 +5,4 @@ class OutgoingMessage(Message):
 		self.dstIp = dstIp
 		self.dstPort = dstPort
 		self.dstName = dstName
+		

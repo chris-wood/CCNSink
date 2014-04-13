@@ -5,3 +5,4 @@ class IncomingMessage(Message):
 		self.srcIp = srcIp
 		self.srcPort = srcPort
 		self.srcName = srcName
+		
