@@ -2,6 +2,8 @@ import sys
 import threading
 import time
 from Prompt import *
+from IPOutputStage import *
+from IPInputStage import *
 
 """ Main class that orchestrates the behavior and operation of the gateway, including all
 internal pipeline components.
@@ -13,6 +15,22 @@ class NDNGateway(threading.Thread):
 	def __init__(self, sleepTime = 2, paramMap = {}):
 		threading.Thread.__init__(self)
 		self.sleepTime = sleepTime
+
+		# IP input pipeline
+		paramMap = {}
+		paramMap["HTTP_HOST"] = "localhost"
+		paramMap["HTTP_PORT"] = 1234
+		ipOutput = IPOutputStage("IPOutputStage", None)
+		ipInput = IPInputStage("IPInputStage", None, paramMap)
+
+		# IP output pipeline
+		#TODO
+
+		# NDN input pipeline
+		#TODO
+
+		# NDN output pipeline
+		#TODO
 
 	def run(self):
 		self.running = True

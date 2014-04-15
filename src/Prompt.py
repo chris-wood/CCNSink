@@ -21,10 +21,8 @@ class Prompt(threading.Thread):
 				line = sys.stdin.readline()
 			except KeyboardInterrupt:
 				break
-
 			if (len(line.strip()) > 0):
 				self.parseInput(line.strip())
-
 
 	def parseInput(self, usrInput):
 		print("Parsing: " + usrInput)
