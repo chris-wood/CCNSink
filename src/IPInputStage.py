@@ -1,6 +1,7 @@
 import sys
 import time
 import BaseHTTPServer
+import threading
 from BaseHTTPServer import *
 from PipelineStage import *
 
@@ -23,14 +24,18 @@ class IPInputStageHTTPHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 		# TODO: replace what's written with raw bytes read from the pipeline
 		self.wfile.write("Hello World")
 
-class IPInputStage(PipelineStage):
+class IPInputStage(PipelineStage, threading.Thread):
 	def __init__(self, name, nextStage, paramMap = {}):
+		threading.Thread.__init__(self)
+		global stage
 		self.name = name
 		self.nextStage = nextStage
+		self.paramMap = paramMap
 		stage = self # set the reference so the handler can refer back to this stage
 
+	def run(self):
 		# Setup the HTTP handler
-		print >> sys.stderr, "HTTP server on: " + str(paramMap["HTTP_HOST"]) + ":" + str(paramMap["HTTP_PORT"])
-		httpd = HTTPServer((paramMap["HTTP_HOST"], 80), IPInputStageHTTPHandler)
+		print >> sys.stderr, "HTTP server on: " + str(self.paramMap["HTTP_HOST"]) + ":" + str(self.paramMap["HTTP_PORT"])
+		httpd = HTTPServer((self.paramMap["HTTP_HOST"], int(self.paramMap["HTTP_PORT"])), IPInputStageHTTPHandler)
 		httpd.serve_forever()
 		print >> sys.stderr, "Started server..."

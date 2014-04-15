@@ -1,0 +1,9 @@
+# Simply NDNGateway configuration
+
+
+# IP input configuration
+HTTP_HOST: "localhost"
+HTTP_PORT: 12345
+
+# NDN input configuration
+#TODO

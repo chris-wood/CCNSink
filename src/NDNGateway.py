@@ -1,6 +1,7 @@
 import sys
 import threading
 import time
+import yaml # for config file parsing
 from Prompt import *
 from IPOutputStage import *
 from IPInputStage import *
@@ -17,11 +18,9 @@ class NDNGateway(threading.Thread):
 		self.sleepTime = sleepTime
 
 		# IP input pipeline
-		paramMap = {}
-		paramMap["HTTP_HOST"] = "localhost"
-		paramMap["HTTP_PORT"] = 1234
 		ipOutput = IPOutputStage("IPOutputStage", None)
 		ipInput = IPInputStage("IPInputStage", None, paramMap)
+		ipInput.start()
 
 		# IP output pipeline
 		#TODO
@@ -47,8 +46,18 @@ class NDNGateway(threading.Thread):
 """ Main entry point for the gateway.
 """
 def main():
+	# Parse cmd line arguments
+	if len(sys.argv) != 2:
+		print >> sys.stderr, "Usage: python NDNGateway.py <config_file>"
+		return
+
+	# Parse the config file
+	cfgFile = open(sys.argv[1], 'r')
+	paramMap = yaml.load(cfgFile)
+	print(paramMap)
+
 	# Create the gateway
-	gateway = NDNGateway()
+	gateway = NDNGateway(paramMap = paramMap)
 	gateway.start()
 
 	#### TODO: wait for initialization
