@@ -1,9 +1,9 @@
 # Simply NDNGateway configuration
 
-
 # IP input configuration
-HTTP_HOST: "localhost"
-HTTP_PORT: 12345
+HTTP_HOST: localhost
+HTTP_PORT: 44431
 
 # NDN input configuration
-#TODO
+NDN_URI_ROOT: ccnx:/gateway/
+NDN_CACHE_TIME: 900 # 15 * 60 = 15 minutes

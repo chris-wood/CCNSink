@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.5.30)  2 APR 2014 18:59
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.5.30)  15 APR 2014 10:31
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1002,11 +1002,11 @@ e 51.
 Here is how much of TeX's memory you used:
  20498 strings out of 493315
  402901 string characters out of 6137904
- 489806 words of memory out of 5000000
+ 488806 words of memory out of 5000000
  23530 multiletter control sequences out of 15000+600000
  9399 words of font info for 35 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
- 63i,7n,68p,1087b,315s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 63i,7n,68p,1142b,315s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/
 local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/l
 ocal/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/lo
@@ -1016,7 +1016,7 @@ texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/local/te
 xlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/tex
 live/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texl
 ive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb>
-Output written on woodc1_proposal.pdf (3 pages, 124535 bytes).
+Output written on woodc1_proposal.pdf (3 pages, 126738 bytes).
 PDF statistics:
  74 PDF objects out of 1000 (max. 8388607)
  54 compressed objects within 1 object stream

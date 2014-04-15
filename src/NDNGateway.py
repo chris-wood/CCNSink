@@ -5,6 +5,8 @@ import yaml # for config file parsing
 from Prompt import *
 from IPOutputStage import *
 from IPInputStage import *
+from NDNOutputStage import *
+from NDNInputStage import *
 
 """ Main class that orchestrates the behavior and operation of the gateway, including all
 internal pipeline components.
@@ -18,7 +20,7 @@ class NDNGateway(threading.Thread):
 		self.sleepTime = sleepTime
 
 		# IP input pipeline
-		ipOutput = IPOutputStage("IPOutputStage", None)
+		ipOutput = IPOutputStage("IPOutputStage", None) # there is no next stage after output
 		ipInput = IPInputStage("IPInputStage", None, paramMap)
 		ipInput.start()
 
@@ -26,7 +28,8 @@ class NDNGateway(threading.Thread):
 		#TODO
 
 		# NDN input pipeline
-		#TODO
+		ndnOutput = NDNOutputStage("NDNOutputStage", None) # there is no next stage after output
+		ndnInput = NDNInputStage("NDNInputStage", None, paramMap) 
 
 		# NDN output pipeline
 		#TODO

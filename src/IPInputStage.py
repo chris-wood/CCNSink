@@ -25,7 +25,7 @@ class IPInputStageHTTPHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 		self.wfile.write("Hello World")
 
 class IPInputStage(PipelineStage, threading.Thread):
-	def __init__(self, name, nextStage, paramMap = {}):
+	def __init__(self, name, nextStage, paramMap):
 		threading.Thread.__init__(self)
 		global stage
 		self.name = name

@@ -1,24 +1,42 @@
-import threading # should this really be a threaded class?... seems like it is only triggered asynchronously
 import time
 import pyccn
+import sys
+from pyccn import _pyccn, Key, ContentObject
+from PipelineStage import *
 
-class NDNInputStage(PipelineStage, pyccn.Closure):
-
-	def __init__(self, name, prefix, handle):
-		PipelineStage.__init__(name)
-		threading.Thread.__init__(self)
+class FlowController(pyccn.Closure):
+	def __init__(self, prefix, handle, paramMap):
 		self.prefix = pyccn.Name(prefix)
 		self.handle = handle
 		self.content_objects = []
-
-		self.cleanup_time = 15 * 60 # keep responses for 15 min
+		self.cleanup_time = int(paramMap["NDN_CACHE_TIME"])
 		handle.setInterestFilter(self.prefix, self)
 
-	def put(self, co):
-		self.content_objects.append((time.time(), co))
+	def buildContentObject(self, name, content):
+		key = pyccn.CCN.getDefaultKey()
+		keylocator = pyccn.KeyLocator(key)
+
+		# Name
+		co_name = pyccn.Name(name).appendSegment(0)
+
+		# SignedInfo
+		si = pyccn.SignedInfo()
+		si.type = pyccn.CONTENT_DATA
+		si.finalBlockID = pyccn.Name.num2seg(0)
+		si.publisherPublicKeyDigest = key.publicKeyID
+		si.keyLocator = keylocator
+
+		# ContentObject
+		co = pyccn.ContentObject()
+		co.content = content
+		co.name = co_name
+		co.signedInfo = si
+
+		co.sign(key)
+		return co
 
 	def dispatch(self, interest, elem):
-		if time.time() - elem[0] > self.cleanup_time:
+		if (time.time() - elem[0]) > self.cleanup_time:
 			return False
 		elif elem[1].matchesInterest(interest):
 			self.handle.put(elem[1])
@@ -30,19 +48,21 @@ class NDNInputStage(PipelineStage, pyccn.Closure):
 			return pyccn.RESULT_OK
 
 		if kind != pyccn.UPCALL_INTEREST:
-			print("Got weird upcall kind: %d" % kind)
+			print >> sys.stderr, "Got weird upcall kind: %d" % kind
 			return pyccn.RESULT_ERR
 
-		f = lambda elem: self.dispatch(info.Interest, elem)
+		# Extract the interest information and shove it into the pipeline
+		print(info.Interest)
 
-		new = []
-		consumed = False
-		for elem in self.content_objects:
-			if consumed or f(elem):
-				new.append(elem)
-				continue
-			consumed = True
-		self.content_objects = new
+		# Block and wait for response
+		#TODO
+		data = "TEST"
+
+		# Build output message
+		content = self.buildContentObject(info.Interest, data)
 
 		return pyccn.RESULT_INTEREST_CONSUMED if consumed else pyccn.RESULT_OK
 
+class NDNInputStage(PipelineStage):
+	def __init__(self, name, nextStage, paramMap):
+		fc = FlowController(paramMap["NDN_URI_ROOT"], pyccn.CCN(), paramMap)
