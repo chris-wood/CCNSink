@@ -18,21 +18,22 @@ class NDNGateway(threading.Thread):
 	def __init__(self, sleepTime = 2, paramMap = {}):
 		threading.Thread.__init__(self)
 		self.sleepTime = sleepTime
+		self.stages = []
 
-		# IP input pipeline
-		ipOutput = IPOutputStage("IPOutputStage", None) # there is no next stage after output
-		ipInput = IPInputStage("IPInputStage", None, paramMap)
-		ipInput.start()
-
-		# IP output pipeline
-		#TODO
-
-		# NDN input pipeline
+		# Create output stages
 		ndnOutput = NDNOutputStage("NDNOutputStage", None) # there is no next stage after output
-		ndnInput = NDNInputStage("NDNInputStage", None, paramMap) 
+		self.stages.append(ndnOutput)
+		ndnOutput.start()
+		ipOutput = IPOutputStage("IPOutputStage", None) # there is no next stage after output
+		self.stages.append(ipOutput)
 
-		# NDN output pipeline
-		#TODO
+		# IP input pipeline and connect it to the output stage
+		ipInput = IPInputStage("IPInputStage", ndnOutput, paramMap)
+		self.stages.append(ipInput)
+		ipInput.start()
+		ndnInput = NDNInputStage("NDNInputStage", ipOutput, paramMap)
+		self.stages.append(ndnInput)
+		# ndnInput.start()
 
 	def run(self):
 		self.running = True
@@ -41,6 +42,8 @@ class NDNGateway(threading.Thread):
 
 		# Print closing remarks
 		print("?> NDNGateway terminating...")
+		for s in self.stages:
+			s.stop()
 
 	def stop(self):
 		self.running = False

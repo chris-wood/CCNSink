@@ -1,8 +1,10 @@
+from Message import *
+
 class OutgoingMessage(Message):
 
-	def __init__(self, content, dstIp, dstPort, dstName):
-		Message.__init__(self, content)
-		self.dstIp = dstIp
-		self.dstPort = dstPort
+	def __init__(self, srcInfo, dstInfo, dstName):
+		Message.__init__(self, dstName)
+		self.srcInfo = srcInfo
+		self.dstInfo = dstInfo
 		self.dstName = dstName
 		

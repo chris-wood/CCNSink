@@ -38,7 +38,7 @@ class FlowController(pyccn.Closure):
 	def dispatch(self, interest, elem):
 		if (time.time() - elem[0]) > self.cleanup_time:
 			return False
-		elif elem[1].matchesInterest(interest):
+		elif (elem[1].matchesInterest(interest)):
 			self.handle.put(elem[1])
 			return False
 		return True

@@ -4,6 +4,7 @@ import BaseHTTPServer
 import threading
 from BaseHTTPServer import *
 from PipelineStage import *
+from OutgoingMessage import *
 
 # Public reference to the stage instance for this pipeline (only one!)
 stage = None
@@ -15,14 +16,20 @@ class IPInputStageHTTPHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 		self.send_response(200)
 		self.send_header("Content-type", "text/html")
 		self.end_headers()
+		
+		addr = self.client_address
+		cmd = self.command
+		path = self.path
+		targetInterest = (stage.paramMap["NDN_URI_PREFIX"] + str(path)).replace("//", "/")
+		print >> sys.stderr, (addr, cmd, path)
 
-		print("HERE")
-
-		# TODO: send to the real pipeline stage (via queue?) so that it can be forwarded through the rest of the pipeline
-		# block until response is generated... from NDN world
+		# Build the message, send it out, and wait for a response
+		myAddr = (stage.paramMap["HTTP_HOST"], stage.paramMap["HTTP_PORT"])
+		msg = OutgoingMessage(addr, myAddr, targetInterest)
+		stage.nextStage.put(msg)
 
 		# TODO: replace what's written with raw bytes read from the pipeline
-		self.wfile.write("Hello World")
+		self.wfile.write("Test")
 
 class IPInputStage(PipelineStage, threading.Thread):
 	def __init__(self, name, nextStage, paramMap):
