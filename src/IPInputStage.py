@@ -2,6 +2,8 @@ import sys
 import time
 import BaseHTTPServer
 import threading
+import multiprocessing
+import multiprocessing.Semaphore
 from BaseHTTPServer import *
 from PipelineStage import *
 from OutgoingMessage import *
@@ -23,21 +25,37 @@ class IPInputStageHTTPHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 		targetInterest = (stage.paramMap["NDN_URI_PREFIX"] + str(path)).replace("//", "/")
 		print >> sys.stderr, (addr, cmd, path)
 
-		# Build the message, send it out, and wait for a response
+		# Build the message and drop it into the table
 		myAddr = (stage.paramMap["HTTP_HOST"], stage.paramMap["HTTP_PORT"])
 		msg = OutgoingMessage(addr, myAddr, targetInterest)
-		stage.nextStage.put(msg)
+		semaphore = threading.BoundedSemaphore()
+		self.table.insertIPEntry(msg, semaphore)
 
-		# TODO: replace what's written with raw bytes read from the pipeline
-		self.wfile.write("Test")
+		# Drop the message into the pipeline and wait for a response
+		stage.nextStage.put(msg)
+		semaphore.acquire()
+
+		print >> sys.stderr, "Content came back -- relaying now"
+
+		# Acquire the content, and write it back out
+		entry = self.table.lookupIPEntry(msg.tag)
+		if (entry != None):
+			self.table.clearIPEntry(msg.tag)
+			lock = entry[1]
+			lock.release()
+			content = entry[2]
+			self.wfile.write(str(content))
+		else:
+			self.wfile.write("Error: internal gateway error.")
 
 class IPInputStage(PipelineStage, threading.Thread):
-	def __init__(self, name, nextStage, paramMap):
+	def __init__(self, name, nextStage, table, paramMap):
 		threading.Thread.__init__(self)
 		global stage
 		self.name = name
 		self.nextStage = nextStage
 		self.paramMap = paramMap
+		self.table = table
 		stage = self # set the reference so the handler can refer back to this stage
 
 	def run(self):

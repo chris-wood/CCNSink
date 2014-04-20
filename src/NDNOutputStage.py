@@ -10,9 +10,10 @@ def callback(kind, info):
 	print(info.ContentObject.content)
 
 class NDNOutputStage(PipelineStage, threading.Thread):
-	def __init__(self, name, nextStage = None, handle = None, paramMap = {}):
+	def __init__(self, name, nextStage = None, table, paramMap = {}):
 		threading.Thread.__init__(self)
-		self.handle = handle or pyccn.CCN()
+		self.table = table
+		self.handle = pyccn.CCN()
 		self.name = name
 		self.nextStage = nextStage
 		self.queue = Queue()

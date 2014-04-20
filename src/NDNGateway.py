@@ -20,18 +20,21 @@ class NDNGateway(threading.Thread):
 		self.sleepTime = sleepTime
 		self.stages = []
 
+		# Shared pending message table
+		table = PendingMessageTable()
+
 		# Create output stages
-		ndnOutput = NDNOutputStage("NDNOutputStage", None) # there is no next stage after output
+		ndnOutput = NDNOutputStage("NDNOutputStage", table, None) # there is no next stage after output
 		self.stages.append(ndnOutput)
 		ndnOutput.start()
-		ipOutput = IPOutputStage("IPOutputStage", None) # there is no next stage after output
+		ipOutput = IPOutputStage("IPOutputStage", table, None) # there is no next stage after output
 		self.stages.append(ipOutput)
 
 		# IP input pipeline and connect it to the output stage
-		ipInput = IPInputStage("IPInputStage", ndnOutput, paramMap)
+		ipInput = IPInputStage("IPInputStage", ndnOutput, table, paramMap)
 		self.stages.append(ipInput)
 		ipInput.start()
-		ndnInput = NDNInputStage("NDNInputStage", ipOutput, paramMap)
+		ndnInput = NDNInputStage("NDNInputStage", ipOutput, table, paramMap)
 		self.stages.append(ndnInput)
 		# ndnInput.start()
 

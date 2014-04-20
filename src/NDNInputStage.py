@@ -64,5 +64,6 @@ class FlowController(pyccn.Closure):
 		return pyccn.RESULT_INTEREST_CONSUMED if consumed else pyccn.RESULT_OK
 
 class NDNInputStage(PipelineStage):
-	def __init__(self, name, nextStage, paramMap):
+	def __init__(self, name, nextStage, table, paramMap):
+		self.table = table
 		fc = FlowController(paramMap["NDN_URI_ROOT"], pyccn.CCN(), paramMap)
