@@ -6,13 +6,15 @@ class PendingMessageTable(object):
 		self.ndnTable = {}
 
 	def insertIPEntry(self, msg, lock):
+		# print("Inserting tag: " + msg.tag)
 		self.ipTable[msg.tag] = (msg, lock, None)
 
 	def insertNDNEntry(self, msg, lock):
 		self.ndnTable[msg.tag] = (msg, lock, None)
 
 	def updateIPEntry(self, tag, content):
-		if (self.ipTable.containsKey(tag)):
+		# print("Updating tag: " + tag)
+		if (tag in self.ipTable):
 			tup = self.ipTable[tag]
 			self.ipTable[tag] = (tup[0], tup[1], content)
 			return True
@@ -20,7 +22,7 @@ class PendingMessageTable(object):
 			return False
 
 	def updateNDNEntry(self, msg, content):
-		if (self.ndnTable.containsKey(tag)):
+		if (tag in self.ndnTable):
 			tup = self.ndnTable[tag]
 			self.ndnTable[tag] = (tup[0], tup[1], content)
 			return True
@@ -28,26 +30,26 @@ class PendingMessageTable(object):
 			return False
 
 	def lookupIPEntry(self, tag):
-		if (self.ipTable.containsKey(tag)):
+		if (tag in self.ipTable):
 			return self.ipTable[tag]
 		else:
 			return None
 
 	def lookupNDNEntry(self, tag):
-		if (self.ndnTable.containsKey(tag)):
+		if (tag in self.ndnTable):
 			return self.ipTable[tag]
 		else:
 			return None
 
 	def clearIPEntry(self, tag):
-		if (self.ipTable.containsKey(tag)):
+		if (tag in self.ipTable):
 			del self.ipTable[tag]
 			return True
 		else:
 			return False
 
 	def clearNDNEntry(self, tag):
-		if (self.ipTable.containsKey(tag)):
+		if (tag in self.ipTable):
 			del self.ndnTable[tag]
 			return True
 		else:

@@ -3,7 +3,7 @@ import time
 import BaseHTTPServer
 import threading
 import multiprocessing
-import multiprocessing.Semaphore
+from PendingMessageTable import *
 from BaseHTTPServer import *
 from PipelineStage import *
 from OutgoingMessage import *
@@ -22,27 +22,23 @@ class IPInputStageHTTPHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 		addr = self.client_address
 		cmd = self.command
 		path = self.path
-		targetInterest = (stage.paramMap["NDN_URI_PREFIX"] + str(path)).replace("//", "/")
-		print >> sys.stderr, (addr, cmd, path)
+		targetInterestName = (stage.paramMap["NDN_URI_PREFIX"] + str(path)).replace("//", "/")
+		print >> sys.stderr, (addr, cmd, path, targetInterestName)
 
 		# Build the message and drop it into the table
 		myAddr = (stage.paramMap["HTTP_HOST"], stage.paramMap["HTTP_PORT"])
-		msg = OutgoingMessage(addr, myAddr, targetInterest)
-		semaphore = threading.BoundedSemaphore()
-		self.table.insertIPEntry(msg, semaphore)
+		msg = OutgoingMessage(addr, myAddr, targetInterestName)
+		semaphore = multiprocessing.BoundedSemaphore(0)
+		stage.table.insertIPEntry(msg, semaphore)
 
 		# Drop the message into the pipeline and wait for a response
 		stage.nextStage.put(msg)
 		semaphore.acquire()
 
-		print >> sys.stderr, "Content came back -- relaying now"
-
 		# Acquire the content, and write it back out
-		entry = self.table.lookupIPEntry(msg.tag)
+		entry = stage.table.lookupIPEntry(msg.tag)
 		if (entry != None):
-			self.table.clearIPEntry(msg.tag)
-			lock = entry[1]
-			lock.release()
+			stage.table.clearIPEntry(msg.tag)
 			content = entry[2]
 			self.wfile.write(str(content))
 		else:
@@ -64,3 +60,4 @@ class IPInputStage(PipelineStage, threading.Thread):
 		httpd = HTTPServer((self.paramMap["HTTP_HOST"], int(self.paramMap["HTTP_PORT"])), IPInputStageHTTPHandler)
 		httpd.serve_forever()
 		print >> sys.stderr, "Started server..."
+

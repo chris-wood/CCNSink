@@ -67,3 +67,4 @@ class NDNInputStage(PipelineStage):
 	def __init__(self, name, nextStage, table, paramMap):
 		self.table = table
 		fc = FlowController(paramMap["NDN_URI_ROOT"], pyccn.CCN(), paramMap)
+

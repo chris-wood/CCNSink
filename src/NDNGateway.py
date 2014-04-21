@@ -7,6 +7,7 @@ from IPOutputStage import *
 from IPInputStage import *
 from NDNOutputStage import *
 from NDNInputStage import *
+from PendingMessageTable import *
 
 """ Main class that orchestrates the behavior and operation of the gateway, including all
 internal pipeline components.
@@ -24,7 +25,7 @@ class NDNGateway(threading.Thread):
 		table = PendingMessageTable()
 
 		# Create output stages
-		ndnOutput = NDNOutputStage("NDNOutputStage", table, None) # there is no next stage after output
+		ndnOutput = NDNOutputStage("NDNOutputStage", table, paramMap) # there is no next stage after output
 		self.stages.append(ndnOutput)
 		ndnOutput.start()
 		ipOutput = IPOutputStage("IPOutputStage", table, None) # there is no next stage after output
@@ -82,3 +83,4 @@ def main():
 
 if __name__ == "__main__":
 	main()
+

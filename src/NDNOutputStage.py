@@ -5,31 +5,43 @@ from multiprocessing import Queue
 from PipelineStage import *
 from OutgoingMessage import *
 
-def callback(kind, info):
-	print("Name: " + str(info.ContentObject.name))
-	print(info.ContentObject.content)
+stage = None
 
-class NDNOutputStage(PipelineStage, threading.Thread):
-	def __init__(self, name, nextStage = None, table, paramMap = {}):
-		threading.Thread.__init__(self)
-		self.table = table
+class NDNOutputClosure(pyccn.Closure):
+	def __init__(self, name, stage, table = None, paramMap = {}):
 		self.handle = pyccn.CCN()
-		self.name = name
-		self.nextStage = nextStage
-		self.queue = Queue()
-
-	def put(self, msg):
-		self.queue.put(msg)
+		self.version_marker = '\xfd'
+		self.first_version_marker = self.version_marker
+		self.last_version_marker = '\xfe\x00\x00\x00\x00\x00\x00'
 
 	def upcall(self, kind, info):
 		if (kind == pyccn.UPCALL_FINAL):
 			return pyccn.RESULT_OK
-		self.callback(kind, info)
+
+		# TODO: any special handling should go here..
+
 		return pyccn.RESULT_OK
 
+	def dispatch(self, interest):
+		co = self.handle.get(name = interest.name, template = interest)
+		return co
+
+class NDNOutputStage(PipelineStage, threading.Thread):
+	def __init__(self, name, table = None, paramMap = {}):
+		threading.Thread.__init__(self)
+		global stage
+		stage = self
+		self.paramMap = paramMap
+		self.table = table
+		self.name = name
+		self.queue = Queue()
+		self.handle = NDNOutputClosure(name, self, table, paramMap)
+
+	def put(self, msg):
+		self.queue.put(msg)
+
 	def buildInterest(self, msg):
-		name = pyccn.Name([msg.dstName])
-		print(name)
+		name = pyccn.Name(msg.dstName)
 		interest = pyccn.Interest(name = name, minSuffixComponents = 1)
 		return interest
 
@@ -38,6 +50,10 @@ class NDNOutputStage(PipelineStage, threading.Thread):
 		while (self.running):
 			msg = self.queue.get()
 			interest = self.buildInterest(msg)
-			print >> sys.stderr, "Putting: " + str(interest)
-			co = self.handle.get(name = interest.name, template = interest)
+			co = self.handle.dispatch(interest)
+			if (self.table.updateIPEntry(msg.tag, co) == False):
+				print >> sys.stderr, "FAILED TO UPDATE AN ENTRY"
+			entry = stage.table.lookupIPEntry(msg.tag)
+			entry[1].release() # release the lock now that we've updated the table
+
 
