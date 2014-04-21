@@ -1,16 +1,21 @@
 import time
 import pyccn
 import sys
+import threading
+import multiprocessing
 from PipelineStage import *
 
-class FlowController(pyccn.Closure):
+class NDNHandle(pyccn.Closure):
 	def __init__(self, stage, paramMap):
-		self.prefix = pyccn.Name(paramMap["NDN_URI_ROOT"])
-		self.handle = pyccn.CCN()
-		self.cleanupTime = int(paramMap["NDN_CACHE_TIME"])
+		self.paramMap = paramMap
 		self.stage = stage
-		print(self.prefix)
+		self.prefix = pyccn.Name(paramMap["NDN_URI_ROOT"])
+		self.cleanupTime = int(paramMap["NDN_CACHE_TIME"])
+		self.handle = pyccn.CCN()
+
+	def run(self):
 		self.handle.setInterestFilter(self.prefix, self)
+		self.handle.run(-1)
 
 	def buildContentObject(self, name, content):
 		key = pyccn.CCN.getDefaultKey()
@@ -43,9 +48,14 @@ class FlowController(pyccn.Closure):
 			return False
 		return True
 
+	def buildMessage(self, name, protocol):
+		if (protocol == "http"):
+			msg = OutgoingMessage(self.paramMap["HTTP_HOST"], self.paramMap["HTTP_PORT"], str(name))
+			return msg
+		else:
+			return None
+
 	def upcall(self, kind, info):
-		global stage
-		print "upcall baby"
 		if kind in [pyccn.UPCALL_FINAL, pyccn.UPCALL_CONSUMED_INTEREST]:
 			return pyccn.RESULT_OK
 
@@ -55,42 +65,53 @@ class FlowController(pyccn.Closure):
 
 		# Extract the interest information and shove it into the pipeline
 		print(info.Interest)
-		baseOffset = len(stage.baseName.components)
+		baseOffset = len(self.stage.baseName.components)
+		print(baseOffset)
 		if (len(info.Interest.name.components) <= baseOffset):
+			print >> sys.stderr, "Error: No protocol specified"
 			return pyccn.RESULT_ERR
-		protocol = info.Interest.components[baseOffset]
-		print("Protocol = " + str(protocol))
+		protocol = str(info.Interest.name.components[baseOffset]).lower()
 
 		# Construct a unique message for each of the supported protocols
-		#TODO
+		msg = self.buildMessage(info.Interest.name, protocol)
+		if (msg == None):
+			msg = "Error: Unable to build IP message"
+			print >> sys.stderr, msg
+			content = self.buildContentObject(info.Interest.name, msg)
+			self.handle.put(content)
+			return pyccn.RESULT_ERR
 
-		# Put the message in the PMT
-		#TODO
+		# Put the message in the PMT, throw it to the next stage, and then block
+		semaphore = multiprocessing.BoundedSemaphore(0)
+		self.stage.table.insertNDNEntry(msg, semaphore)
+		self.stage.nextStage.put(msg)
+		semaphore.acquire()
 
-		# myAddr = (stage.paramMap["HTTP_HOST"], stage.paramMap["HTTP_PORT"])
-		# msg = OutgoingMessage(addr, myAddr, targetInterestName)
-		# semaphore = multiprocessing.BoundedSemaphore(0)
-		# stage.table.insertIPEntry(msg, semaphore)
-
-		# Drop the message into the pipeline and wait for a response
-		# stage.nextStage.put(msg)
-		# semaphore.acquire()
-
-		# Block and wait for response
-		data = "NOT YET IMPLEMENTED"
-
-		# Build output message and shoot it away
-		content = self.buildContentObject(info.Interest, data)
-		self.handle.put(content)
-
-		return pyccn.RESULT_INTEREST_CONSUMED # if consumed else pyccn.RESULT_OK
+		# Acquire the content, and write it back out
+		entry = stage.table.lookupNDNEntry(msg.tag)
+		data = None
+		if (entry != None):
+			stage.table.clearNDNEntry(msg.tag)
+			content = entry[2]
+			data = content
+			content = self.buildContentObject(info.Interest.name, data)
+			self.handle.put(content)
+			return pyccn.RESULT_INTEREST_CONSUMED
+		else:
+			data = "Error: internal gateway error."
+			content = self.buildContentObject(info.Interest.name, data)
+			self.handle.put(content)
+			return pyccn.RESULT_ERR
 
 class NDNInputStage(PipelineStage):
 	def __init__(self, name, nextStage, table, paramMap):
 		self.table = table
+		self.nextStage = nextStage
 
 		# Set the base name
 		self.baseName = pyccn.Name(paramMap["NDN_URI_ROOT"])
 
-		fc = FlowController(self, paramMap)
+		# Create and start the flow controller
+		fc = NDNHandle(self, paramMap)
+		fc.run()
 
