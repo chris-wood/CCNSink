@@ -9,6 +9,7 @@ class NDNHandle(pyccn.Closure):
 	def __init__(self, stage, paramMap):
 		self.paramMap = paramMap
 		self.stage = stage
+		self.baseOffset = len(self.stage.baseName.components)
 		self.prefix = pyccn.Name(paramMap["NDN_URI_ROOT"])
 		self.cleanupTime = int(paramMap["NDN_CACHE_TIME"])
 		self.handle = pyccn.CCN()
@@ -50,7 +51,10 @@ class NDNHandle(pyccn.Closure):
 
 	def buildMessage(self, name, protocol):
 		if (protocol == "http"):
-			msg = OutgoingMessage(self.paramMap["HTTP_HOST"], self.paramMap["HTTP_PORT"], str(name))
+			srcInfo = (self.paramMap["HTTP_HOST"], self.paramMap["HTTP_PORT"])
+			dstInfo = (name.components[self.baseOffset + 1], name.components[self.baseOffset + 2])
+			path = name.components[self.baseOffset + 3:]
+			msg = OutgoingMessage(srcInfo, dstInfo, path)
 			return msg
 		else:
 			return None
@@ -65,9 +69,7 @@ class NDNHandle(pyccn.Closure):
 
 		# Extract the interest information and shove it into the pipeline
 		print(info.Interest)
-		baseOffset = len(self.stage.baseName.components)
-		print(baseOffset)
-		if (len(info.Interest.name.components) <= baseOffset):
+		if (len(info.Interest.name.components) <= self.baseOffset):
 			print >> sys.stderr, "Error: No protocol specified"
 			return pyccn.RESULT_ERR
 		protocol = str(info.Interest.name.components[baseOffset]).lower()
@@ -84,7 +86,8 @@ class NDNHandle(pyccn.Closure):
 		# Put the message in the PMT, throw it to the next stage, and then block
 		semaphore = multiprocessing.BoundedSemaphore(0)
 		self.stage.table.insertNDNEntry(msg, semaphore)
-		self.stage.nextStage.put(msg)
+		tup = (protocol, msg)
+		self.stage.nextStage.put(tup)
 		semaphore.acquire()
 
 		# Acquire the content, and write it back out
