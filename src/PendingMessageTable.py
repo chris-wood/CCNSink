@@ -6,14 +6,12 @@ class PendingMessageTable(object):
 		self.ndnTable = {}
 
 	def insertIPEntry(self, msg, lock):
-		# print("Inserting tag: " + msg.tag)
 		self.ipTable[msg.tag] = (msg, lock, None)
 
 	def insertNDNEntry(self, msg, lock):
 		self.ndnTable[msg.tag] = (msg, lock, None)
 
 	def updateIPEntry(self, tag, content):
-		# print("Updating tag: " + tag)
 		if (tag in self.ipTable):
 			tup = self.ipTable[tag]
 			self.ipTable[tag] = (tup[0], tup[1], content)

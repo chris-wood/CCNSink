@@ -19,11 +19,11 @@ class IPInputStageHTTPHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 		self.send_header("Content-type", "text/html")
 		self.end_headers()
 		
+		# Extract the relevant information needed to build the interest
 		addr = self.client_address
 		cmd = self.command
 		path = self.path
 		targetInterestName = (stage.paramMap["NDN_URI_PREFIX"] + str(path)).replace("//", "/")
-		print >> sys.stderr, (addr, cmd, path, targetInterestName)
 
 		# Build the message and drop it into the table
 		myAddr = (stage.paramMap["HTTP_HOST"], stage.paramMap["HTTP_PORT"])
