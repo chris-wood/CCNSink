@@ -28,8 +28,9 @@ class NDNGateway(threading.Thread):
 		ndnOutput = NDNOutputStage("NDNOutputStage", table, paramMap) # there is no next stage after output
 		self.stages.append(ndnOutput)
 		ndnOutput.start()
-		ipOutput = IPOutputStage("IPOutputStage", table, None) # there is no next stage after output
+		ipOutput = IPOutputStage("IPOutputStage", table, paramMap) # there is no next stage after output
 		self.stages.append(ipOutput)
+		ipOutput.start()
 
 		# IP input pipeline and connect it to the output stage
 		ipInput = IPInputStage("IPInputStage", ndnOutput, table, paramMap)

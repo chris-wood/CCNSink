@@ -4,6 +4,7 @@ import sys
 import threading
 import multiprocessing
 from PipelineStage import *
+from OutgoingMessage import *
 
 class NDNHandle(pyccn.Closure):
 	def __init__(self, stage, paramMap):
@@ -53,7 +54,9 @@ class NDNHandle(pyccn.Closure):
 		if (protocol == "http"):
 			srcInfo = (self.paramMap["HTTP_HOST"], self.paramMap["HTTP_PORT"])
 			dstInfo = (name.components[self.baseOffset + 1], name.components[self.baseOffset + 2])
-			path = name.components[self.baseOffset + 3:]
+			path = str(name.components[self.baseOffset + 3:])
+			if (len(path[0] == 0)):
+				path = "/" # workaround
 			msg = OutgoingMessage(srcInfo, dstInfo, path)
 			return msg
 		else:
@@ -72,7 +75,7 @@ class NDNHandle(pyccn.Closure):
 		if (len(info.Interest.name.components) <= self.baseOffset):
 			print >> sys.stderr, "Error: No protocol specified"
 			return pyccn.RESULT_ERR
-		protocol = str(info.Interest.name.components[baseOffset]).lower()
+		protocol = str(info.Interest.name.components[self.baseOffset]).lower()
 
 		# Construct a unique message for each of the supported protocols
 		msg = self.buildMessage(info.Interest.name, protocol)
@@ -91,10 +94,10 @@ class NDNHandle(pyccn.Closure):
 		semaphore.acquire()
 
 		# Acquire the content, and write it back out
-		entry = stage.table.lookupNDNEntry(msg.tag)
+		entry = self.stage.table.lookupNDNEntry(msg.tag)
 		data = None
 		if (entry != None):
-			stage.table.clearNDNEntry(msg.tag)
+			self.stage.table.clearNDNEntry(msg.tag)
 			content = entry[2]
 			data = content
 			content = self.buildContentObject(info.Interest.name, data)

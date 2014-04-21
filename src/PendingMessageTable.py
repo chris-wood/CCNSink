@@ -19,7 +19,7 @@ class PendingMessageTable(object):
 		else:
 			return False
 
-	def updateNDNEntry(self, msg, content):
+	def updateNDNEntry(self, tag, content):
 		if (tag in self.ndnTable):
 			tup = self.ndnTable[tag]
 			self.ndnTable[tag] = (tup[0], tup[1], content)
@@ -35,7 +35,7 @@ class PendingMessageTable(object):
 
 	def lookupNDNEntry(self, tag):
 		if (tag in self.ndnTable):
-			return self.ipTable[tag]
+			return self.ndnTable[tag]
 		else:
 			return None
 
@@ -47,7 +47,7 @@ class PendingMessageTable(object):
 			return False
 
 	def clearNDNEntry(self, tag):
-		if (tag in self.ipTable):
+		if (tag in self.ndnTable):
 			del self.ndnTable[tag]
 			return True
 		else:

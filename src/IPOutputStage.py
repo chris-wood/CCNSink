@@ -7,11 +7,9 @@ from PipelineStage import *
 from OutgoingMessage import *
 
 class IPOutputStage(PipelineStage, threading.Thread):
-	def __init__(self, name, nextStage = None, table = None, paramMap = {}):
+	def __init__(self, name, table, paramMap):
 		threading.Thread.__init__(self)
-		global stage
 		self.name = name
-		self.nextStage = nextStage
 		self.table = table
 		self.queue = Queue()
 
@@ -24,9 +22,12 @@ class IPOutputStage(PipelineStage, threading.Thread):
 			ip = msg.dstInfo[0]
 			port = msg.dstInfo[1]
 			conn = httplib.HTTPConnection(str(ip) + ":" + str(port))
-			conn.request("HEAD", str(msg.path))
+
+			print >> sys.stderr, "Issuing GET to: " + str(ip) + ":" + str(port) + "/" + str(msg.dstName)
+			
+			conn.request("GET", str(msg.dstName))
 			res = conn.getresponse()
-			return res
+			return res.read()
 		else:
 			print >> sys.stderr, "Error: Unsupported application-layer protocol: " + str(protocol)
 
@@ -34,6 +35,7 @@ class IPOutputStage(PipelineStage, threading.Thread):
 		self.running = True
 		while (self.running):
 			tup = self.queue.get()
+			print >> sys.stderr, "IPOutputStage processing a message..."
 			protocol = tup[0]
 			msg = tup[1]
 
@@ -41,5 +43,5 @@ class IPOutputStage(PipelineStage, threading.Thread):
 			res = self.outputMessage(msg, protocol)
 			if (self.table.updateNDNEntry(msg.tag, res) == False):
 				print >> sys.stderr, "FAILED TO UPDATE AN ENTRY"
-			entry = stage.table.lookupNDNEntry(msg.tag)
+			entry = self.table.lookupNDNEntry(msg.tag)
 			entry[1].release() # release the lock now that we've updated the table
