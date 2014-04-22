@@ -27,7 +27,7 @@ class IPInputStageHTTPHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 
 		# Build the message and drop it into the table
 		myAddr = (stage.paramMap["HTTP_HOST"], stage.paramMap["HTTP_PORT"])
-		msg = OutgoingMessage(addr, myAddr, targetInterestName)
+		msg = OutgoingMessage(addr, myAddr, targetInterestName, "http")
 		semaphore = multiprocessing.BoundedSemaphore(0)
 		stage.table.insertIPEntry(msg, semaphore)
 

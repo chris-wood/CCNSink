@@ -57,7 +57,7 @@ class NDNHandle(pyccn.Closure):
 			path = str(name.components[self.baseOffset + 3:])
 			if (len(path[0] == 0)):
 				path = "/" # workaround
-			msg = OutgoingMessage(srcInfo, dstInfo, path)
+			msg = OutgoingMessage(srcInfo, dstInfo, path, protocol)
 			return msg
 		else:
 			return None
