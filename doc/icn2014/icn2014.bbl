@@ -1,0 +1,18 @@
+\begin{thebibliography}{1}
+
+\bibitem{first}
+V.~Jacobson, D.~K. Smetters, J.~D. Thornton, M.~F. Plass, N.~H. Briggs, and
+  R.~L. Braynard.
+\newblock Networking named content.
+\newblock In {\em Proceedings of the 5th International Conference on Emerging
+  Networking Experiments and Technologies}, CoNEXT '09, pages 1--12, New York,
+  NY, USA, 2009. ACM.
+
+\bibitem{ndn-techreport}
+L.~Zhang, D.~Estrin, J.~Burke, V.~Jacobson, J.~D. Thornton, D.~K. Smetters,
+  B.~Zhang, G.~Tsudik, D.~Massey, C.~Papadopoulos, et~al.
+\newblock Named data networking (ndn) project.
+\newblock {\em Relat{\'o}rio T{\'e}cnico NDN-0001, Xerox Palo Alto Research
+  Center-PARC}, 2010.
+
+\end{thebibliography}
