@@ -35,7 +35,15 @@ Now consider an alternative scenario in which two ``islands'' of NDN hosts exist
 \section{Network Semantic Translations at the Gateway}
 Traditional IP-based applications and upcoming NDN-based applications treat both the network and content in significantly different ways. In IP-based settings, application and transport layer mechanisms and protocols leverage the underlying IP network layer to send packets to specific hosts. In contrast, in NDN-based settings, there are no straightforward application or transport layer analogs; the network layer, responsible for the issuance of interests and retrieval of content, is abstracted to authenticated (i.e., digitally signed) content objects or streams of data that are consumed by applications. From this perspective, there is no clear bijection between application and transport layer communication in IP-based settings and content and stream-centric data retrieval in NDN-settings. Therefore, to support the interoperability of these two networking paradigms, we need a mechanism to translate the semantics of IP-based communication to and from NDN-based content retrieval. 
 
-The direction of traffic across the gateway has a strong influence on how this semantic translation is done: IP-to-NDN application and transport layer protocols will be mapped to corresponding NDN-interests, and NDN-to-IP traffic (in the form of interests) will be encoded so as to map to the appropriate IP-based application or transport layer protocol. Stateless protocols such as HTTP greatly simplify the job of the gateway because it need not maintain any state to support communication across both networks. However, stateful protocols, such as TCP, naturally require the gateway to maintain state so as to emulate the behavior of an endpoint or host that implements such protocols. For instance, if an IP-based application wishes to establish a TCP connection with an application running on an NDN network to retrieve data, then the gateway must maintain stateful information needed to transform streams of data retrieved over a TCP socket to (packed) discrete and contiguous interests in the NDN network. In what follows we describe the semantic translation details for application and transport layer stateful and stateless protocols in both directions across the gateway.
+The direction of traffic across the gateway has a strong influence on how this semantic translation is done: IP-to-NDN application and transport layer protocols will be mapped to corresponding NDN-interests, and NDN-to-IP traffic (in the form of interests) will be encoded so as to map to the appropriate IP-based application or transport layer protocol. Stateless protocols such as HTTP greatly simplify the job of the gateway because it need not maintain any state to support communication across both networks. However, stateful protocols, such as TCP, naturally require the gateway to maintain state so as to emulate the behavior of an endpoint or host that implements such protocols. For instance, if an IP-based application wishes to establish a TCP connection with an application running on an NDN network to retrieve data, then the gateway must maintain stateful information needed to transform streams of data retrieved over a TCP socket to (packed) discrete and contiguous interests in the NDN network. In what follows we describe the semantic translation details for application and transport layer stateful and stateless protocols in both directions across the gateway. 
+
+\begin{figure*}[ht!]
+\begin{center}
+\includegraphics[scale=0.45]{./images/pipeline.pdf}
+\label{fig:pipeline}
+\caption{Bidirectional message pipeline for IP-to-NDN and NDN-to-IP message traversal.}
+\end{center}
+\end{figure*}
 
 % \subsection{IP-to-NDN Transport Layer Semantic Translation}
 % TODO
@@ -46,8 +54,54 @@ The direction of traffic across the gateway has a strong influence on how this s
 % \subsection{NDN-to-IP Transport Layer Semantic Translation}
 % TODO
 
-% \subsection{NDN-to-IP Application Layer Semantic Translation}
-% TODO
+\subsection{NDN-to-IP Application Layer Semantic Translation}
+There does not exist a native correspondence between NDN interests and IP-based application layer protocol messages. For example, there is no standard way for a client to represent an HTTP GET request in the format of an NDN interest. To make this type of semantic translation possible, the NDN-to-IP application layer bridge leverages the human-readable names of content to encode IP-based application layer protocol specifics. The encoding for HTTP and FTP semantic translations is specified in EBNF form below; other application-layer protocols can easily be supported by extending this grammar in the natural way.
+
+\begin{figure*}
+\begin{mdframed}
+\begingrammar
+\noindent
+<ip-interest>:	'/$\dots$/ip/'<protocol>.
+
+<protocol>:	'http/'<http-cmd>[{'/'<http-path>}] | 'ftp/'<ftp-cmd>[{'/'<ftp-param>}]'/'<ftp-ident>.
+
+<http-cmd>: 'GET' | 'PUT' | 'POST' | 'DELETE'.
+
+<ftp-cmd>: 'ascii' | 'binary' | 'bye' | 'cd' | 'close' | 'delete' | 'get' | 'help' | 'lcd' | 'ls' | 'mkdir' | 'mget' | 'open' | 'put' | 'pwd' | 'quit' | 'rmdir'.
+
+<http-path>: <uri> | ip-address{':'port}{'/'<uri-encoded-string>}
+
+<ftp-ident>: <SHA256-hash>'/'<public-key>.
+
+<ftp-param>: <uri-encoded-string>.
+
+<uri-encoded-string>: TODO
+
+% <number>:	<real-number>;
+% 		"$\{$" <real-number> "," <real-number> "$\}$";
+% 		{$\backslash$}b[01][01]+;
+% 		{$\backslash$}o[07][07]+;
+% 		\$[0-9A-Fa-f][0-9A-Fa-f]+.
+
+%<real-number>:	[\+--]?[0-9][0-9]+[\.[0-9]+]?[[eE][0-9][0-9]+].
+
+% <operator>:	"*" |	 "/"	|     "$\backslash$"	| "\%";
+% 		"==" |	 "!="	|     "$>$" 		| "$<$"  
+% 		| "$<$=" | "$>$=";
+% 		"\ul ="	| "\ul !=" |  "\ul $<$" | "\ul $>$" 
+% 		| "\ul$<$=" | "\ul$>$=";
+% 		"\&"	 | "$\vert$"  | "$\uparrow\uparrow$";
+% 		"\&\&"	| "$\Vert$"  | "\ul$\uparrow$".
+		
+\endgrammar
+\end{mdframed}
+\end{figure*}
+
+Interests encoded using this grammar are intercepted in the NDNInputStage of the gateway (see Figure \ref{fig:pipeline}). Upon reception, the gateway parses the message, stores a new entry in the NDN pending message table, and forwards the decoded message contents to the appropriate IPOutputStage pipeline stage. Upon reception, the IP response is retrieved in the IPInputStage and forwarded inwards to the NDNOutputStage, where the corresponding entry in the NDN pending message table is indexed using the contents of the arriving message to retrieve the original incoming interest name. Once fetched, the gateway creates and signs a new content object with the IP network response, and then forwards the content downstream to its intended consumer. 
+
+Unlike traditional NDN routing, the NDN pending message table does not collapse interests by default. The reason for this is that application-protocol interests are often issued when \emph{new} state needs to change (i.e., cached responses not generated on demand from the intended IP recipient are not acceptable). 
+
+It is important to note that stateful protocols such as FTP must explicitly embed identifying information about the consumer in order to operate correctly. The reason is that one FTP session must be associate with at most one consumer, and since NDN does not have any notion of host addresses or identifiers, the consumer application must explicitly encode its identity in the interest. Our grammar proposes embedding the consumer public key and a corresponding digital signature of the entire interest for such protocols so that consumers can be explicitly identified and their sessions cannot be hijacked by other consumers (doing so would require compromising a consumer and its private key).
 
 \section{Bridging Isolated Networks via Message Encapsulation at the Bridge}
 TODO

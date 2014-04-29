@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.5.30)  24 APR 2014 11:44
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.5.30)  28 APR 2014 22:07
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -856,26 +856,26 @@ File: md-frame-0.mdf 2013/03/09\ 1.8: md-frame-0
 Package zref Info: New property: mdf@pagevalue on input line 840.
 \mdf@horizontalspaceofbox=\skip119
 )
+(./bnf.tex)
 \c@defn=\count179
 \c@thm=\count180
 \c@cor=\count181
 \c@lemma=\count182
-
-(./icn2014.aux)
+ (./icn2014.aux)
 \openout1 = `icn2014.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 15.
-LaTeX Font Info:    ... okay on input line 15.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 15.
-LaTeX Font Info:    ... okay on input line 15.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 15.
-LaTeX Font Info:    ... okay on input line 15.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 15.
-LaTeX Font Info:    ... okay on input line 15.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 15.
-LaTeX Font Info:    ... okay on input line 15.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 15.
-LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 16.
+LaTeX Font Info:    ... okay on input line 16.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 16.
+LaTeX Font Info:    ... okay on input line 16.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 16.
+LaTeX Font Info:    ... okay on input line 16.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 16.
+LaTeX Font Info:    ... okay on input line 16.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 16.
+LaTeX Font Info:    ... okay on input line 16.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 16.
+LaTeX Font Info:    ... okay on input line 16.
 
 (/usr/local/texlive/2013/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
@@ -907,17 +907,17 @@ e
 ))
 ABD: EveryShipout initializing macros
 \AtBeginShipoutBox=\box62
-LaTeX Font Info:    Try loading font information for U+msa on input line 30.
+LaTeX Font Info:    Try loading font information for U+msa on input line 31.
 
 (/usr/local/texlive/2013/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 30.
+LaTeX Font Info:    Try loading font information for U+msb on input line 31.
 
 (/usr/local/texlive/2013/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-LaTeX Font Info:    Try loading font information for U+lasy on input line 30.
+LaTeX Font Info:    Try loading font information for U+lasy on input line 31.
 
 (/usr/local/texlive/2013/texmf-dist/tex/latex/base/ulasy.fd
 File: ulasy.fd 1998/08/17 v2.2e LaTeX symbol font definitions
@@ -965,44 +965,64 @@ Overfull \hbox (1.24733pt too wide) in paragraph at lines 38--39
  []
 
 [2 <./images/hourglass_conn.pdf>]
-Overfull \hbox (3.27177pt too wide) in paragraph at lines 52--52
+<./images/pipeline.pdf, id=42, 916.42375pt x 355.3275pt>
+File: ./images/pipeline.pdf Graphic file (type pdf)
+
+<use ./images/pipeline.pdf>
+Package pdftex.def Info: ./images/pipeline.pdf used on input line 42.
+(pdftex.def)             Requested size: 412.38689pt x 159.89589pt.
+
+Overfull \hbox (23.45708pt too wide) in paragraph at lines 57--57
+[]\secfnt NDN-to-IP Ap-pli-ca-tion Layer Se-man-tic Trans-
+ []
+
+Package mdframed Info: mdframed works in twoside mode on input line 62.
+Package mdframed Info: mdframed inside float 
+ mdframed uses option nobreak mdframed on input line 97.
+Package mdframed Info: mdframed inside a box 
+ mdframed uses option nobreak mdframed on input line 97.
+
+Underfull \vbox (badness 6396) has occurred while \output is active []
+
+
+Overfull \hbox (3.27177pt too wide) in paragraph at lines 106--106
 []\secfnt BRIDGING ISO-LATED NET-WORKS VIA
  []
 
 
-Overfull \hbox (39.21098pt too wide) in paragraph at lines 52--52
+Overfull \hbox (39.21098pt too wide) in paragraph at lines 106--106
 \secfnt MES-SAGE EN-CAP-SU-LA-TION AT THE BRIDGE 
  []
 
-) (./icn2014.bbl) [3
-
-] (./icn2014.aux) ) 
+) (./icn2014.bbl) [3] [4 <./images/pipeline.pdf>] (./icn2014.aux) ) 
 Here is how much of TeX's memory you used:
- 18553 strings out of 493315
- 341436 string characters out of 6137904
- 389405 words of memory out of 5000000
- 21584 multiletter control sequences out of 15000+600000
- 52294 words of font info for 77 fonts, out of 8000000 for 9000
+ 18573 strings out of 493315
+ 341713 string characters out of 6137904
+ 389615 words of memory out of 5000000
+ 21599 multiletter control sequences out of 15000+600000
+ 53828 words of font info for 78 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
  63i,13n,57p,1435b,333s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/local/texlive/2013/texmf-dist/fonts/enc/dvips/base/8r.
-enc}</usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.p
-fb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pf
-b></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb>
-</usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></u
-sr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/
-local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/l
-ocal/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/loc
-al/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/loca
-l/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local
-/texlive/2013/texmf-dist/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/local/texliv
-e/2013/texmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/local/texlive/2013/
-texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2013/texmf-dist
-/fonts/type1/urw/times/utmr8a.pfb>
-Output written on icn2014.pdf (3 pages, 283924 bytes).
+{/usr/local/
+texlive/2013/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/local/texlive/2013/te
+xmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2013/tex
+mf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2013/texm
+f-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2013/texmf-
+dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/2013/texmf-dis
+t/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texlive/2013/texmf-dist/f
+onts/type1/public/amsfonts/cm/cmsl10.pfb></usr/local/texlive/2013/texmf-dist/fo
+nts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2013/texmf-dist/fon
+ts/type1/public/amsfonts/cm/cmsy9.pfb></usr/local/texlive/2013/texmf-dist/fonts
+/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2013/texmf-dist/fonts/
+type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive/2013/texmf-dist/fonts/t
+ype1/urw/helvetic/uhvb8a.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/ur
+w/helvetic/uhvr8a.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/urw/times
+/utmb8a.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/urw/times/utmr8a.pf
+b>
+Output written on icn2014.pdf (4 pages, 323201 bytes).
 PDF statistics:
- 87 PDF objects out of 1000 (max. 8388607)
- 63 compressed objects within 1 object stream
+ 119 PDF objects out of 1000 (max. 8388607)
+ 87 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 18 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 23 words of extra memory for PDF output out of 10000 (max. 10000000)
 
