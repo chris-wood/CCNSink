@@ -1,0 +1,124 @@
+\documentclass[handout]{beamer}
+\usetheme{Montpellier}
+% \usecolortheme{beaver}
+
+\usepackage{beamerthemesplit}
+\usepackage{pgfpages}
+\usepackage{verbatim}
+\usepackage{fancybox}
+\usepackage{algorithm}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{algpseudocode}
+\usepackage{algorithmicx}% http://ctan.org/pkg/algorithmicx
+\usepackage{lipsum}% http://ctan.org/pkg/lipsum
+\usepackage{xifthen}% http://ctan.org/pkg/xifthen
+\usepackage{needspace}% http://ctan.org/pkg/needspace
+\usepackage{hyperref}% http://ctan.org/pkg/hyperref
+\usepackage{tikz}
+\usepackage{mathptmx}
+\usepackage[scaled=.90]{helvet}
+\usepackage[T1]{fontenc}
+\usepackage{framed}
+\usepackage{listings}
+
+
+
+\title[NDN Gateway]{Multipurpose IP/NDN Gateway and Bridge \\ for Heterogeneous Network Interoperability}
+\institute[Donald Bren School of Information and Computer Sciences \\ UC Irvine]{}
+\date{\today}
+%\subtitle{}
+\author[Christopher A. Wood]{Christopher A. Wood \\ \url{www.christopher-wood.com} \\ {\tt woodc1@uci.edu}}
+%\institute[]{}
+\date{\today}
+
+\begin{document}
+
+%%%%%
+%%
+%% Resource link: http://www.math-linux.com/spip.php?article77
+%%
+%%%%
+
+\begin{frame}
+	\titlepage
+\end{frame}
+
+\begin{frame}{Agenda}
+	\tableofcontents
+\end{frame}
+
+%% 6-8 slides each
+
+\section{Overview}
+\begin{frame}{Today's Internet: Communication Networks as Distribution Networks}
+	The communication-centric design enables point-to-point communcation between any two parties:
+	\begin{itemize}
+		\item Names)boxes)and)interfaces)
+		\item Supports)end5to5end)conversaAons)
+		\item Provides)unreliable)packet)delivery)via)IP)datagrams)
+		\item Compensates)for)simplicity)of)IP)via)complexity)of)TCP)
+	\end{itemize}
+
+	Important observations:
+	\begin{itemize}
+		\item Helped)facilitate)today’s)content5centric)world)butwas)never)designed)for)it)
+		\item Fundamental)communicaAon)model:)point5to5point)conversaAon)between)two)hosts)(IP)interfaces)
+		\item The)central)abstracAon)is)a)host)idenAﬁer)corresponding)to)an)IP)address)
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{NDN Architecture Overview}
+	{\bf Motivating Observation}: What matters is \emph{content}, not \emph{where} it came from
+	TODO: differences
+
+	TODO: names/roles/objects
+\end{frame}
+
+\begin{frame}{Content Retrieval Strategies}
+	TODO
+\end{frame}
+
+\section{Design}
+\begin{frame}{Semantic Translations}
+	TODO
+\end{frame}
+
+\begin{frame}{IP-to-NDN Traffic}
+	TODO
+\end{frame}
+
+\begin{frame}{NDN-to-IP Traffic}
+	TODO
+\end{frame}
+
+\begin{frame}{Pipeline-Based Load Balancing Design}
+	TODO
+\end{frame}
+
+\section{Experimental Setups}
+\begin{frame}{Experiments}
+	TODO: describe the experimental setup -> unidirectional in both settings, bidirectional applications
+\end{frame}
+
+%% EXAMPLE REFERENCES 
+% \begin{frame}
+% 	\frametitle{References}
+% 	All images taken from Google Developers documentation: 
+% 	\begin{center}
+% 		\url{https://developers.google.com/appengine/features/}
+% 	\end{center}
+% 	% \begin{thebibliography}
+% 	% \bibitem CHANGE ME PLEASE
+% 	% \end{thebibliography}
+% \end{frame}
+
+%% EXAMPLE FIGURE
+% \begin{comment}
+% \begin{figure}
+% \centering
+% \includegraphics[scale = 0.6]{images/sub_layer.jpg}
+% \end{figure}
+% \end{comment}
+
+\end{document}

@@ -77,7 +77,7 @@ Due to their architectural differences, there does not exist a native correspond
 
 % <ftp-cmd>: 'ascii' | 'binary' | 'bye' | 'cd' | 'close' | 'delete' | 'get' | 'help' | 'lcd' | 'ls' | 'mkdir' | 'mget' | 'open' | 'put' | 'pwd' | 'quit' | 'rmdir'.
 
-<http-path>: <uri> | ip-address{':'port}{'/'<uri-encoded-string>}
+<http-path>: <uri> | <ip-address>[port]['/'<uri-encoded-string>]
 
 <tcp-ident>: <SHA256-hash>'/'<public-key>.
 
@@ -107,12 +107,13 @@ Due to their architectural differences, there does not exist a native correspond
 
 Interests encoded using this grammar are intercepted in the NDNInputStage of the gateway (see Figure \ref{fig:pipeline}). Upon reception, the gateway parses the message, stores a new entry in the NDN pending message table, and forwards the decoded message contents to the appropriate IPOutputStage pipeline stage. Upon reception, the IP response is retrieved in the IPInputStage and forwarded inwards to the NDNOutputStage, where the corresponding entry in the NDN pending message table is indexed using the contents of the arriving message to retrieve the original incoming interest name. Once fetched, the gateway creates and signs a new content object with the IP network response, and then forwards the content downstream to its intended consumer. 
 
-Unlike traditional NDN routing, the NDN pending message table does not collapse interests by default. The reason for this is that application-protocol interests are often issued when \emph{new} state needs to change (i.e., cached responses not generated on demand from the intended IP recipient are not acceptable). 
+Unlike traditional NDN routing, the gateway pending message table does not collapse interests by default. The reason for this is that application-protocol interests are often issued when \emph{new} state needs to change (i.e., cached responses not generated on demand from the intended IP recipient are not acceptable). 
 
-It is important to note that stateful protocols such as TCP must explicitly embed identifying information about the consumer in order to operate correctly. The reason is that one FTP session must be associate with at most one consumer, and since NDN does not have any notion of host addresses or identifiers, the consumer application must explicitly encode its identity in the interest. Our grammar proposes embedding the consumer public key and a corresponding digital signature of the entire interest for such protocols so that consumers can be explicitly identified and their sessions cannot be hijacked by other consumers (doing so would require compromising a consumer and its private key).
+It is important to note that stateful protocols such as TCP must explicitly embed identifying information about the consumer in order to operate correctly. The reason is that one TCP stream must be associated with at most one consumer, and since NDN does not have any notion of host addresses or identifiers, the consumer application must explicitly encode its identity in the interest. Our grammar enforces identities based on consumer public keys and a corresponding digital signature of the entire interest for such protocols so that consumers can be explicitly identified and their sessions cannot be hijacked by other consumers (doing so would require compromising a consumer and its private key).
 
 \section{Bridging Isolated Networks via Message Encapsulation at the Bridge}
 TODO
 
 \section{Internal Gateway Pipeline}
 \todo[inline]{pipeline stage defers parsing to subclasses - template pattern}
+
