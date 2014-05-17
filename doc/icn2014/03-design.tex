@@ -12,12 +12,12 @@ Consider the typical hourglass network stack in IP-based networks as shown in le
 Assuming that NDN is not to be deployed over IP, but instead as a separate network stack entirely, the need for such a gateway cannot be understated. Consider two instances of an application, $A$ and $B$, that wish to send data back and forth to each other. Application $A$ is running on a host with only an IP interface, and application $B$ is running on a host with only an NDN interface. What does it mean for application $A$ to establish a TCP connection stream with application $B$ and what does it mean for application $B$ to issue an interest to application $A$ when neither application speaks the network language of the other. In order for these two applications to communicate, the semantics of a TCP stream-oriented connection must be translated to a stream of contiguous interests, and vice versa. 
 
 Now consider an alternative scenario in which two ``islands'' of NDN hosts exist in isolation, both of which running the same instance of an application. Let host $H_1$ and $H_2$ be a host in the first and second island, respectively, that wish to retrieve data from one another using interests. Without a network route between the two islands, there would be no way for $H_1$ and $H_2$ to interact with one another. However, if there existed two gateways at the borders of each island, each of which connected to the same IP network, then interests from $H_1$ ($H_2$) could be sent to $H_2$ ($H_1)$ as follows:
-\begin{enumerate} 
+\begin{compactenum} 
 	\item An interest from $H_1$ is intercepted a gateway $G_1$.
 	\item $G_1$ encapsulates the interest in an IP packet sent to gateway $G_2$ adhering to IPsec.
 	\item $G_2$ unwraps and re-issues the interest and waits for the content to be retrieved from $H_2$. Upon reception, the content's signature is verified and the content is encapsulated in a signed IPsec packet and sent to $G_1$. 
 	\item $G_1$ verifies the signature of the packet, creates and signs a new content object, and sends the content object back downstream to $H_1$.
-\end{enumerate}
+\end{compactenum}
 
 % The gateway middleware is designed so as to support bi-directional traffic flowing from both types of networks. In what follows we describe how traffic in both directions will be supported internally by the gateway.
 
@@ -57,7 +57,9 @@ GET X.X.X.X:80/ndn/ccnx/name/of/content
 \end{center}
 Since HTTP requests and NDN interests are stateless, the gateway will parse the URI of the request to determine that (1) it corresponds to an NDN interest, and (2) the full interest name is explicitly ``ccnx:/name/of/content''. Upon reception, the gateway will store the key-value pair $(\mathsf{name}, (\mathsf{source IP}, \mathsf{source port}))$ in the IP pending message table and issue an interest with the given name to the NDN network. Upon receipt of a piece of content, a NDN content handler callback recovers the IP address and port from the pending message table using the content name as the index and then writes the raw content back to the client over the same incoming HTTP TCP connection. Since it is not required that the HTTP request uses a persistent TCP connection, the HTTP message handler is a synchronous procedure that blocks while the NDN interest is satisfied so that the same TCP connection can be used to write the response. 
 
-\subsubsection{Transport Layer}
+\subsubsection{Transport Layer} % ip to ndn
+Given that interests can be overloaded to ascertain 
+
 TODO: interests can be overloaded to contain content, some NDN applications will accept some interests, applications using raw TCP streams to send data to NDN applications, so client opens up TCP socket to gateway and all data is partitioned/packed in an interest/forwarded, setting up TCP connection requires hooking up socket to gateway/sending producer root as first message chunk in TCP stream/and then sending streams of data continually
 
 \subsection{NDN-to-IP Layer Semantic Translation}

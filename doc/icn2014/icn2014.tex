@@ -6,6 +6,7 @@
 \usepackage[noend]{algpseudocode}
 \usepackage{mdframed}
 \usepackage{amsmath}
+\usepackage{paralist}
 \input{bnf}
 
 \newtheorem{defn}{\textbf{Definition}}
@@ -15,7 +16,7 @@
 
 \begin{document}
 
-\title{Multipurpose IP/NDN Gateway and Bridge for Heterogeneous Network Interoperability}
+\title{An Application-Layer Gateway for TCP/IP and Content Centric Network Interoperability}
 
 \numberofauthors{1} 
 \author{
@@ -30,7 +31,7 @@ Christopher A. Wood\titlenote{NSF GRFP blurb.}\\
 
 \maketitle
 \begin{abstract}
-TODO
+With the growing presence of data streaming services and applications in today's Internet, content-centric networks (CCNs) are an increasingly attractive design alternative to the traditional IP-based host-oriented  architecture. CCNs emphasize content by making it directly addressable and routable within the network, in contrast to addressable hosts and interfaces. This fundamental difference leads to vastly different mechanisms to publish and retrieve content and enable peer-to-peer communication. Named Data Networking (NDN) and its sibling implementation - CCNx - is one particular CCN design that has received considerable academic and industry attention. Despite the many promising benefits, there has been little research into the NDN deployment strategy. Clearly, an incremental deployment strategy is the only viable solution. During this rollout phase, however, there will undoubtedly be a need for IP-based hosts to communicate with and retrieve content from NDN-based hosts (and vice versa). To this end, we present an IP/NDN gateway to support interoperability between these different networking architectures with minimal application and transport layer modifications via semantic translation between the communication mechanisms used in both networks. The performance overhead induced by this gateway is studied in unidirectional and bidirectional communication settings.
 \end{abstract}
 
 \category{H.4}{TODO}{TODO}
