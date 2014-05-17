@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.5.30)  8 MAY 2014 18:14
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.5.30)  16 MAY 2014 16:13
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -926,13 +926,14 @@ LaTeX Font Info:    Try loading font information for T1+aett on input line 6.
 
 (/usr/local/texlive/2013/texmf-dist/tex/latex/ae/t1aett.fd
 File: t1aett.fd 1997/11/16 Font definitions for T1/aett.
-)) (./03-design.tex
+)) (./02-prelims.tex
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [1{/usr/local/texlive/2013/texmf-var/fonts/map/pdftex/updmap/pdftex.map}
 
 
-]
+])
+(./03-design.tex
 Overfull \hbox (17.62457pt too wide) in paragraph at lines 1--1
 []\secfnt MOTVATING IN-TER-OP-ER-A-BLE HET-ERO-
  []
@@ -958,12 +959,11 @@ Overfull \hbox (4.64716pt too wide) in paragraph at lines 38--39
 []\T1/aer/m/n/10 Traditional IP-based ap-pli-ca-tions and up-com-ing NDN-
  []
 
-
+[2 <./images/hourglass_conn.pdf>]
 Overfull \hbox (1.24733pt too wide) in paragraph at lines 40--41
 []\T1/aer/m/n/10 The di-rec-tion of traf-fic across the gate-way has a strong
  []
 
-[2 <./images/hourglass_conn.pdf>]
 <./images/pipeline.pdf, id=42, 916.42375pt x 355.3275pt>
 File: ./images/pipeline.pdf Graphic file (type pdf)
 
@@ -1010,9 +1010,9 @@ Overfull \hbox (39.21098pt too wide) in paragraph at lines 114--114
 
 ) (./icn2014.bbl) [4 <./images/pipeline.pdf>] (./icn2014.aux) ) 
 Here is how much of TeX's memory you used:
- 18620 strings out of 493315
- 342814 string characters out of 6137904
- 391723 words of memory out of 5000000
+ 18623 strings out of 493315
+ 342854 string characters out of 6137904
+ 390722 words of memory out of 5000000
  21643 multiletter control sequences out of 15000+600000
  55869 words of font info for 82 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
@@ -1034,7 +1034,7 @@ urw/helvetic/uhvb8a.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/urw/hel
 vetic/uhvr8a.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/urw/times/utmb
 8a.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></u
 sr/local/texlive/2013/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on icn2014.pdf (4 pages, 343562 bytes).
+Output written on icn2014.pdf (4 pages, 343204 bytes).
 PDF statistics:
  127 PDF objects out of 1000 (max. 8388607)
  93 compressed objects within 1 object stream
