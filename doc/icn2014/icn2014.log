@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (MiKTeX 2.9) (preloaded format=pdflatex 2014.1.2)  16 MAY 2014 20:10
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (MiKTeX 2.9) (preloaded format=pdflatex 2014.1.2)  16 MAY 2014 20:21
 entering extended mode
 **icn2014.tex
 (C:\Users\Christopher\Documents\GitHub\NDNGateway\doc\icn2014\icn2014.tex
@@ -900,8 +900,13 @@ Overfull \hbox (17.76712pt too wide) in paragraph at lines 34--36
  []
 
 (C:\Users\Christopher\Documents\GitHub\NDNGateway\doc\icn2014\01-intro.tex
-LaTeX Font Info:    Try loading font information for T1+aett on input line 6.
 
+LaTeX Warning: Citation `first' on page 1 undefined on input line 4.
+
+
+LaTeX Warning: Citation `ndn-techreport' on page 1 undefined on input line 6.
+
+LaTeX Font Info:    Try loading font information for T1+aett on input line 6.
 ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\ae\t1aett.fd"
 File: t1aett.fd 1997/11/16 Font definitions for T1/aett.
 )
@@ -915,6 +920,12 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 Overfull \hbox (17.62457pt too wide) in paragraph at lines 1--1
 []\secfnt MOTVATING IN-TER-OP-ER-A-BLE HET-ERO-
  []
+
+
+LaTeX Warning: Reference `fig:hourglass' on page 2 undefined on input line 2.
+
+
+LaTeX Warning: Reference `fig:hourglass' on page 2 undefined on input line 2.
 
 <./images/hourglass_conn.pdf, id=19, 756.8275pt x 369.38pt>
 File: ./images/hourglass_conn.pdf Graphic file (type pdf)
@@ -932,13 +943,13 @@ Overfull \hbox (7.65266pt too wide) in paragraph at lines 37--37
 []\secfnt NETWORK SE-MAN-TIC TRANS-LA-TIONS
  []
 
-[2 <C:/Users/Christopher/Documents/GitHub/NDNGateway/doc/icn2014/images/hourgla
-ss_conn.pdf>]
+
 Overfull \hbox (4.64716pt too wide) in paragraph at lines 38--39
 []\T1/aer/m/n/10 Traditional IP-based ap-pli-ca-tions and up-com-ing NDN-
  []
 
-
+[2 <C:/Users/Christopher/Documents/GitHub/NDNGateway/doc/icn2014/images/hourgla
+ss_conn.pdf>]
 Overfull \hbox (1.24733pt too wide) in paragraph at lines 40--41
 []\T1/aer/m/n/10 The di-rec-tion of traf-fic across the gate-way has a strong
  []
@@ -977,6 +988,13 @@ Package mdframed Info: mdframed inside float
  mdframed uses option nobreak mdframed on input line 107.
 Package mdframed Info: mdframed inside a box 
  mdframed uses option nobreak mdframed on input line 107.
+
+LaTeX Warning: Reference `mdf@pagelabel-1' on page 3 undefined on input line 10
+7.
+
+
+LaTeX Warning: Reference `fig:pipeline' on page 3 undefined on input line 110.
+
 [3]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
@@ -995,33 +1013,39 @@ Overfull \hbox (39.21098pt too wide) in paragraph at lines 116--116
 e.pdf>]) [5
 
 ]
-(C:\Users\Christopher\Documents\GitHub\NDNGateway\doc\icn2014\icn2014.aux) ) 
+(C:\Users\Christopher\Documents\GitHub\NDNGateway\doc\icn2014\icn2014.aux)
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+ ) 
 Here is how much of TeX's memory you used:
  18775 strings out of 493921
  354024 string characters out of 3144859
- 395623 words of memory out of 3000000
+ 395473 words of memory out of 3000000
  21704 multiletter control sequences out of 15000+200000
  55869 words of font info for 82 fonts, out of 3000000 for 9000
  841 hyphenation exceptions out of 8191
  63i,13n,80p,10416b,584s stack positions out of 5000i,500n,10000p,200000b,50000s
-{C:
-/Program Files (x86)/MiKTeX 2.9/fonts/enc/dvips/fontname/8r.enc}<C:/Program Fil
-es (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Program Files
- (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Program Files (
-x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Program Files (x86
-)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Program Files (x86)/Mi
-KTeX 2.9/fonts/type1/public/amsfonts/cm/cmr9.pfb><C:/Program Files (x86)/MiKTeX
- 2.9/fonts/type1/public/amsfonts/cm/cmsl10.pfb><C:/Program Files (x86)/MiKTeX 2
-.9/fonts/type1/public/amsfonts/cm/cmss10.pfb><C:/Program Files (x86)/MiKTeX 2.9
-/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Program Files (x86)/MiKTeX 2.9/f
-onts/type1/public/amsfonts/cm/cmsy9.pfb><C:/Program Files (x86)/MiKTeX 2.9/font
-s/type1/public/amsfonts/cm/cmti10.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/
-type1/public/amsfonts/cm/cmtt10.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/ty
-pe1/urw/helvetic/uhvb8a.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/urw/
-helvetic/uhvr8a.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/urw/times/ut
-mb8a.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/urw/times/utmr8a.pfb><C
-:/Program Files (x86)/MiKTeX 2.9/fonts/type1/urw/times/utmri8a.pfb>
-Output written on icn2014.pdf (5 pages, 368821 bytes).
+{C:/Program Files (x86)/MiKTeX 2.9/fonts/enc/dvips/fontname/8r.enc}<C:/Progra
+m Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Program 
+Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Program Fi
+les (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Program Files
+ (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Program Files (x8
+6)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr9.pfb><C:/Program Files (x86)/M
+iKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsl10.pfb><C:/Program Files (x86)/MiK
+TeX 2.9/fonts/type1/public/amsfonts/cm/cmss10.pfb><C:/Program Files (x86)/MiKTe
+X 2.9/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Program Files (x86)/MiKTeX 
+2.9/fonts/type1/public/amsfonts/cm/cmsy9.pfb><C:/Program Files (x86)/MiKTeX 2.9
+/fonts/type1/public/amsfonts/cm/cmti10.pfb><C:/Program Files (x86)/MiKTeX 2.9/f
+onts/type1/public/amsfonts/cm/cmtt10.pfb><C:/Program Files (x86)/MiKTeX 2.9/fon
+ts/type1/urw/helvetic/uhvb8a.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1
+/urw/helvetic/uhvr8a.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/urw/tim
+es/utmb8a.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/urw/times/utmr8a.p
+fb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/urw/times/utmri8a.pfb>
+Output written on icn2014.pdf (5 pages, 369050 bytes).
 PDF statistics:
  128 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
