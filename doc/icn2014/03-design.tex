@@ -9,15 +9,7 @@ Consider the typical hourglass network stack in IP-based networks as shown in le
 \end{center}
 \end{figure}
 
-Assuming that NDN is not to be deployed over IP, but instead as a separate network stack entirely, the need for such a gateway cannot be understated. Consider two instances of an application, $A$ and $B$, that wish to send data back and forth to each other. Application $A$ is running on a host with only an IP interface, and application $B$ is running on a host with only an NDN interface. What does it mean for application $A$ to establish a TCP connection stream with application $B$ and what does it mean for application $B$ to issue an interest to application $A$ when neither application speaks the network language of the other. In order for these two applications to communicate, the semantics of a TCP stream-oriented connection must be translated to a stream of contiguous interests, and vice versa. 
-
-Now consider an alternative scenario in which two ``islands'' of NDN hosts exist in isolation, both of which running the same instance of an application. Let host $H_1$ and $H_2$ be a host in the first and second island, respectively, that wish to retrieve data from one another using interests. Without a network route between the two islands, there would be no way for $H_1$ and $H_2$ to interact with one another. However, if there existed two gateways at the borders of each island, each of which connected to the same IP network, then interests from $H_1$ ($H_2$) could be sent to $H_2$ ($H_1)$ as follows:
-\begin{compactenum} 
-	\item An interest from $H_1$ is intercepted a gateway $G_1$.
-	\item $G_1$ encapsulates the interest in an IP packet sent to gateway $G_2$ adhering to IPsec.
-	\item $G_2$ unwraps and re-issues the interest and waits for the content to be retrieved from $H_2$. Upon reception, the content's signature is verified and the content is encapsulated in a signed IPsec packet and sent to $G_1$. 
-	\item $G_1$ verifies the signature of the packet, creates and signs a new content object, and sends the content object back downstream to $H_1$.
-\end{compactenum}
+Assuming that NDN is not to be deployed over IP, but instead as a separate network stack entirely, the need for such a gateway cannot be understated. Consider two instances of an application, $A$ and $B$, that wish to send data back and forth to each other. Application $A$ is running on a host with only an IP interface, and application $B$ is running on a host with only an NDN interface. What does it mean for application $A$ to establish a TCP connection stream with application $B$ and what does it mean for application $B$ to issue an interest to application $A$ when neither application speaks the network language of the other. In order for these two applications to communicate, the semantics of a TCP stream-oriented connection must be translated to a stream of contiguous interests, and vice versa. Now consider the alternative scenario in which two or more physically disjoint NDN networks need to communicate to distribute content, but such networks can only be connected via the Internet. Strategically placed border gateways at the edges of these NDN networks can be used to establish a bridge across the Internet to enable cross-network interest issuance and content retrieval. Given these two seemingly unavoidable scenarios in an incremental deployment of NDN networks, our IP/NDN bridge will enable continual application operation with minimal application and transport layer software changes. In the following sections we describe the gateway design that faciliates such interoperability.
 
 % The gateway middleware is designed so as to support bi-directional traffic flowing from both types of networks. In what follows we describe how traffic in both directions will be supported internally by the gateway.
 
@@ -39,28 +31,29 @@ Traditional IP-based applications and upcoming NDN-based applications treat both
 
 The direction of traffic across the gateway has a strong influence on how this semantic translation is done: IP-to-NDN application and transport layer protocols will be mapped to corresponding NDN-interests, and NDN-to-IP traffic (in the form of interests) will be encoded so as to map to the appropriate IP-based application or transport layer protocol. Stateless protocols such as HTTP greatly simplify the job of the gateway because it need not maintain any state to support communication across both networks. However, stateful protocols, such as TCP, naturally require the gateway to maintain state so as to emulate the behavior of an endpoint or host that implements such protocols. For instance, if an IP-based application wishes to establish a TCP connection with an application running on an NDN network to retrieve data, then the gateway must maintain stateful information needed to transform streams of data retrieved over a TCP socket to (packed) discrete and contiguous interests in the NDN network. In what follows we describe the semantic translation details for application and transport layer stateful and stateless protocols in both directions across the gateway. 
 
-\begin{figure*}[ht!]
-\begin{center}
-\includegraphics[scale=0.45]{./images/pipeline.pdf}
-\label{fig:pipeline}
-\caption{Bidirectional message pipeline for IP-to-NDN and NDN-to-IP message traversal.}
-\end{center}
-\end{figure*}
-
 \subsection{IP-to-NDN Semantic Translation}
-TODO
+TODO: could link in CCNx library and re-write networking code, but that requires too much work, instead we re-use existing protocols for encoding interests
 
 \subsubsection{Application Layer}
 Translating IP-based application layer messages to NDN interests is highly dependent on the particular application protocol in question. There is an intuitive NDN-friendly encoding of HTTP GET requests in which human-readable URIs are parsed as interest names. Stateless application-layer protocols enable such direct mappings. Therefore, the gateway supports IP-to-NDN application-layer messaging by encoding interests in HTTP GET requests as follows. NDN content objects with names ``ccnx:/name/of/content'' are issued via the gateway by sending a HTTP GET request with the following format to the gateway (in this example, the IP address X.X.X.X of the gateway is known or can be obtained via DNS):
 \begin{center}
-GET X.X.X.X:80/ndn/ccnx/name/of/content
+{\tt GET X.X.X.X:80/ndn/ccnx/name/of/content}
 \end{center}
 Since HTTP requests and NDN interests are stateless, the gateway will parse the URI of the request to determine that (1) it corresponds to an NDN interest, and (2) the full interest name is explicitly ``ccnx:/name/of/content''. Upon reception, the gateway will store the key-value pair $(\mathsf{name}, (\mathsf{source IP}, \mathsf{source port}))$ in the IP pending message table and issue an interest with the given name to the NDN network. Upon receipt of a piece of content, a NDN content handler callback recovers the IP address and port from the pending message table using the content name as the index and then writes the raw content back to the client over the same incoming HTTP TCP connection. Since it is not required that the HTTP request uses a persistent TCP connection, the HTTP message handler is a synchronous procedure that blocks while the NDN interest is satisfied so that the same TCP connection can be used to write the response. 
 
 \subsubsection{Transport Layer} % ip to ndn
-Given that interests can be overloaded to ascertain 
+Since interests can be overloaded to contain arbitrary data, our gateway design exploits this characteristic to carry transport-layer streams of data from applications on IP hosts to supporting applications on NDN-hosts. IP is a host-based protocol, however, and so establishing a ``virtual'' TCP connection between two such applications must be done in two steps: (1) a TCP socket from the IP client to the gateway must be established, and (2) the first chunk of data sent from the client must be the NDN host prefix to which data will be sent. The gateway parses this path and stores it internally for each open TCP socket. Let $C$ be the IP client generating data in the socket $S$, $G$ be the gateway forwarding data on behalf of $C$, and $\mathsf{prefix}$ be the NDN host prefix sent during the connection establishment phase. All subsequent data chunks are then forwarded to this NDN host using the following steps:
+%
+\begin{compactenum}
+	\item $C$ sends a chunk of $B$ bytes to $G$ over the socket $S$.
+	\item $G$ reads $B$ bytes of data from $S$ and encodes it in Base64 format, denoted as $\mathsf{data}$.
+	\item $G$ generates a uniformly random string $\mathsf{nonce}$ of $k$ bits from $\{0,1\}^k$. 
+	\item $G$ builds the interest $\mathsf{prefix}/\mathsf{nonce}/\mathsf{data}$ and issues the interest to the NDN network.
+\end{compactenum}
+%
+By incorporating a fresh random string in each new interest name, the probability that any issued interest will be satisfied from a network cache instead of the desired NDN host is negligible. Therefore, all data sent over the socket $S$ will reach the NDN host, and the receiving application can parse the last component of the interest as fresh data. Note that since this is strictly IP-to-NDN communication, there is no state information persisted in the session table. This is because the NDN host application may not respond with data since the gateway is forwarding \emph{transport} layer data, unlike the case where application-layer queries are forwarded.
 
-TODO: interests can be overloaded to contain content, some NDN applications will accept some interests, applications using raw TCP streams to send data to NDN applications, so client opens up TCP socket to gateway and all data is partitioned/packed in an interest/forwarded, setting up TCP connection requires hooking up socket to gateway/sending producer root as first message chunk in TCP stream/and then sending streams of data continually
+% TODO: interests can be overloaded to contain content, some NDN applications will accept some interests, applications using raw TCP streams to send data to NDN applications, so client opens up TCP socket to gateway and all data is partitioned/packed in an interest/forwarded, setting up TCP connection requires hooking up socket to gateway/sending producer root as first message chunk in TCP stream/and then sending streams of data continually
 
 \subsection{NDN-to-IP Layer Semantic Translation}
 Due to their architectural differences, there does not exist a native correspondence between NDN interests and IP-based application layer protocol messages. For example, there is no standard way for a client to represent an HTTP GET request in the format of an NDN interest. To make this type of semantic translation possible, the NDN-to-IP application layer bridge leverages the human-readable names of content to encode IP-based application layer protocol specifics. The encoding for HTTP and FTP semantic translations is specified in EBNF form below; other application-layer protocols can easily be supported by extending this grammar in the natural way.
@@ -113,9 +106,70 @@ Unlike traditional NDN routing, the gateway pending message table does not colla
 
 It is important to note that stateful protocols such as TCP must explicitly embed identifying information about the consumer in order to operate correctly. The reason is that one TCP stream must be associated with at most one consumer, and since NDN does not have any notion of host addresses or identifiers, the consumer application must explicitly encode its identity in the interest. Our grammar enforces identities based on consumer public keys and a corresponding digital signature of the entire interest for such protocols so that consumers can be explicitly identified and their sessions cannot be hijacked by other consumers (doing so would require compromising a consumer and its private key).
 
-\section{Bridging Isolated Networks via Message Encapsulation at the Bridge}
-TODO
+\section{Bridging Isolated Networks via Message Encapsulation}
+The second type of interoperability scenario that may arise during the deployment of NDN networks is when two or more physically disjoint NDN networks need to communicate with eachother. Let $I_i$ and $I_j$ be two such dijoint NDN networks, and let $A_i$ and $A_j$ be two applications running on hosts in $I_i$ and $I_j$, respectively. Without any additional mechanisms, $A_i$ and $A_j$ would not be able to communicate. However, if there existed two gateways at the edges of $I_i$ and $I_j$, each of which connected to the same IP-based network (i.e., the Internet), then interests from $A_i$ ($A_j$) could be sent to $A_j$ ($A_i)$ as follows:
+\begin{compactenum} 
+	\item An interest from $A_i$ is intercepted a gateway $G_i$.
+	\item $G_i$ encapsulates the interest in an IP packet sent to gateway $G_j$ adhering to IPsec.
+	\item $G_j$ unwraps and re-issues the interest and waits for the content to be retrieved from $A_j$. Upon reception, the content's signature is verified and the content is encapsulated in a signed IPsec packet and sent to $G_i$. 
+	\item $G_i$ verifies the signature of the packet, creates and signs a new content object, and sends the content object back downstream to $A_i$.
+\end{compactenum}
+A visual depiction of this scenario is shown in Figure \ref{fig:islands}. Of course, many optimizations can be made to this simplistic design to increase interest throughput across the bridge. First, persistent TCP connections are maintained between adjacent gateways.
+\begin{compactitem}
+	\item 
+	\item Interests are routed based on the physical distance supporting gateways.
+\end{compactitem}
 
-\section{Internal Gateway Pipeline}
-\todo[inline]{pipeline stage defers parsing to subclasses - template pattern}
+\begin{figure}[ht!]
+\begin{center}
+\includegraphics[scale=0.45]{./images/island_tunnel.pdf}
+\label{fig:islands}
+\caption{TODO.}
+\end{center}
+\end{figure}
 
+TODO: handshake between gateways to establish secure tunnel (SSL/TLS), protocol that lists all explicit steps, 
+
+\begin{algorithm}[ht!]
+  \caption{EstablishBridge}
+  \begin{algorithmic}[1]
+    \Require{Anonymous routers $r_1,r_2,\dots,r_n$ ($n \geq 1$) with public keys $pk_1,pk_2,\dots,pk_n$.}
+    
+% \medskip
+
+% \Function{{\sf InitHandler}}{$\mathsf{int}$} %// Server-side at router $i$
+%     \State $(k, E_{k_i}, M_{k_i}, M_{k_{i+1}}, \mathsf{EIV}_i, \mathsf{SIV}_i^1, \mathsf{session}_i, \mathsf{SIndex}_i^1) := \mathcal{D}_{sk_i}(\mathsf{int})$
+%   \State Persist $(\mathsf{session}_i, E_{k_i}, M_{k_i}, M_{k_{i+1}}, \mathsf{EIV}_i, \mathsf{SIV}_i)$ to state, and store $(\mathsf{SIndex}_i, \mathsf{session}_i, \mathsf{SIV}_i)$ in the session table $\mathsf{ST}_i$
+%   \State $\mathsf{resp} \gets \mathsf{Encrypt}_{k}(\mathsf{session}_i, E_{k_i}, M_{k_i}, \mathsf{EIV}_i, \mathsf{SIV}_i)$
+%   \State \Return $\mathsf{resp}$
+%  \EndFunction
+
+% \medskip
+
+% \Function{{\sf Init}}{$r_i$, $M_{k_{i+1}}$} %// Client-side
+%   \State $E_{k_i} \gets \{0,1\}^{\kappa}, M_{k_i} \gets \{0,1\}^{\kappa}$
+%   \State $\mathsf{EIV}_i \gets \{0,1\}^{\kappa}, \mathsf{SIV}_i^1 \gets \{0,1\}^{\kappa}$ %// session IV
+%   \State $x \gets \{0,1\}^{\kappa}, \mathsf{session}_i := H(x)$ %// session ID
+%   \State $\mathsf{SIndex}_i^1 := H(\mathsf{session}_i + \mathsf{SIV}_i)$
+%   \State $\mathsf{PAYLOAD} := \mathcal{E}_{pk_i}(k, E_{k_i}, M_{k_i}, M_{k_{i+1}}, \mathsf{EIV}_i, \mathsf{SIV}_i, \mathsf{session}_i, \mathsf{SIndex}_i^1)$
+%   \State $\mathsf{int} := \mathsf{namespace}_i/\mathsf{CREATEInitHandlerSION}/\mathsf{PAYLOAD}$
+%   \State $\mathsf{resp} := \mathsf{ccnget}(\mathsf{int})$ %// reach out to the AR
+%   \State \Return $(E_{k_i}, M_{k_i}, x_i, \mathsf{session}_i, \mathsf{IV}_i)$
+% \EndFunction
+
+% \medskip
+
+% \Function{{\sf EstablishCircuit}}{$r_1,\dots,r_n$} %// Main procedure
+% \State $(E_{k_n}, M_{k_n}, c_n, \mathsf{session}_n, \mathsf{IV}_n) := \mathsf{Init}(r_n)$
+% \For{$i = n - 1$ \textbf{ downto } $1$}
+%   \If{$i = n-1$}
+%     \State $(E_{k_i}, M_{k_i}, \mathsf{EIV}_i, \mathsf{session}_i, \mathsf{SIV}_i) := \mathsf{Init}(r_i, \perp)$
+%   \Else
+%     \State $(E_{k_i}, M_{k_i}, \mathsf{EIV}_i, \mathsf{session}_i, \mathsf{SIV}_i) := \mathsf{Init}(r_i, M_{k_{i+1}})$
+%   \EndIf
+% \EndFor
+% \EndFunction
+
+  \end{algorithmic}
+  \label{alg:init}
+\end{algorithm}

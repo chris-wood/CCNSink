@@ -38,7 +38,7 @@ class NDNGateway(threading.Thread):
 		ipInput.start()
 		ndnInput = NDNInputStage("NDNInputStage", ipOutput, table, paramMap)
 		self.stages.append(ndnInput)
-		# ndnInput.start()
+		ndnInput.start()
 
 	def run(self):
 		self.running = True

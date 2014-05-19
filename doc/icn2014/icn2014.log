@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.5.30)  16 MAY 2014 20:31
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.5.30)  19 MAY 2014 10:47
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -970,102 +970,102 @@ Overfull \hbox (2.18974pt too wide) in paragraph at lines 6--8
  []
 
 [2]
-Overfull \hbox (7.65266pt too wide) in paragraph at lines 37--37
+Overfull \hbox (7.65266pt too wide) in paragraph at lines 29--29
 []\secfnt NETWORK SE-MAN-TIC TRANS-LA-TIONS
  []
 
 
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
-
-Overfull \hbox (4.64716pt too wide) in paragraph at lines 38--39
+Overfull \hbox (4.64716pt too wide) in paragraph at lines 30--31
 []\T1/aer/m/n/10 Traditional IP-based ap-pli-ca-tions and up-com-ing NDN-
  []
 
 
-Overfull \hbox (1.24733pt too wide) in paragraph at lines 40--41
+Overfull \hbox (1.24733pt too wide) in paragraph at lines 32--33
 []\T1/aer/m/n/10 The di-rec-tion of traf-fic across the gate-way has a strong
  []
 
-<./images/pipeline.pdf, id=24, 916.42375pt x 355.3275pt>
-File: ./images/pipeline.pdf Graphic file (type pdf)
 
-<use ./images/pipeline.pdf>
-Package pdftex.def Info: ./images/pipeline.pdf used on input line 44.
-(pdftex.def)             Requested size: 412.38689pt x 159.89589pt.
-
-Overfull \hbox (8.82706pt too wide) in paragraph at lines 54--55
+Overfull \hbox (8.82706pt too wide) in paragraph at lines 38--39
 \T1/aer/m/n/10 human-readable URIs are parsed as in-ter-est names. State-
  []
 
 
-Overfull \hbox (32.61739pt too wide) in paragraph at lines 54--55
+Overfull \hbox (32.61739pt too wide) in paragraph at lines 38--39
 \T1/aer/m/n/10 pings. There-fore, the gate-way sup-ports IP-to-NDN application-
 
  []
 
 [3 <./images/hourglass_conn.pdf>]
-Overfull \hbox (15.13622pt too wide) in paragraph at lines 58--59
+Overfull \hbox (15.13622pt too wide) in paragraph at lines 42--43
 \T1/aer/m/n/10 the full in-ter-est name is ex-plic-itly ``ccnx:/name/of/content
 ''.
  []
 
 
-Overfull \hbox (3.64511pt too wide) in paragraph at lines 58--59
+Overfull \hbox (3.64511pt too wide) in paragraph at lines 42--43
 \T1/aer/m/n/10 pair $\OT1/cmr/m/n/10 ([]\OML/cmm/m/it/10 ; \OT1/cmr/m/n/10 ([]\
 OML/cmm/m/it/10 ; []\OT1/cmr/m/n/10 ))$ \T1/aer/m/n/10 in the IP pend-ing mes-
  []
 
-Package mdframed Info: mdframed works in twoside mode on input line 72.
+Package mdframed Info: mdframed works in twoside mode on input line 65.
 Package mdframed Info: mdframed inside float 
- mdframed uses option nobreak mdframed on input line 107.
+ mdframed uses option nobreak mdframed on input line 100.
 Package mdframed Info: mdframed inside a box 
- mdframed uses option nobreak mdframed on input line 107.
+ mdframed uses option nobreak mdframed on input line 100.
 
-Underfull \vbox (badness 2393) has occurred while \output is active []
-
- [4 <./images/pipeline.pdf>]
-Overfull \hbox (3.27177pt too wide) in paragraph at lines 116--116
+Overfull \hbox (3.27177pt too wide) in paragraph at lines 109--109
 []\secfnt BRIDGING ISO-LATED NET-WORKS VIA
  []
 
 
-Overfull \hbox (39.21098pt too wide) in paragraph at lines 116--116
-\secfnt MES-SAGE EN-CAP-SU-LA-TION AT THE BRIDGE 
- []
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
-) (./icn2014.bbl) [5
+ [4]
+<./images/island_tunnel.pdf, id=50, 486.81876pt x 211.79124pt>
+File: ./images/island_tunnel.pdf Graphic file (type pdf)
 
-] (./icn2014.aux) ) 
+<use ./images/island_tunnel.pdf>
+Package pdftex.def Info: ./images/island_tunnel.pdf used on input line 125.
+(pdftex.def)             Requested size: 219.0664pt x 95.30518pt.
+) (./04-implementation.tex
+<./images/pipeline.pdf, id=51, 916.42375pt x 355.3275pt>
+File: ./images/pipeline.pdf Graphic file (type pdf)
+
+<use ./images/pipeline.pdf>
+Package pdftex.def Info: ./images/pipeline.pdf used on input line 6.
+(pdftex.def)             Requested size: 412.38689pt x 159.89589pt.
+) (./05-performance.tex) (./icn2014.bbl) [5 <./images/island_tunnel.pdf>] [6 <.
+/images/pipeline.pdf>] (./icn2014.aux) ) 
 Here is how much of TeX's memory you used:
- 18748 strings out of 493315
- 344630 string characters out of 6137904
- 393745 words of memory out of 5000000
- 21764 multiletter control sequences out of 15000+600000
+ 18764 strings out of 493315
+ 344951 string characters out of 6137904
+ 395762 words of memory out of 5000000
+ 21773 multiletter control sequences out of 15000+600000
  55869 words of font info for 82 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
- 63i,13n,80p,1435b,584s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/local/texlive/2013/texmf-dist/fonts/enc/dvips/base/8r.
-enc}</usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.p
-fb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pf
-b></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb>
-</usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></u
-sr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/
-local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmsl10.pfb></usr/l
-ocal/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmss10.pfb></usr/lo
-cal/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/loc
-al/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/local
-/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/
-texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/t
-exlive/2013/texmf-dist/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/local/texlive/
-2013/texmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/local/texlive/2013/te
-xmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2013/texmf-dist/f
-onts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1
-/urw/times/utmri8a.pfb>
-Output written on icn2014.pdf (5 pages, 357727 bytes).
+ 63i,13n,80p,1540b,584s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/usr/local/texlive/2013/texmf-dist/fon
+ts/enc/dvips/base/8r.enc}</usr/local/texlive/2013/texmf-dist/fonts/type1/public
+/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/
+amsfonts/cm/cmmi10.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/a
+msfonts/cm/cmmi7.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/ams
+fonts/cm/cmr10.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfo
+nts/cm/cmr7.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts
+/cm/cmr9.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm
+/cmsl10.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/
+cmss10.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/c
+msy10.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cm
+sy9.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmti
+10.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt1
+0.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/urw/helvetic/uhvb8a.pfb><
+/usr/local/texlive/2013/texmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/lo
+cal/texlive/2013/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texliv
+e/2013/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2013/tex
+mf-dist/fonts/type1/urw/times/utmri8a.pfb>
+Output written on icn2014.pdf (6 pages, 387264 bytes).
 PDF statistics:
- 130 PDF objects out of 1000 (max. 8388607)
- 95 compressed objects within 1 object stream
+ 155 PDF objects out of 1000 (max. 8388607)
+ 113 compressed objects within 2 object streams
  0 named destinations out of 1000 (max. 500000)
- 23 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 28 words of extra memory for PDF output out of 10000 (max. 10000000)
 
