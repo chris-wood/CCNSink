@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.5.30)  19 MAY 2014 10:47
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.5.30)  19 MAY 2014 11:06
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1012,15 +1012,11 @@ Package mdframed Info: mdframed inside float
  mdframed uses option nobreak mdframed on input line 100.
 Package mdframed Info: mdframed inside a box 
  mdframed uses option nobreak mdframed on input line 100.
-
+[4]
 Overfull \hbox (3.27177pt too wide) in paragraph at lines 109--109
 []\secfnt BRIDGING ISO-LATED NET-WORKS VIA
  []
 
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [4]
 <./images/island_tunnel.pdf, id=50, 486.81876pt x 211.79124pt>
 File: ./images/island_tunnel.pdf Graphic file (type pdf)
 
@@ -1037,10 +1033,10 @@ Package pdftex.def Info: ./images/pipeline.pdf used on input line 6.
 ) (./05-performance.tex) (./icn2014.bbl) [5 <./images/island_tunnel.pdf>] [6 <.
 /images/pipeline.pdf>] (./icn2014.aux) ) 
 Here is how much of TeX's memory you used:
- 18764 strings out of 493315
- 344951 string characters out of 6137904
- 395762 words of memory out of 5000000
- 21773 multiletter control sequences out of 15000+600000
+ 18765 strings out of 493315
+ 344966 string characters out of 6137904
+ 395772 words of memory out of 5000000
+ 21774 multiletter control sequences out of 15000+600000
  55869 words of font info for 82 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
  63i,13n,80p,1540b,584s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -1062,7 +1058,7 @@ sy9.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmti
 cal/texlive/2013/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texliv
 e/2013/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2013/tex
 mf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on icn2014.pdf (6 pages, 387264 bytes).
+Output written on icn2014.pdf (6 pages, 388105 bytes).
 PDF statistics:
  155 PDF objects out of 1000 (max. 8388607)
  113 compressed objects within 2 object streams

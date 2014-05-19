@@ -42,20 +42,26 @@ Translating IP-based application layer messages to NDN interests is highly depen
 Since HTTP requests and NDN interests are stateless, the gateway will parse the URI of the request to determine that (1) it corresponds to an NDN interest, and (2) the full interest name is explicitly ``ccnx:/name/of/content''. Upon reception, the gateway will store the key-value pair $(\mathsf{name}, (\mathsf{source IP}, \mathsf{source port}))$ in the IP pending message table and issue an interest with the given name to the NDN network. Upon receipt of a piece of content, a NDN content handler callback recovers the IP address and port from the pending message table using the content name as the index and then writes the raw content back to the client over the same incoming HTTP TCP connection. Since it is not required that the HTTP request uses a persistent TCP connection, the HTTP message handler is a synchronous procedure that blocks while the NDN interest is satisfied so that the same TCP connection can be used to write the response. 
 
 \subsubsection{Transport Layer} % ip to ndn
-Since interests can be overloaded to contain arbitrary data, our gateway design exploits this characteristic to carry transport-layer streams of data from applications on IP hosts to supporting applications on NDN-hosts. IP is a host-based protocol, however, and so establishing a ``virtual'' TCP connection between two such applications must be done in two steps: (1) a TCP socket from the IP client to the gateway must be established, and (2) the first chunk of data sent from the client must be the NDN host prefix to which data will be sent. The gateway parses this path and stores it internally for each open TCP socket. Let $C$ be the IP client generating data in the socket $S$, $G$ be the gateway forwarding data on behalf of $C$, and $\mathsf{prefix}$ be the NDN host prefix sent during the connection establishment phase. All subsequent data chunks are then forwarded to this NDN host using the following steps:
+Since interests can be overloaded to contain arbitrary data, our gateway design exploits this characteristic to carry transport-layer streams of data from applications on IP hosts to supporting applications on NDN-hosts. IP is a host-based protocol, however, and so establishing a ``virtual'' TCP connection between two such applications must be done in two steps: (1) a TCP socket from the IP client to the gateway must be established, and (2) the first chunk of data sent from the client must be the NDN host prefix to which data will be sent. The gateway parses this path and stores it internally for each open TCP socket. Let $C$ be the IP client generating data in the socket $S$ from source address and port $(A, P)$, and let $G$ be the gateway forwarding data on behalf of $C$. The connection establishment phase proceeds as follows:
+%
+\begin{compactenum}
+	\item $C$ ??? need to send path and public key (we then compute the hash and save the TCP session identifier)
+\end{compactenum}
+%
+With $\mathsf{prefix}$ and $\mathsf{id}$ generated during the the connection establishment phase, all subsequent data chunks are then forwarded to this NDN host using the following steps:
 %
 \begin{compactenum}
 	\item $C$ sends a chunk of $B$ bytes to $G$ over the socket $S$.
 	\item $G$ reads $B$ bytes of data from $S$ and encodes it in Base64 format, denoted as $\mathsf{data}$.
 	\item $G$ generates a uniformly random string $\mathsf{nonce}$ of $k$ bits from $\{0,1\}^k$. 
-	\item $G$ builds the interest $\mathsf{prefix}/\mathsf{nonce}/\mathsf{data}$ and issues the interest to the NDN network.
+	\item $G$ builds the interest $\mathsf{prefix}/\mathsf{id}/\mathsf{nonce}/\mathsf{data}$ and issues the interest to the NDN network.
 \end{compactenum}
 %
-By incorporating a fresh random string in each new interest name, the probability that any issued interest will be satisfied from a network cache instead of the desired NDN host is negligible. Therefore, all data sent over the socket $S$ will reach the NDN host, and the receiving application can parse the last component of the interest as fresh data. Note that since this is strictly IP-to-NDN communication, there is no state information persisted in the session table. This is because the NDN host application may not respond with data since the gateway is forwarding \emph{transport} layer data, unlike the case where application-layer queries are forwarded.
+By incorporating a fresh random string in each new interest name, the probability that any issued interest will be satisfied from a network cache instead of the desired NDN host is negligible. Therefore, all data sent over the socket $S$ will reach the NDN host, and the receiving application can parse the last component of the interest as fresh data. Note that since this is strictly IP-to-NDN communication, there is no state information persisted in the session table. This is because the NDN host application may not respond with data since the gateway is forwarding \emph{transport} layer data, unlike the case where application-layer queries are forwarded. If the target application wishes to respond, it may do so by retrieving the TCP session identifier from the interest name and responding with a properly formatted interest as specified below in Section \ref{sec:ndn-to-ip}.
 
 % TODO: interests can be overloaded to contain content, some NDN applications will accept some interests, applications using raw TCP streams to send data to NDN applications, so client opens up TCP socket to gateway and all data is partitioned/packed in an interest/forwarded, setting up TCP connection requires hooking up socket to gateway/sending producer root as first message chunk in TCP stream/and then sending streams of data continually
 
-\subsection{NDN-to-IP Layer Semantic Translation}
+\subsection{NDN-to-IP Layer Semantic Translation}\label{sec:ndn-to-ip}
 Due to their architectural differences, there does not exist a native correspondence between NDN interests and IP-based application layer protocol messages. For example, there is no standard way for a client to represent an HTTP GET request in the format of an NDN interest. To make this type of semantic translation possible, the NDN-to-IP application layer bridge leverages the human-readable names of content to encode IP-based application layer protocol specifics. The encoding for HTTP and FTP semantic translations is specified in EBNF form below; other application-layer protocols can easily be supported by extending this grammar in the natural way.
 
 \todo[inline]{Command pattern}
@@ -66,7 +72,7 @@ Due to their architectural differences, there does not exist a native correspond
 \noindent
 <ip-interest>:	'/$\dots$/ip/'<protocol>.
 
-<protocol>:	'http/'<http-cmd>[{'/'<http-path>}] | 'tcp/'<uri-encoded-string>'/'<tcp-ident>. 
+<protocol>:	'http/'<http-cmd>[{'/'<http-path>}] | 'tcp/'<tcp-ident>'/'<uri-encoded-string>. 
 
 <http-cmd>: 'GET' | 'PUT' | 'POST' | 'DELETE'.
 
@@ -74,7 +80,7 @@ Due to their architectural differences, there does not exist a native correspond
 
 <http-path>: <uri> | <ip-address>[port]['/'<uri-encoded-string>]
 
-<tcp-ident>: <SHA256-hash>'/'<public-key>.
+<tcp-ident>: <SHA256-hash>'/'<nonce>'/'<public-key>. % nonce is the random ID associated with the TCP socket for constant-time lookup when going from ndn-to-ip, this must be set during the connection establishment phase from ip-to-ndn (if it doesn't exist in the TCP state table, then the NDN-side is creating the connection in one shot)
 
 <tcp-param>: <uri-encoded-string>.
 
