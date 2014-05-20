@@ -32,7 +32,9 @@ Traditional IP-based applications and upcoming NDN-based applications treat both
 The direction of traffic across the gateway has a strong influence on how this semantic translation is done: IP-to-NDN application and transport layer protocols will be mapped to corresponding NDN-interests, and NDN-to-IP traffic (in the form of interests) will be encoded so as to map to the appropriate IP-based application or transport layer protocol. Stateless protocols such as HTTP greatly simplify the job of the gateway because it need not maintain any state to support communication across both networks. However, stateful protocols, such as TCP, naturally require the gateway to maintain state so as to emulate the behavior of an endpoint or host that implements such protocols. For instance, if an IP-based application wishes to establish a TCP connection with an application running on an NDN network to retrieve data, then the gateway must maintain stateful information needed to transform streams of data retrieved over a TCP socket to (packed) discrete and contiguous interests in the NDN network. In what follows we describe the semantic translation details for application and transport layer stateful and stateless protocols in both directions across the gateway. 
 
 \subsection{IP-to-NDN Semantic Translation}
-TODO: could link in CCNx library and re-write networking code, but that requires too much work, instead we re-use existing protocols for encoding interests
+The current CCNx/NDNx libraries enable IP-based hosts to communicate with applications running on NDN-enabled hosts. However, the engineering effort to retrofit the entire networking layer or subsystem of an existing applications or systems could be quite significant. The gateway is designed to minimize the effect of modifying the network components of such applications to still communicate with NDN hosts. In particular, it enables existing IP-based protocols to be used as is or with slight variations (e.g., TCP connections require additional overhead to setup) to communicate with NDN hosts through the gateway. In this way, the semantic translation of IP-based messages to NDN-based interests and content is offloaded to the gateway, rather than done in the application itself. In the following sections we describe the steps necessary to interoperate with the gateway at both the application and transport layers, which are the two most common levels used by applications for point-to-point communication in the OSI network stack.
+
+% TODO: could link in CCNx library and re-write networking code, but that requires too much work, instead we re-use existing protocols for encoding interests
 
 \subsubsection{Application Layer}
 Translating IP-based application layer messages to NDN interests is highly dependent on the particular application protocol in question. There is an intuitive NDN-friendly encoding of HTTP GET requests in which human-readable URIs are parsed as interest names. Stateless application-layer protocols enable such direct mappings. Therefore, the gateway supports IP-to-NDN application-layer messaging by encoding interests in HTTP GET requests as follows. NDN content objects with names ``ccnx:/name/of/content'' are issued via the gateway by sending a HTTP GET request with the following format to the gateway (in this example, the IP address X.X.X.X of the gateway is known or can be obtained via DNS):
@@ -42,10 +44,13 @@ Translating IP-based application layer messages to NDN interests is highly depen
 Since HTTP requests and NDN interests are stateless, the gateway will parse the URI of the request to determine that (1) it corresponds to an NDN interest, and (2) the full interest name is explicitly ``ccnx:/name/of/content''. Upon reception, the gateway will store the key-value pair $(\mathsf{name}, (\mathsf{source IP}, \mathsf{source port}))$ in the IP pending message table and issue an interest with the given name to the NDN network. Upon receipt of a piece of content, a NDN content handler callback recovers the IP address and port from the pending message table using the content name as the index and then writes the raw content back to the client over the same incoming HTTP TCP connection. Since it is not required that the HTTP request uses a persistent TCP connection, the HTTP message handler is a synchronous procedure that blocks while the NDN interest is satisfied so that the same TCP connection can be used to write the response. 
 
 \subsubsection{Transport Layer} % ip to ndn
-Since interests can be overloaded to contain arbitrary data, our gateway design exploits this characteristic to carry transport-layer streams of data from applications on IP hosts to supporting applications on NDN-hosts. IP is a host-based protocol, however, and so establishing a ``virtual'' TCP connection between two such applications must be done in two steps: (1) a TCP socket from the IP client to the gateway must be established, and (2) the first chunk of data sent from the client must be the NDN host prefix to which data will be sent. The gateway parses this path and stores it internally for each open TCP socket. Let $C$ be the IP client generating data in the socket $S$ from source address and port $(A, P)$, and let $G$ be the gateway forwarding data on behalf of $C$. The connection establishment phase proceeds as follows:
+Since interests can be overloaded to contain arbitrary data, our gateway design exploits this characteristic to carry transport-layer streams of data from applications on IP hosts to supporting applications on NDN-hosts. IP is a host-based protocol, however, and so establishing a ``virtual'' TCP connection between two such applications must be done in two steps: (1) a TCP socket from the IP client to the gateway must be established, and (2) the first chunk of data sent from the client must be the NDN host prefix to which data will be sent. The gateway parses this path and stores it internally for each open TCP socket. Let $C$ be the IP client generating data in the socket $S$ from source address and port $(A, P)$, let $(pk,sk)$ be a public and private key pair owned by $C$, and let $G$ be the gateway forwarding data on behalf of $C$. The connection establishment phase proceeds as follows:
 %
 \begin{compactenum}
-	\item $C$ ??? need to send path and public key (we then compute the hash and save the TCP session identifier)
+	\item $C$ opens a TCP socket connection $S$ to $G$. \item Let $\mathsf{id}$ be a unique identifier for the TCP socket in both $C$ and $G$.
+	\item $C$ sends $\mathsf{prefix}\mathsf{EOC}$ to $G$ over $S$, where $\mathsf{EOC}$ is the end-of-connection indicator.
+	\item $G$ reads and parses data from $S$, and stores the key-value pair $(\mathsf{id}, \mathsf{prefix})$ in the TCP connection map.
+	% ??? need to send path and public key (we then compute the hash and save the TCP session identifier)
 \end{compactenum}
 %
 With $\mathsf{prefix}$ and $\mathsf{id}$ generated during the the connection establishment phase, all subsequent data chunks are then forwarded to this NDN host using the following steps:
@@ -54,7 +59,7 @@ With $\mathsf{prefix}$ and $\mathsf{id}$ generated during the the connection est
 	\item $C$ sends a chunk of $B$ bytes to $G$ over the socket $S$.
 	\item $G$ reads $B$ bytes of data from $S$ and encodes it in Base64 format, denoted as $\mathsf{data}$.
 	\item $G$ generates a uniformly random string $\mathsf{nonce}$ of $k$ bits from $\{0,1\}^k$. 
-	\item $G$ builds the interest $\mathsf{prefix}/\mathsf{id}/\mathsf{nonce}/\mathsf{data}$ and issues the interest to the NDN network.
+	\item $G$ retrieves $\mathsf{prefix}$ from the TCP connection map using the TCP socket ID $\mathsf{id}$, uses it to build the interest $\mathsf{prefix}/\mathsf{nonce}/\mathsf{data}$, and issues the interest to the NDN network.
 \end{compactenum}
 %
 By incorporating a fresh random string in each new interest name, the probability that any issued interest will be satisfied from a network cache instead of the desired NDN host is negligible. Therefore, all data sent over the socket $S$ will reach the NDN host, and the receiving application can parse the last component of the interest as fresh data. Note that since this is strictly IP-to-NDN communication, there is no state information persisted in the session table. This is because the NDN host application may not respond with data since the gateway is forwarding \emph{transport} layer data, unlike the case where application-layer queries are forwarded. If the target application wishes to respond, it may do so by retrieving the TCP session identifier from the interest name and responding with a properly formatted interest as specified below in Section \ref{sec:ndn-to-ip}.
@@ -112,19 +117,17 @@ Unlike traditional NDN routing, the gateway pending message table does not colla
 
 It is important to note that stateful protocols such as TCP must explicitly embed identifying information about the consumer in order to operate correctly. The reason is that one TCP stream must be associated with at most one consumer, and since NDN does not have any notion of host addresses or identifiers, the consumer application must explicitly encode its identity in the interest. Our grammar enforces identities based on consumer public keys and a corresponding digital signature of the entire interest for such protocols so that consumers can be explicitly identified and their sessions cannot be hijacked by other consumers (doing so would require compromising a consumer and its private key).
 
-\section{Bridging Isolated Networks via Message Encapsulation}
+\section{Bridging Isolated Networks}
 The second type of interoperability scenario that may arise during the deployment of NDN networks is when two or more physically disjoint NDN networks need to communicate with eachother. Let $I_i$ and $I_j$ be two such dijoint NDN networks, and let $A_i$ and $A_j$ be two applications running on hosts in $I_i$ and $I_j$, respectively. Without any additional mechanisms, $A_i$ and $A_j$ would not be able to communicate. However, if there existed two gateways at the edges of $I_i$ and $I_j$, each of which connected to the same IP-based network (i.e., the Internet), then interests from $A_i$ ($A_j$) could be sent to $A_j$ ($A_i)$ as follows:
 \begin{compactenum} 
 	\item An interest from $A_i$ is intercepted a gateway $G_i$.
-	\item $G_i$ encapsulates the interest in an IP packet sent to gateway $G_j$ adhering to IPsec.
-	\item $G_j$ unwraps and re-issues the interest and waits for the content to be retrieved from $A_j$. Upon reception, the content's signature is verified and the content is encapsulated in a signed IPsec packet and sent to $G_i$. 
+	\item $G_i$ encapsulates the interest in an IP packet sent to gateway $G_j$.
+	\item $G_j$ unwraps and re-issues the interest and waits for the content to be retrieved from $A_j$. Upon reception, the content's signature is verified and the content is signed and sent to $G_i$. 
 	\item $G_i$ verifies the signature of the packet, creates and signs a new content object, and sends the content object back downstream to $A_i$.
 \end{compactenum}
 A visual depiction of this scenario is shown in Figure \ref{fig:islands}. Of course, many optimizations can be made to this simplistic design to increase interest throughput across the bridge. First, persistent TCP connections are maintained between adjacent gateways.
-\begin{compactitem}
-	\item 
-	\item Interests are routed based on the physical distance supporting gateways.
-\end{compactitem}
+
+TODO: pull from below
 
 \begin{figure}[ht!]
 \begin{center}
@@ -134,48 +137,62 @@ A visual depiction of this scenario is shown in Figure \ref{fig:islands}. Of cou
 \end{center}
 \end{figure}
 
-TODO: handshake between gateways to establish secure tunnel (SSL/TLS), protocol that lists all explicit steps, 
+Despite the simplicity of this scheme there are many important underlying issues that need to be solved. In particular, incoming interests need to be directed to gateways connected to the desired endpoint network. We achieve this by maintaining a prefix-gateway mapping $\mathsf{PTGMap}$ in each gateway $G_i$ about interest prefixes and the associated gateways from which they can be satisfied. If an incoming interest to gateway $G_i$ has no key in $\mathsf{PTGMap}$, i.e., a previous interest with the prefix $\mathsf{p}$ was never received by $G_i$, then the interest is broadcast to all known gateways. Whenever a response is retrieved from a source gateway $G_j$, the key-value pair $(\mathsf{p}, G_j)$ is inserted into $\mathsf{PTGMap}$. All subsequent interests with the prefix $\mathsf{p}$ received by gateway $G_i$ will be sent directly to gateway $G_j$. If an interest times out, the $\mathsf{PTGMap}$ entry is removed, and the broadcast procedure is retried. 
 
-\begin{algorithm}[ht!]
-  \caption{EstablishBridge}
-  \begin{algorithmic}[1]
-    \Require{Anonymous routers $r_1,r_2,\dots,r_n$ ($n \geq 1$) with public keys $pk_1,pk_2,\dots,pk_n$.}
+Another issue is the location and retrieval of cryptographic keys used for digital signatures. Our design permits three variations for authenticating content between gateways: (1) full PKI-based based digital signatures, (2) keyed MAC tags sourced by keys generated from authenticated symmetric key agreement protocols (i.e., Diffie Hellman key agreement), and (3) keyed MAC tags sourced by a \emph{shared} symmetric key gateway group key generated using a group key agreement protocol (i.e., Tree-Based Group Diffie Hellman). In what follows we describe each of these three variants in more detail; modifications to the content authentication procedure described above between gateways change in the obvious way (i.e., keyed MAC tags are replace digital signatures for MAC-based variants). \\
+
+\noindent
+\textbf{Full PKI-based Digital Signatures}
+The only modification required for this variant is that gateways must be given the certificate for each gateway with which it will communicate.
+
+\noindent
+\textbf{Pair-Wise Keyed MAC Tags}
+TODO
+
+\noindent
+\textbf{Group-Based Keyed MAC Tags}
+TODO
+
+% \begin{algorithm}[ht!]
+%   \caption{EstablishBridge}
+%   \begin{algorithmic}[1]
+%     \Require{Anonymous routers $r_1,r_2,\dots,r_n$ ($n \geq 1$) with public keys $pk_1,pk_2,\dots,pk_n$.}
     
-% \medskip
+% % \medskip
 
-% \Function{{\sf InitHandler}}{$\mathsf{int}$} %// Server-side at router $i$
-%     \State $(k, E_{k_i}, M_{k_i}, M_{k_{i+1}}, \mathsf{EIV}_i, \mathsf{SIV}_i^1, \mathsf{session}_i, \mathsf{SIndex}_i^1) := \mathcal{D}_{sk_i}(\mathsf{int})$
-%   \State Persist $(\mathsf{session}_i, E_{k_i}, M_{k_i}, M_{k_{i+1}}, \mathsf{EIV}_i, \mathsf{SIV}_i)$ to state, and store $(\mathsf{SIndex}_i, \mathsf{session}_i, \mathsf{SIV}_i)$ in the session table $\mathsf{ST}_i$
-%   \State $\mathsf{resp} \gets \mathsf{Encrypt}_{k}(\mathsf{session}_i, E_{k_i}, M_{k_i}, \mathsf{EIV}_i, \mathsf{SIV}_i)$
-%   \State \Return $\mathsf{resp}$
-%  \EndFunction
+% % \Function{{\sf InitHandler}}{$\mathsf{int}$} %// Server-side at router $i$
+% %     \State $(k, E_{k_i}, M_{k_i}, M_{k_{i+1}}, \mathsf{EIV}_i, \mathsf{SIV}_i^1, \mathsf{session}_i, \mathsf{SIndex}_i^1) := \mathcal{D}_{sk_i}(\mathsf{int})$
+% %   \State Persist $(\mathsf{session}_i, E_{k_i}, M_{k_i}, M_{k_{i+1}}, \mathsf{EIV}_i, \mathsf{SIV}_i)$ to state, and store $(\mathsf{SIndex}_i, \mathsf{session}_i, \mathsf{SIV}_i)$ in the session table $\mathsf{ST}_i$
+% %   \State $\mathsf{resp} \gets \mathsf{Encrypt}_{k}(\mathsf{session}_i, E_{k_i}, M_{k_i}, \mathsf{EIV}_i, \mathsf{SIV}_i)$
+% %   \State \Return $\mathsf{resp}$
+% %  \EndFunction
 
-% \medskip
+% % \medskip
 
-% \Function{{\sf Init}}{$r_i$, $M_{k_{i+1}}$} %// Client-side
-%   \State $E_{k_i} \gets \{0,1\}^{\kappa}, M_{k_i} \gets \{0,1\}^{\kappa}$
-%   \State $\mathsf{EIV}_i \gets \{0,1\}^{\kappa}, \mathsf{SIV}_i^1 \gets \{0,1\}^{\kappa}$ %// session IV
-%   \State $x \gets \{0,1\}^{\kappa}, \mathsf{session}_i := H(x)$ %// session ID
-%   \State $\mathsf{SIndex}_i^1 := H(\mathsf{session}_i + \mathsf{SIV}_i)$
-%   \State $\mathsf{PAYLOAD} := \mathcal{E}_{pk_i}(k, E_{k_i}, M_{k_i}, M_{k_{i+1}}, \mathsf{EIV}_i, \mathsf{SIV}_i, \mathsf{session}_i, \mathsf{SIndex}_i^1)$
-%   \State $\mathsf{int} := \mathsf{namespace}_i/\mathsf{CREATEInitHandlerSION}/\mathsf{PAYLOAD}$
-%   \State $\mathsf{resp} := \mathsf{ccnget}(\mathsf{int})$ %// reach out to the AR
-%   \State \Return $(E_{k_i}, M_{k_i}, x_i, \mathsf{session}_i, \mathsf{IV}_i)$
-% \EndFunction
+% % \Function{{\sf Init}}{$r_i$, $M_{k_{i+1}}$} %// Client-side
+% %   \State $E_{k_i} \gets \{0,1\}^{\kappa}, M_{k_i} \gets \{0,1\}^{\kappa}$
+% %   \State $\mathsf{EIV}_i \gets \{0,1\}^{\kappa}, \mathsf{SIV}_i^1 \gets \{0,1\}^{\kappa}$ %// session IV
+% %   \State $x \gets \{0,1\}^{\kappa}, \mathsf{session}_i := H(x)$ %// session ID
+% %   \State $\mathsf{SIndex}_i^1 := H(\mathsf{session}_i + \mathsf{SIV}_i)$
+% %   \State $\mathsf{PAYLOAD} := \mathcal{E}_{pk_i}(k, E_{k_i}, M_{k_i}, M_{k_{i+1}}, \mathsf{EIV}_i, \mathsf{SIV}_i, \mathsf{session}_i, \mathsf{SIndex}_i^1)$
+% %   \State $\mathsf{int} := \mathsf{namespace}_i/\mathsf{CREATEInitHandlerSION}/\mathsf{PAYLOAD}$
+% %   \State $\mathsf{resp} := \mathsf{ccnget}(\mathsf{int})$ %// reach out to the AR
+% %   \State \Return $(E_{k_i}, M_{k_i}, x_i, \mathsf{session}_i, \mathsf{IV}_i)$
+% % \EndFunction
 
-% \medskip
+% % \medskip
 
-% \Function{{\sf EstablishCircuit}}{$r_1,\dots,r_n$} %// Main procedure
-% \State $(E_{k_n}, M_{k_n}, c_n, \mathsf{session}_n, \mathsf{IV}_n) := \mathsf{Init}(r_n)$
-% \For{$i = n - 1$ \textbf{ downto } $1$}
-%   \If{$i = n-1$}
-%     \State $(E_{k_i}, M_{k_i}, \mathsf{EIV}_i, \mathsf{session}_i, \mathsf{SIV}_i) := \mathsf{Init}(r_i, \perp)$
-%   \Else
-%     \State $(E_{k_i}, M_{k_i}, \mathsf{EIV}_i, \mathsf{session}_i, \mathsf{SIV}_i) := \mathsf{Init}(r_i, M_{k_{i+1}})$
-%   \EndIf
-% \EndFor
-% \EndFunction
+% % \Function{{\sf EstablishCircuit}}{$r_1,\dots,r_n$} %// Main procedure
+% % \State $(E_{k_n}, M_{k_n}, c_n, \mathsf{session}_n, \mathsf{IV}_n) := \mathsf{Init}(r_n)$
+% % \For{$i = n - 1$ \textbf{ downto } $1$}
+% %   \If{$i = n-1$}
+% %     \State $(E_{k_i}, M_{k_i}, \mathsf{EIV}_i, \mathsf{session}_i, \mathsf{SIV}_i) := \mathsf{Init}(r_i, \perp)$
+% %   \Else
+% %     \State $(E_{k_i}, M_{k_i}, \mathsf{EIV}_i, \mathsf{session}_i, \mathsf{SIV}_i) := \mathsf{Init}(r_i, M_{k_{i+1}})$
+% %   \EndIf
+% % \EndFor
+% % \EndFunction
 
-  \end{algorithmic}
-  \label{alg:init}
-\end{algorithm}
+%   \end{algorithmic}
+%   \label{alg:init}
+% \end{algorithm}
