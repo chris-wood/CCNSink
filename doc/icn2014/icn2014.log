@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.5.30)  20 MAY 2014 11:37
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.5.30)  20 MAY 2014 17:36
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1029,57 +1029,68 @@ Package mdframed Info: mdframed inside a box
 Underfull \vbox (badness 6396) has occurred while \output is active []
 
  [4]
-<./images/island_tunnel.pdf, id=50, 486.81876pt x 211.79124pt>
+<./images/island_tunnel.pdf, id=50, 486.81876pt x 202.7575pt>
 File: ./images/island_tunnel.pdf Graphic file (type pdf)
 
 <use ./images/island_tunnel.pdf>
-Package pdftex.def Info: ./images/island_tunnel.pdf used on input line 133.
-(pdftex.def)             Requested size: 219.0664pt x 95.30518pt.
- [5 <./images/island_tunnel.pdf>]
-Underfull \hbox (badness 10000) in paragraph at lines 141--142
+Package pdftex.def Info: ./images/island_tunnel.pdf used on input line 132.
+(pdftex.def)             Requested size: 219.0664pt x 91.24002pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 138--139
 
  []
 
+[5 <./images/island_tunnel.pdf>]
+<./images/gateway_group.pdf, id=71, 265.99374pt x 446.66875pt>
+File: ./images/gateway_group.pdf Graphic file (type pdf)
+
+<use ./images/gateway_group.pdf>
+Package pdftex.def Info: ./images/gateway_group.pdf used on input line 152.
+(pdftex.def)             Requested size: 119.69608pt x 200.99907pt.
+
+Overfull \hbox (7.04729pt too wide) in paragraph at lines 158--159
+\T1/aer/m/n/10 net-work. We achieve this by main-tain-ing a prefix-gateway
+ []
+
 ) (./04-implementation.tex
-<./images/pipeline.pdf, id=71, 916.42375pt x 355.3275pt>
+<./images/pipeline.pdf, id=72, 916.42375pt x 355.3275pt>
 File: ./images/pipeline.pdf Graphic file (type pdf)
 
 <use ./images/pipeline.pdf>
 Package pdftex.def Info: ./images/pipeline.pdf used on input line 6.
 (pdftex.def)             Requested size: 412.38689pt x 159.89589pt.
-) (./05-performance.tex) (./icn2014.bbl) [6
+) (./05-performance.tex) (./icn2014.bbl [6 <./images/gateway_group.pdf>]) [7
 
-]
-[7 <./images/pipeline.pdf>] (./icn2014.aux) ) 
+ <./images/pipeline.pdf>] (./icn2014.aux) ) 
 Here is how much of TeX's memory you used:
- 18761 strings out of 493315
- 344911 string characters out of 6137904
- 395764 words of memory out of 5000000
- 21770 multiletter control sequences out of 15000+600000
+ 18767 strings out of 493315
+ 345071 string characters out of 6137904
+ 395772 words of memory out of 5000000
+ 21775 multiletter control sequences out of 15000+600000
  55869 words of font info for 82 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
  63i,13n,80p,1540b,584s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/local/texlive/2013/texmf-dis
-t/fonts/enc/dvips/base/8r.enc}</usr/local/texlive/2013/texmf-dist/fonts/type1/p
-ublic/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/pu
-blic/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/pub
-lic/amsfonts/cm/cmmi7.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/publi
-c/amsfonts/cm/cmr10.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/
-amsfonts/cm/cmr9.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/ams
-fonts/cm/cmsl10.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsf
-onts/cm/cmss10.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfo
-nts/cm/cmsy10.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfon
-ts/cm/cmsy9.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts
-/cm/cmti10.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/
-cm/cmtt10.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/urw/helvetic/uhvb
-8a.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb>
-</usr/local/texlive/2013/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/loca
-l/texlive/2013/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/
-2013/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on icn2014.pdf (7 pages, 385651 bytes).
+{/usr/local/texlive/2013/texmf-dist/
+fonts/enc/dvips/base/8r.enc}</usr/local/texlive/2013/texmf-dist/fonts/type1/pub
+lic/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/publ
+ic/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/publi
+c/amsfonts/cm/cmmi7.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/
+amsfonts/cm/cmr10.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/am
+sfonts/cm/cmr9.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfo
+nts/cm/cmsl10.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfon
+ts/cm/cmss10.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfont
+s/cm/cmsy10.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts
+/cm/cmsy9.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/c
+m/cmti10.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm
+/cmtt10.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/urw/helvetic/uhvb8a
+.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb></
+usr/local/texlive/2013/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/
+texlive/2013/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/20
+13/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
+Output written on icn2014.pdf (7 pages, 402332 bytes).
 PDF statistics:
- 156 PDF objects out of 1000 (max. 8388607)
- 114 compressed objects within 2 object streams
+ 173 PDF objects out of 1000 (max. 8388607)
+ 127 compressed objects within 2 object streams
  0 named destinations out of 1000 (max. 500000)
- 28 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 33 words of extra memory for PDF output out of 10000 (max. 10000000)
 

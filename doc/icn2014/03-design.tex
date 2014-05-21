@@ -125,9 +125,7 @@ The second type of interoperability scenario that may arise during the deploymen
 	\item $G_j$ unwraps and re-issues the interest and waits for the content to be retrieved from $A_j$. Upon reception, the content's signature is verified and the content is signed and sent to $G_i$. 
 	\item $G_i$ verifies the signature of the packet, creates and signs a new content object, and sends the content object back downstream to $A_i$.
 \end{compactenum}
-A visual depiction of this scenario is shown in Figure \ref{fig:islands}. Of course, many optimizations can be made to this simplistic design to increase interest throughput across the bridge. First, persistent TCP connections are maintained between adjacent gateways.
-
-TODO: pull from below
+A visual depiction of this scenario is shown in Figure \ref{fig:islands}. To increase interest throughput across the bridge, each gateway uses persistent content-oriented TCP connections between other adjacent gateways. In order to authenticate content sent between gateways, we have the option of establishing a secure connection via SSL/TLS so that all content messages will be authenticated below the application-layer of the gateway, or we can manually sign and verify content separately from transport mechanism. Since CCN/NDN stipulates that content is only signed (as a form of authentication), we do not need the additional overhead of encrypting content as it moves between gateways. This is why we provide support for secure and insecure persistent connections. 
 
 \begin{figure}[ht!]
 \begin{center}
@@ -137,21 +135,27 @@ TODO: pull from below
 \end{center}
 \end{figure}
 
-Despite the simplicity of this scheme there are many important underlying issues that need to be solved. In particular, incoming interests need to be directed to gateways connected to the desired endpoint network. We achieve this by maintaining a prefix-gateway mapping $\mathsf{PTGMap}$ in each gateway $G_i$ about interest prefixes and the associated gateways from which they can be satisfied. If an incoming interest to gateway $G_i$ has no key in $\mathsf{PTGMap}$, i.e., a previous interest with the prefix $\mathsf{p}$ was never received by $G_i$, then the interest is broadcast to all known gateways. Whenever a response is retrieved from a source gateway $G_j$, the key-value pair $(\mathsf{p}, G_j)$ is inserted into $\mathsf{PTGMap}$. All subsequent interests with the prefix $\mathsf{p}$ received by gateway $G_i$ will be sent directly to gateway $G_j$. If an interest times out, the $\mathsf{PTGMap}$ entry is removed, and the broadcast procedure is retried. 
+In the latter case, one issue is the method for locating and retrieving cryptographic keys used for digital signatures. If the content TCP socket is not Our design permits three variations for authenticating content between gateways: (1) full PKI-based based digital signatures, (2) keyed MAC tags sourced by keys generated from authenticated symmetric key agreement protocols (i.e., Diffie Hellman key agreement), and (3) keyed MAC tags sourced by a \emph{shared} symmetric key gateway group key generated using a group key agreement protocol (i.e., Tree-Based Group Diffie Hellman). In what follows we describe each of these three variants in more detail; modifications to the content authentication procedure described above between gateways change in the obvious way (i.e., keyed MAC tags are replace digital signatures for MAC-based variants) Figure \ref{fig:gateway-groups} shows a visual depiction of the variants (1) and (2). \\
 
-Another issue is the location and retrieval of cryptographic keys used for digital signatures. Our design permits three variations for authenticating content between gateways: (1) full PKI-based based digital signatures, (2) keyed MAC tags sourced by keys generated from authenticated symmetric key agreement protocols (i.e., Diffie Hellman key agreement), and (3) keyed MAC tags sourced by a \emph{shared} symmetric key gateway group key generated using a group key agreement protocol (i.e., Tree-Based Group Diffie Hellman). In what follows we describe each of these three variants in more detail; modifications to the content authentication procedure described above between gateways change in the obvious way (i.e., keyed MAC tags are replace digital signatures for MAC-based variants). \\
+\begin{description}
 
-\noindent
-\textbf{Full PKI-based Digital Signatures}
-The only modification required for this variant is that gateways must be given the certificate for each gateway with which it will communicate.
+	\item[\textbf{Full PKI-based Digital Signatures}:] The only modification required for this variant is that gateways must be given the certificate for each gateway with which it will communicate. Certificates are exchanged and stored via the control channel between adjacent gateways.
 
-\noindent
-\textbf{Pair-Wise Keyed MAC Tags}
-TODO
+	\item[\textbf{Pair-Wise Keyed MAC Tags}:] In this variant, each pair of gateways will run the DH protocol to establish a shared common symmetric key to use for generating MAC tags. The DH protocol is run over the control channel between adjacent gateways. With $n$ gateway routers, this variant requires $(n(n-1))/2$ key pairs. MAC keys need to only be refreshed when they expire out or the gateway connectivity changes. New gateways can discover all other gateways by querying a central ``gateway directory'' server, obtaining a list of all corresponding IP addresses, and then initiating control channel connections with them.
 
-\noindent
-\textbf{Group-Based Keyed MAC Tags}
-TODO
+	\item[\textbf{Group-Based Keyed MAC Tags}:] When all groups share a common key, the ``gateway directory'' server is repurposed as a distributed director for all registered gateways that is responsible for coordinating group key agreement protocols (i.e., TGDH). After a single invocation of TGDH, each gateway will possess the same MAC key $k$ used for tagging and verifying content. Each individual gateway is also required to periodically send heartbeat messages to the director in order to maintain an active list of available gateways. The director will initiate new instances of the TGDH protocol to establish a new shared group key whenever gateway connectivity changes, i.e., when new gateways are added or time out. 
+
+\end{description}
+
+\begin{figure}[ht!]
+\begin{center}
+\includegraphics[scale=0.45]{./images/gateway_group.pdf}
+\label{fig:gateway-groups}
+\caption{The top figure shows the deployment strategy with a fixed global directory that exists merely for obtaining gateway addresses, and the bottom figure shows the deployment strategy in which a distributed directory coordinates group key agreement protocols between all gateways.}
+\end{center}
+\end{figure}
+
+Another issue is that incoming interests need to be directed to gateways connected to the desired endpoint network. We achieve this by maintaining a prefix-gateway mapping $\mathsf{PTGMap}$ in each gateway $G_i$ about interest prefixes and the associated gateways from which they can be satisfied. If an incoming interest to gateway $G_i$ has no key in $\mathsf{PTGMap}$, i.e., a previous interest with the prefix $\mathsf{p}$ was never received by $G_i$, then the interest is broadcast to all known gateways. Whenever a response is retrieved from a source gateway $G_j$, the key-value pair $(\mathsf{p}, G_j)$ is inserted into $\mathsf{PTGMap}$. All subsequent interests with the prefix $\mathsf{p}$ received by gateway $G_i$ will be sent directly to gateway $G_j$. If an interest times out, the $\mathsf{PTGMap}$ entry is removed, and the broadcast procedure is retried. 
 
 % \begin{algorithm}[ht!]
 %   \caption{EstablishBridge}
