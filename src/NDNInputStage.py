@@ -73,7 +73,7 @@ class NDNHandle(pyccn.Closure):
 			return None
 		else: # Must be a general interest, see if we can bridge it
 			
-			
+
 
 			return None
 
@@ -129,8 +129,10 @@ class NDNInputStage(PipelineStage):
 		self.table = table
 		self.nextStage = nextStage
 		self.baseName = pyccn.Name(paramMap["NDN_URI_ROOT"])
+		self.helper = GatewayHelper()
+		self.ndnHandler = NDNHandle(self, paramMap)
 
-		# Create and start the input handler
-		fc = NDNHandle(self, paramMap)
-		fc.run()
+		# Create and start the input handler and gateway helper
+		self.ndnHandler.run()
+		self.helper.run()
 
