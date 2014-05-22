@@ -18,3 +18,4 @@ create table gateways (
 --   text text not null,
 --   pub_date integer
 -- );
+

@@ -22,3 +22,5 @@ def init_db(database, schema):
 if __name__ == "__main__":
 	init_db(GATEWAY_DB, GATEWAY_SCHEMA)
 	# init_db(COORDINATOR_DB, COORDINATOR_SCHEMA)
+
+
