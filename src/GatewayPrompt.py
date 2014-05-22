@@ -36,5 +36,3 @@ class GatewayPrompt(threading.Thread):
 
 	def printHelp(self):
 		print("TODO")
-
-	def 

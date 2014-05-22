@@ -11,18 +11,26 @@ class HTTPOutputStage(threading.Thread):
 		self.paramMap = paramMap
 		self.gateways = []
 		self.prefixGatewayMap = {}
+		self.connected = False
 
 	def run(self):
 		self.running = True
 		while (self.running):
-			# Send the server a heartbeat message
-			self.sendHeartbeat()
-
-			# Update the list of known gateways
-			self.updateGateways()
+			if (not self.connected):
+				self.connectToServer()
+			if (self.connected):
+				# Send the server a heartbeat message and update our gateway list
+				self.sendHeartbeat()
+				self.updateGateways()
 
 			# Sleep it off man...
 			time.sleep(int(self.paramMap["BRIDGE_SERVER_UPDATE_FREQ"]))
+
+	def connectToServer(self):
+		conn = httplib.HTTPConnection(self.paramMap["BRIDGE_SERVER_ADDRESS"])
+		resp = conn.request("POST", "/connect", None, None)
+		if (int(resp.status) == 200):
+			self.connected = True
 
 	def sendHeartbeat(self):
 		conn = httplib.HTTPConnection(self.paramMap["BRIDGE_SERVER_ADDRESS"])
