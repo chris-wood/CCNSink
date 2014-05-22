@@ -1,6 +1,6 @@
 from FlaskBackend import *
 
-DATABASE = './db/directory.db'
+DATABASE = './db/coordinator.db'
 
 # Open up a DB connection before the request
 @app.before_request
