@@ -61,27 +61,26 @@
 		\item Compensates for simplicity of IP via complexity of TCP
 	\end{itemize}
 
-	Important observations:
-	\begin{itemize}
-		\item Helped facilitate today's concent-centric world, \emph{but was never designed for it!}
-		\item Fundamental communication model: point-to-point conversation between two hosts (IP interfaces)
-		\item The central abstraction is a host identifier corresponding to an IP address
-	\end{itemize}
+	Important observation: Helped facilitate today's concent-centric world, \emph{but was never designed for it!}
+
+	\medskip
+
+	\emph{NDN is a new architecture designed for content-centric networking}
 \end{frame}
 
-\begin{frame}{Data vs Communication Networks}
-	Distribution/data (DN) and communication (CN) networks differ in several key ways:
-	\begin{table}
-		\begin{tabular}{c|c|c} \hline
-		~ & CN & DN \\ \hline
-		Naming & Endpoints & Content \\
-		Memory & Invisible \& limited & Explicit (storage = wires) \\
-		Security & Communication process/channel & Content \\ \hline
-		\end{tabular}
-	\end{table}
-\end{frame}
+% \begin{frame}{Data vs Communication Networks}
+% 	Distribution/data (DN) and communication (CN) networks differ in several key ways:
+% 	\begin{table}
+% 		\begin{tabular}{c|c|c} \hline
+% 		~ & CN & DN \\ \hline
+% 		Naming & Endpoints & Content \\
+% 		Memory & Invisible \& limited & Explicit (storage = wires) \\
+% 		Security & Communication process/channel & Content \\ \hline
+% 		\end{tabular}
+% 	\end{table}
+% \end{frame}
 
-\begin{frame}{CCN Overview}
+\begin{frame}{NDN Overview}
 	Content-centric networking flips around the host-based model of the Internet architecture
 	\begin{itemize}
 		\item \emph{Content names}, rather than content locations, become addressable. 
@@ -90,7 +89,7 @@
 	\end{itemize}
 \end{frame}
 
-\begin{frame}{CCN Overview (continued)}
+\begin{frame}{NDN Overview (continued)}
 	How is data actually retrieved? 
 	\begin{itemize}
 		\item A consumer $C$ sends out an \emph{interest} for content they desire.
@@ -117,42 +116,42 @@
 \end{frame}
 
 %% TODO: images of this happening 
-\begin{frame}
-	\frametitle{CCN in Action - \#1}
-	\begin{figure}[h]
-		\includegraphics[scale=0.4]{img/ccn_img1.pdf}
-	\end{figure}
-\end{frame}
+% \begin{frame}
+% 	\frametitle{NDN in Action - \#1}
+% 	\begin{figure}[h]
+% 		\includegraphics[scale=0.4]{img/ccn_img1.pdf}
+% 	\end{figure}
+% \end{frame}
 
-\begin{frame}
-	\frametitle{CCN in Action - \#2}
-	\begin{figure}[h]
-		\includegraphics[scale=0.4]{img/ccn_img2.pdf}
-	\end{figure}
-\end{frame}
+% \begin{frame}
+% 	\frametitle{NDN in Action - \#2}
+% 	\begin{figure}[h]
+% 		\includegraphics[scale=0.4]{img/ccn_img2.pdf}
+% 	\end{figure}
+% \end{frame}
 
-\begin{frame}
-	\frametitle{CCN in Action - \#3}
-	\begin{figure}[h]
-		\includegraphics[scale=0.4]{img/ccn_img3.pdf}
-	\end{figure}
-\end{frame}
+% \begin{frame}
+% 	\frametitle{NDN in Action - \#3}
+% 	\begin{figure}[h]
+% 		\includegraphics[scale=0.4]{img/ccn_img3.pdf}
+% 	\end{figure}
+% \end{frame}
 
-\begin{frame}
-	\frametitle{CCN in Action - \#4}
-	\begin{figure}[h]
-		\includegraphics[scale=0.4]{img/ccn_img4.pdf}
-	\end{figure}
-\end{frame}
+% \begin{frame}
+% 	\frametitle{NDN in Action - \#4}
+% 	\begin{figure}[h]
+% 		\includegraphics[scale=0.4]{img/ccn_img4.pdf}
+% 	\end{figure}
+% \end{frame}
 
-\begin{frame}{CCN at a Larger Scale}
-	\begin{figure}[h]
-		\includegraphics[scale=0.3]{img/ndn_dist.pdf}
-	\end{figure}
-\end{frame}
+% \begin{frame}{NDN at a Larger Scale}
+% 	\begin{figure}[h]
+% 		\includegraphics[scale=0.3]{img/ndn_dist.pdf}
+% 	\end{figure}
+% \end{frame}
 
 \begin{frame}{Motivation for NDN Gateway/Bridge}
-	\textbf{Question}: If adopted, how will NDN/CCN be deployed?
+	\textbf{Question}: If adopted, how will NDN be deployed?
 	\begin{enumerate}	
 		\item ``Turn off'' the Internet, swap in new hardware, and then flip the switch again
 		\begin{itemize}
@@ -161,7 +160,7 @@
 		\item Incrementally ``roll out'' NDN hardware and slowly make it interoperable with existing IP network
 		\begin{itemize}
 			\item How to enable NDN-based applications to communicate with IP-based applications (and vice versa)?
-			\item ...and how to do this without re-writing the transport/network layer of IP-based applications to use CCNx (i.e., implement CCN functionality on top of IP)?
+			\item ...and how to do this without re-writing the transport/network layer of IP-based applications to use CCNx (i.e., implement NDN functionality on top of IP)?
 		\end{itemize}
 	\end{enumerate}
 
@@ -211,9 +210,9 @@
 
 <http-path>: <uri> | <ip-address>[port]['/'<uri-encoded-string>]
 
-<tcp-ident>: <SHA256-hash>'/'<nonce>'/'<public-key>. % nonce is the random ID associated with the TCP socket for constant-time lookup when going from ndn-to-ip, this must be set during the connection establishment phase from ip-to-ndn (if it doesn't exist in the TCP state table, then the NDN-side is creating the connection in one shot)
+<tcp-ident>: <SHA256-hash>'/'<nonce>. % nonce is the random ID associated with the TCP socket for constant-time lookup when going from ndn-to-ip, this must be set during the connection establishment phase from ip-to-ndn (if it doesn't exist in the TCP state table, then the NDN-side is creating the connection in one shot)
 
-<tcp-param>: <uri-encoded-string>.
+% <tcp-param>: <uri-encoded-string>.
 
 % <uri-encoded-string>: TODO
 

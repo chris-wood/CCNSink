@@ -1,7 +1,7 @@
 \beamer@endinputifotherversion {3.26pt}
 \beamer@sectionintoc {1}{Overview}{3}{0}{1}
-\beamer@sectionintoc {2}{Modes of Operation}{14}{0}{2}
-\beamer@subsectionintoc {2}{1}{Gateway Functionality}{14}{0}{2}
-\beamer@subsectionintoc {2}{2}{Bridge Functionality}{17}{0}{2}
-\beamer@sectionintoc {3}{Internal Design}{18}{0}{3}
-\beamer@sectionintoc {4}{Experimental Setups}{19}{0}{4}
+\beamer@sectionintoc {2}{Modes of Operation}{8}{0}{2}
+\beamer@subsectionintoc {2}{1}{Gateway Functionality}{8}{0}{2}
+\beamer@subsectionintoc {2}{2}{Bridge Functionality}{11}{0}{2}
+\beamer@sectionintoc {3}{Internal Design}{12}{0}{3}
+\beamer@sectionintoc {4}{Experimental Setups}{13}{0}{4}
