@@ -72,8 +72,23 @@ class NDNHandle(pyccn.Closure):
 
 			return None
 		else: # Must be a general interest, see if we can bridge it
-			
+			helper = self.stage.helper
+			prefixMatch = False
+			match = None
+			for i in range(1, len(name.components)):
+				prefix = ""
+				for j in range(0, i - 1):
+					prefix = prefix + name.components[j] + "/"
+				prefix = prefix + name.components[i]
+				(match, socket) =  helper.lookupPrefix(prefix)
+				if (match != None):
+					prefixMatch = True
+					# TODO: send the interest to the matching gateway
 
+			if (not prefixMatch):
+				for gateway in helper.getGateways():
+					print(gateway)
+					# TODO: send the interest to this gateway
 
 			return None
 

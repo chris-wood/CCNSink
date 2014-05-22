@@ -44,4 +44,11 @@ class HTTPOutputStage(threading.Thread):
 		for gateway in dic["gateways"]:
 			self.gateways.append(gateway) # gateway should be the address
 
+	def getGateways(self):
+		return gateways
 
+	def lookupPrefix(self, prefix):
+		if (self.prefixGatewayMap.contains(prefix)):
+			return self.prefixGatewayMap[prefix]
+		else:
+			return None
