@@ -1,14 +1,10 @@
 # Flask web app server imports
-from flask import Flask, jsonify, abort
+from flask import Flask, jsonify, abort, request
 app = Flask(__name__)
 
 # Database imports
 import sqlite3
 from flask import g
-
-################################################
-################ DATABASE CODE #################
-################################################
 
 # Database connection establishment helper
 def connect_db(database):

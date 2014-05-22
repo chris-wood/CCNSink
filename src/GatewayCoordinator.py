@@ -36,6 +36,5 @@ def req_list_gateways():
     	str = str + gateway['address'], 'has the id', gateway['gateway_id']
 	return str
 
-
 if __name__ == "__main__":
     app.run()

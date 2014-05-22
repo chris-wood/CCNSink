@@ -13,4 +13,10 @@ TCP_END_OF_PATH_CHAR: 0x00
 # NDN configuration
 NDN_URI_PREFIX: ccnx:/
 NDN_URI_ROOT: ccnx:/gateway/
+NDN_URI_ROOT_ALL: ccnx:/
 NDN_CACHE_TIME: 900 # 15 * 60 = 15 minutes
+
+# Bridge configuration options
+BRIDGE_MODE: 0
+BRIDGE_SERVER_UPDATE_FREQ: 5
+BRIDGE_SERVER_ADDRESS: <ip address here>:5000

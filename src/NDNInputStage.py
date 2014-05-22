@@ -12,11 +12,13 @@ class NDNHandle(pyccn.Closure):
 		self.stage = stage
 		self.baseOffset = len(self.stage.baseName.components)
 		self.prefix = pyccn.Name(paramMap["NDN_URI_ROOT"])
+		self.prefixAll = pyccn.Name(paramMap["NDN_URI_ROOT_ALL"])
 		self.cleanupTime = int(paramMap["NDN_CACHE_TIME"])
 		self.handle = pyccn.CCN()
 
 	def run(self):
 		self.handle.setInterestFilter(self.prefix, self)
+		self.handle.setInterestFilter(self.prefixAll, self)
 		self.handle.run(-1)
 
 	def buildContentObject(self, name, content):
@@ -59,7 +61,20 @@ class NDNHandle(pyccn.Closure):
 				path = "/" # workaround
 			msg = OutgoingMessage(srcInfo, dstInfo, path, protocol)
 			return msg
-		else:
+		elif (protocol == "tcp"):
+			# srcInfo = (self.paramMap["HTTP_HOST"], self.paramMap["HTTP_PORT"])
+			# dstInfo = (name.components[self.baseOffset + 1], name.components[self.baseOffset + 2])
+			# path = str(name.components[self.baseOffset + 3:])
+			# if (len(path[0] == 0)):
+			# 	path = "/" # workaround
+			# msg = OutgoingMessage(srcInfo, dstInfo, path, protocol)
+			# return msg
+
+			return None
+		else: # Must be a general interest, see if we can bridge it
+			
+			
+
 			return None
 
 	def upcall(self, kind, info):
@@ -113,11 +128,9 @@ class NDNInputStage(PipelineStage):
 	def __init__(self, name, nextStage, table, paramMap):
 		self.table = table
 		self.nextStage = nextStage
-
-		# Set the base name
 		self.baseName = pyccn.Name(paramMap["NDN_URI_ROOT"])
 
-		# Create and start the flow controller
+		# Create and start the input handler
 		fc = NDNHandle(self, paramMap)
 		fc.run()
 

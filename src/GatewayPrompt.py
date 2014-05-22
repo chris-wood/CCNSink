@@ -4,7 +4,7 @@ import time
 
 """ Separate threaded class that handles user input at runtime to control the gateway.
 """
-class Prompt(threading.Thread):
+class GatewayPrompt(threading.Thread):
 
 	""" Construct the gateway using parameters from the paramMap.
 	"""
@@ -34,6 +34,7 @@ class Prompt(threading.Thread):
 			print("?> Command " + str(usrInput) + " unknown")
 			self.printHelp()
 
-
 	def printHelp(self):
 		print("TODO")
+
+	def 

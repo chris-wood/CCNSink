@@ -1,7 +1,7 @@
 import sys
 import threading
 import time
-import yaml # for config file parsing
+import yaml 
 from Prompt import *
 from IPOutputStage import *
 from IPInputStage import *
@@ -74,7 +74,7 @@ def main():
 	#### TODO: wait for initialization
 
 	# Start command prompt to handle all runtime user input
-	prompt = Prompt(gateway)
+	prompt = GatewayPrompt(gateway)
 	prompt.start()
 
 	# Print closing remarks
