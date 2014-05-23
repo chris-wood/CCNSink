@@ -44,12 +44,13 @@ class IPInputStageHTTPHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 		else:
 			self.wfile.write("Error: internal gateway error.")
 
+# this is the gateway tcp server, NOT the bridge tcp server
 class IPTCPServer(threading.Thread):
 	def __init__(self, name, nextStage, paramMap):
 		threading.Thread.__init__(self)
 		self.serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		self.serversocket.bind((socket.gethostname(), int(paramMap["TCP_PORT"])))
-		self.serversocket.listen(int(paramMap["TCP_LISTEN"])
+		self.serversocket.listen(int(paramMap["TCP_LISTEN"]))
 		self.paramMap = paramMap
 
 	def run(self):

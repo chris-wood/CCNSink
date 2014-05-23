@@ -30,7 +30,7 @@ class BridgeServer(asyncore.dispatcher):
 		if pair is not None:
 			sock, addr = pair
 			print 'Incoming connection from %s' % repr(addr)
-			handler = EchoHandler(sock)
+			handler = BridgeHandler(sock)
 
 class Bridge(threading.Thread):
 	def __init__(self, paramMap):
@@ -40,7 +40,7 @@ class Bridge(threading.Thread):
 		self.prefixGatewayMap = {}
 		self.socketMap = {}
 		self.connected = False
-		server = EchoServer(self.paramMap["LOCALHOST"], self.paramMap["BRIDGE_LOCAL_PORT"])
+		server = BridgeServer(self.paramMap["LOCALHOST"], self.paramMap["BRIDGE_LOCAL_PORT"])
 
 	def run(self):
 		self.running = True

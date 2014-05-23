@@ -46,7 +46,7 @@ class HTTPOutputStage(PipelineStage, threading.Thread):
 			else:
 				print >> sys.stderr, "Error deliverying message: " + str(msg)
 
-def FTPOutputStage(PipelineStage, threading.Thread):
+class FTPOutputStage(PipelineStage, threading.Thread):
 	def __init__(self, name, table, paramMap):
 		threading.Thread.__init__(self)
 		self.name = name
@@ -57,28 +57,29 @@ def FTPOutputStage(PipelineStage, threading.Thread):
 		self.queue.put(msg)
 
 	def outputMessage(self, msg, protocol):
-		ip = msg.dstInfo[0]
-		port = msg.dstInfo[1]
-		target = str(ip) + ":" + str(port)
+		raise RuntimeException()
+		# ip = msg.dstInfo[0]
+		# port = msg.dstInfo[1]
+		# target = str(ip) + ":" + str(port)
 
-		# Connect to the server and login
-		ftp = FTP(target)
-		ftp.login()
+		# # Connect to the server and login
+		# ftp = FTP(target)
+		# ftp.login()
 
-		# Fetch the file and pipe its contents back as content
-		f = open("ftp-tmp", "wb")
-		ftp.retrbinary("RETR " + file,f.write)
-		f.close
-		contents = []
-		with open("myfile", "rb") as f:
-			byte = f.read(1)
-			contents.append(byte)
-			while byte != "":
-        		byte = f.read(1)
-        		contents.append(byte)
-        ba = bytearray(h.decode("hex") for h in contents)
+		# # Fetch the file and pipe its contents back as content
+		# f = open("ftp-tmp", "wb")
+		# ftp.retrbinary("RETR " + file,f.write)
+		# f.close
+		# contents = []
+		# with open("myfile", "rb") as f:
+		# 	byte = f.read(1)
+		# 	contents.append(byte)
+		# 	while byte != "":
+  #       		byte = f.read(1)
+  #       		contents.append(byte)
+  #       ba = bytearray(h.decode("hex") for h in contents)
         
-		return ba
+		# return ba
 
 	def run(self):
 		self.running = True

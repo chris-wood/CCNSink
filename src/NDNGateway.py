@@ -2,7 +2,7 @@ import sys
 import threading
 import time
 import yaml 
-from Prompt import *
+from GatewayPrompt import *
 from IPOutputStage import *
 from IPInputStage import *
 from NDNOutputStage import *
@@ -30,7 +30,7 @@ class NDNGateway(threading.Thread):
 		ndnOutput.start()
 		ipOutput = IPOutputStage("IPOutputStage", table, paramMap) # there is no next stage after output
 		self.stages.append(ipOutput)
-		ipOutput.start()
+		# ipOutput.start()
 
 		# IP input pipeline and connect it to the output stage
 		ipInput = IPInputStage("IPInputStage", ndnOutput, table, paramMap)

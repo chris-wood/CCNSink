@@ -3,6 +3,7 @@ import pyccn
 import sys
 import threading
 import multiprocessing
+from Bridge import *
 from PipelineStage import *
 from OutgoingMessage import *
 
@@ -144,7 +145,7 @@ class NDNInputStage(PipelineStage):
 		self.table = table
 		self.nextStage = nextStage
 		self.baseName = pyccn.Name(paramMap["NDN_URI_ROOT"])
-		self.bridge = Bridge()
+		self.bridge = Bridge(paramMap)
 		self.ndnHandler = NDNHandle(self, paramMap)
 
 		# Create and start the input handler and gateway helper
