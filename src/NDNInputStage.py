@@ -72,7 +72,7 @@ class NDNHandle(pyccn.Closure):
 
 			return None
 		else: # Must be a general interest, see if we can bridge it
-			helper = self.stage.helper
+			bridge = self.stage.bridge
 			prefixMatch = False
 			match = None
 			for i in range(1, len(name.components)):
@@ -80,13 +80,13 @@ class NDNHandle(pyccn.Closure):
 				for j in range(0, i - 1):
 					prefix = prefix + name.components[j] + "/"
 				prefix = prefix + name.components[i]
-				(match, socket) =  helper.lookupPrefix(prefix)
+				(match, address) =  bridge.lookupPrefix(prefix)
 				if (match != None):
 					prefixMatch = True
-					# TODO: send the interest to the matching gateway
+					bridge.sendInterest(name, address)
 
 			if (not prefixMatch):
-				for gateway in helper.getGateways():
+				for gateway in bridge.getGateways():
 					print(gateway)
 					# TODO: send the interest to this gateway
 
@@ -144,10 +144,10 @@ class NDNInputStage(PipelineStage):
 		self.table = table
 		self.nextStage = nextStage
 		self.baseName = pyccn.Name(paramMap["NDN_URI_ROOT"])
-		self.helper = GatewayHelper()
+		self.bridge = Bridge()
 		self.ndnHandler = NDNHandle(self, paramMap)
 
 		# Create and start the input handler and gateway helper
 		self.ndnHandler.run()
-		self.helper.run()
+		self.bridge.run()
 

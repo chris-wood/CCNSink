@@ -1,11 +1,13 @@
 # Simply NDNGateway configuration
 
+# Shared host configuration
+LOCALHOST: localhost
+
 # IP configuration
-HTTP_HOST: localhost
-HTTP_PORT: 1234
+HTTP_PORT: 7000
 
 # IP transport configuration
-TCP_POST: 4321
+TCP_POST: 8000
 TCP_LISTEN: 5
 TCP_MSGLEN: 1024
 TCP_END_OF_PATH_CHAR: 0x00
@@ -19,4 +21,5 @@ NDN_CACHE_TIME: 900 # 15 * 60 = 15 minutes
 # Bridge configuration options
 BRIDGE_MODE: 0
 BRIDGE_SERVER_UPDATE_FREQ: 5
-BRIDGE_SERVER_ADDRESS: <ip address here>:5000
+#BRIDGE_SERVER_ADDRESS: <ip address here>:5000
+BRIDGE_LOCAL_PORT: 9000
