@@ -104,4 +104,4 @@ class Bridge(threading.Thread):
 		sock.send(interest)
 
 	def retrieveContent(self, content, sourceAddress):
-		print("TODO")
+		raise RuntimeError()

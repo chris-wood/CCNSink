@@ -57,7 +57,7 @@ class FTPOutputStage(PipelineStage, threading.Thread):
 		self.queue.put(msg)
 
 	def outputMessage(self, msg, protocol):
-		raise RuntimeException()
+		raise RuntimeError()
 		# ip = msg.dstInfo[0]
 		# port = msg.dstInfo[1]
 		# target = str(ip) + ":" + str(port)
@@ -78,7 +78,6 @@ class FTPOutputStage(PipelineStage, threading.Thread):
   #       		byte = f.read(1)
   #       		contents.append(byte)
   #       ba = bytearray(h.decode("hex") for h in contents)
-        
 		# return ba
 
 	def run(self):
