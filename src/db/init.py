@@ -14,7 +14,7 @@ def connect_db(database):
 # Database schema initialization code
 from contextlib import closing
 def init_db(database, schema):
-	with closing(connect_db()) as db:
+	with closing(connect_db(database)) as db:
 		with app.open_resource(schema) as f:
 			db.cursor().executescript(f.read())
 		db.commit()

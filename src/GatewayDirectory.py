@@ -40,16 +40,13 @@ def post_heartbeat():
 	print >> sys.stderr, "DEBUG: post_heartbeat"
 	try:	
 		data = json.loads(request.data)
-
-		# TODO
-
-		# headers = {"Content-type": "application/json","Accept": "text/plain"}
-		# params = {'a': 12.73874, 'b': 1.74872, 'c': 8.27495}
-		# print(str(data))
-		# print(data["a"])
-		# print(data["b"])
-		# print(data["c"])
-
+		addr = request.remote_addr
+		match = query_db('select * from gateways where address = "' + str(addr) + '";')
+		if (match != None and len(match) > 0):
+			gid = str(match['gateway_id'])
+			query_db('update gateways set address = "' + str(addr) + '" where gateway_id = ' + gid + ';')
+		else:
+			print >> sys.stderr, "Received heartbeat from invalid gateway at " + str(addr)
 		return jsonify(result = {"status" : 200})
 	except Exception as e: 
 		print >> sys.stderr, str(e)
@@ -70,7 +67,7 @@ def post_connect():
 		addr = request.remote_addr
 
 		# Insert the address into the database
-		query_db("insert into gateways values (" + str(addr) + ", " + str(datetime.datetime.now()) + ");")
+		query_db('insert into gateways(address, last_update) values ("' + str(addr) + '", "' + str(datetime.datetime.now()) + '");')
 
 		# TOOD: authenticate the client...
 		# cert = data["certificate"]
@@ -83,13 +80,14 @@ def post_connect():
 # Return a JSON-formatted list of all gateway addresses
 @app.route("/list-gateways", methods = ['GET'])
 def get_list_gateways():
-	str = ""
 	addresses = []
 	try:
-		for gateway in query_db('select * from gateways'):
-			addresses.add(gateway['address'])
+		for gateway in query_db('select * from gateways;'):
+			addresses.append(gateway['address'])
 			print gateway['address'], 'has the id', gateway['gateway_id']
 		list = {'gateways' : addresses}
+		print(addresses)
+		print(list)
 		return jsonify(list)
 	except Exception as e:
 		print >> sys.stderr, str(e)

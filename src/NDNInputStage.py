@@ -149,6 +149,6 @@ class NDNInputStage(PipelineStage):
 		self.ndnHandler = NDNHandle(self, paramMap)
 
 		# Create and start the input handler and gateway helper
+		self.bridge.start()
 		self.ndnHandler.run()
-		self.bridge.run()
 

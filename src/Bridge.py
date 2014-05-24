@@ -17,9 +17,10 @@ class BridgeHandler(asyncore.dispatcher_with_send):
 		if data:
 			self.send(data)
 
-class BridgeServer(asyncore.dispatcher):
+class BridgeServer(asyncore.dispatcher, threading.Thread):
 	def __init__(self, host, port):
 		asyncore.dispatcher.__init__(self)
+		threading.Thread.__init__(self)
 		self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
 		self.set_reuse_addr()
 		self.bind((host, port))
@@ -32,6 +33,9 @@ class BridgeServer(asyncore.dispatcher):
 			print 'Incoming connection from %s' % repr(addr)
 			handler = BridgeHandler(sock)
 
+	def run(self):
+		asyncore.loop()
+
 class Bridge(threading.Thread):
 	def __init__(self, paramMap):
 		threading.Thread.__init__(self)
@@ -40,13 +44,14 @@ class Bridge(threading.Thread):
 		self.prefixGatewayMap = {}
 		self.socketMap = {}
 		self.connected = False
-		server = BridgeServer(self.paramMap["LOCALHOST"], self.paramMap["BRIDGE_LOCAL_PORT"])
+		self.server = BridgeServer(self.paramMap["LOCALHOST"], self.paramMap["BRIDGE_LOCAL_PORT"])
 
 	def run(self):
 		self.running = True
-		asyncore.loop()
+		self.server.start()
 
 		# Loop until we're told to quit
+		print >> sys.stderr, "Running bridge"
 		while (self.running):
 			# Try to connect first
 			if (not self.connected):
@@ -58,22 +63,33 @@ class Bridge(threading.Thread):
 				self.updateGateways()
 
 			# Sleep it off man...
+			print >> sys.stderr, "Resting..."
 			time.sleep(int(self.paramMap["BRIDGE_SERVER_UPDATE_FREQ"]))
 
 	def connectToServer(self):
+		print >> sys.stderr, "Connecting to server: " + str(self.paramMap["BRIDGE_SERVER_ADDRESS"])
 		conn = httplib.HTTPConnection(self.paramMap["BRIDGE_SERVER_ADDRESS"])
-		resp = conn.request("POST", "/connect", None, None)
+		params = {'tmp' : 'tmp'}
+		headers = {"Content-type": "application/json","Accept": "text/plain"}
+		conn.request("POST", "/connect", json.dumps(params), headers)
+		resp = conn.getresponse()
 		if (int(resp.status) == 200):
 			self.connected = True
 
 	def sendHeartbeat(self):
+		params = {'tmp' : 'tmp'}
+		headers = {"Content-type": "application/json","Accept": "text/plain"}
 		conn = httplib.HTTPConnection(self.paramMap["BRIDGE_SERVER_ADDRESS"])
-		conn.request("POST", "/heartbeat", None, None)
+		conn.request("POST", "/heartbeat", json.dumps(params), headers)
+		return conn.getresponse()
 
 	def updateGateways(self):
 		conn = httplib.HTTPConnection(self.paramMap["BRIDGE_SERVER_ADDRESS"])
-		resp = conn.request("GET", "/list-gateways", None, None)
-		dic = json.loads(resp)
+		conn.request("GET", "/list-gateways")
+		resp = conn.getresponse()
+		list = resp.read()
+		print(list)
+		dic = json.loads(list)
 		self.gateways = []
 		for gateway in dic["gateways"]:
 			self.gateways.append(gateway) # gateway should be the address
