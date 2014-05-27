@@ -5,6 +5,7 @@ import time
 import json
 import asyncore
 import socket
+import os
 from multiprocessing import Queue
 
 class BridgeHandler(asyncore.dispatcher_with_send):
@@ -43,6 +44,7 @@ class Bridge(threading.Thread):
 		self.gateways = []
 		self.prefixGatewayMap = {}
 		self.socketMap = {}
+		self.keyMap = {}
 		self.connected = False
 		self.server = BridgeServer(self.paramMap["LOCALHOST"], self.paramMap["BRIDGE_LOCAL_PORT"])
 
@@ -107,9 +109,32 @@ class Bridge(threading.Thread):
 		else:
 			return None
 
+	def establishPairwiseKey(self, targetAddress, sock):
+		# Generate our half of the DH share
+		mod = int(self.paramMap["KEYGEN_GROUP_MODULUS"])
+		gen = int(self.paramMap["KEYGEN_GROUP_GENERATOR"])
+		bits = int(self.paramMap["KEYGEN_KEY_BITS"])
+		power = (os.urandom(bits) % (2 ** bits))
+		ours = (gen ** power) % mod
+
+		# Send our half of the share to the other guy
+		sharestr = str(ours)
+		sock.send(len(sharestr))
+		sock.send(sharestr)
+
+		# Receive their share
+		length = sock.recv(4)
+		theirs = sock.recv(length)
+
+		# Compute and save the key
+		key = (ours ** int(theirs)) % mod
+		self.keyMap[targetAddress] = key
+
 	# Messages are sent as follows: |name length|name|
 	def sendInterest(self, interest, targetAddress):
 		sock = None
+
+		# Retrieve socket
 		if (not self.socketMap.contains(targetAddress)):
 			print("TODO: establish a socket connection to the address")
 			sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -117,8 +142,13 @@ class Bridge(threading.Thread):
 			self.socketMap[targetAddress] = sock
 		else:
 			sock = self.socketMap[targetAddress]
+
+		# Check to see if we have a shared key pair before sending an interest
+		# This occurs when we have not previously established a connection to the target
+		if (not self.keyMap.contains(targetAddress)):
+			self.establishPairwiseKey(targetAddress, sock)
 		
-		# Send the message
+		# With a working socket and shared key, send the message
 		nameLen = len(interest)
 		sock.send(nameLen)
 		sock.send(interest)
