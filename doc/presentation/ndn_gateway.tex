@@ -45,9 +45,9 @@
 	\titlepage
 \end{frame}
 
-\begin{frame}{Agenda}
-	\tableofcontents
-\end{frame}
+% \begin{frame}{Agenda}
+% 	\tableofcontents
+% \end{frame}
 
 %% 6-8 slides each
 
@@ -84,36 +84,40 @@
 	Content-centric networking flips around the host-based model of the Internet architecture
 	\begin{itemize}
 		\item \emph{Content names}, rather than content locations, become addressable. 
+		\item Content is retrieved via \emph{interests}, which are similar to URLs: 
+		\begin{center}
+			{\tt ccnx://rit/gccis/cs/spr/ramsey\_survey}
+		\end{center}
 		\item The network is permitted to store (cache) content that is in high demand
 		\item End result: less traffic to/from the content's original source, better usage of network resources, less latency, etc etc.
 	\end{itemize}
 \end{frame}
 
-\begin{frame}{NDN Overview (continued)}
-	How is data actually retrieved? 
-	\begin{itemize}
-		\item A consumer $C$ sends out an \emph{interest} for content they desire.
-		\item A router $R_i$ use the information in their forwarding information base (FIB) table and data in cached in their content store (CS) to handle incoming interests:
-		\begin{enumerate}
-			\item If content with the same name matches what's stored in the CS, return that content
-			\item Else, store the interest in their pending interest table (PIT) (including the downstream router $R_{i-1}$ or consumer $C$ that made the request), and forward the request upstream to the next router $R_{i+1}$ based on their FIB.
-			\item FIBs are configured using protocol similar to OSPF
-		\end{enumerate}
-		\item Once the interest is satisfied in $R_i$, the PIT entry is cleared, the content is cached, and the data is sent downstream to $C$ or $R_{i-1}$. 
- 	\end{itemize}
-\end{frame}
+% \begin{frame}{NDN Overview (continued)}
+% 	How is data actually retrieved? 
+% 	\begin{itemize}
+% 		\item A consumer $C$ sends out an \emph{interest} for content they desire.
+% 		\item A router $R_i$ use the information in their forwarding information base (FIB) table and data in cached in their content store (CS) to handle incoming interests:
+% 		\begin{enumerate}
+% 			\item If content with the same name matches what's stored in the CS, return that content
+% 			\item Else, store the interest in their pending interest table (PIT) (including the downstream router $R_{i-1}$ or consumer $C$ that made the request), and forward the request upstream to the next router $R_{i+1}$ based on their FIB.
+% 			\item FIBs are configured using protocol similar to OSPF
+% 		\end{enumerate}
+% 		\item Once the interest is satisfied in $R_i$, the PIT entry is cleared, the content is cached, and the data is sent downstream to $C$ or $R_{i-1}$. 
+%  	\end{itemize}
+% \end{frame}
 
-\begin{frame}{Interest Format}
-	\begin{itemize}
-		\item Interests are similar to URLs: 
-		\begin{center}
-			{\tt ccnx://rit/gccis/cs/spr/ramsey\_survey}
-		\end{center}
-		\item The {\tt /} character is a delimeter that separates name \emph{components}
-		\item A component can be \emph{anything}, including binary data (e.g. ciphertext)
-		\item Interests are matched to providers in FIBs using a standard longest-prefix rule (to my knowledge, interests in CSs must match completely)
-	\end{itemize}
-\end{frame}
+% \begin{frame}{Interest Format}
+% 	\begin{itemize}
+% 		\item Interests are similar to URLs: 
+% 		\begin{center}
+% 			{\tt ccnx://rit/gccis/cs/spr/ramsey\_survey}
+% 		\end{center}
+% 		\item The {\tt /} character is a delimeter that separates name \emph{components}
+% 		\item A component can be \emph{anything}, including binary data (e.g. ciphertext)
+% 		\item Interests are matched to providers in FIBs using a standard longest-prefix rule (to my knowledge, interests in CSs must match completely)
+% 	\end{itemize}
+% \end{frame}
 
 %% TODO: images of this happening 
 % \begin{frame}
@@ -191,10 +195,8 @@
 \end{frame}
 
 \begin{frame}{NDN-to-IP Traffic}
-\begin{itemize}
-	\item Interests are encoded according to a special grammar to enable the gateway to parse interests and issue them using the appropriate IP-based protocol
-\end{itemize}
 
+Interests are encoded according to a special grammar to enable the gateway to parse interests and issue them using the appropriate IP-based protocol
 
 \begin{figure}
 \begin{mdframed}
@@ -245,12 +247,12 @@
 	\end{figure}
 \end{frame}
 
-\section{Internal Design}
-\begin{frame}{Pipeline-Based Load Balancing Design}
-	\begin{figure}[h]
-		\includegraphics[scale=0.37]{img/pipeline.pdf}
-	\end{figure}
-\end{frame}
+% \section{Internal Design}
+% \begin{frame}{Pipeline-Based Load Balancing Design}
+% 	\begin{figure}[h]
+% 		\includegraphics[scale=0.37]{img/pipeline.pdf}
+% 	\end{figure}
+% \end{frame}
 
 \section{Experimental Setups}
 \begin{frame}{Performance Measurement: Experiments and Metrics}

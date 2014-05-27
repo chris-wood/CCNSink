@@ -50,6 +50,10 @@ class Bridge(threading.Thread):
 		self.running = True
 		self.server.start()
 
+		# Establish long-term connection
+		print >> sys.stderr, "Establishing connection with directory: " + str(self.paramMap["BRIDGE_SERVER_ADDRESS"])
+		self.conn = httplib.HTTPConnection(self.paramMap["BRIDGE_SERVER_ADDRESS"])
+
 		# Loop until we're told to quit
 		print >> sys.stderr, "Running bridge"
 		while (self.running):
@@ -67,26 +71,26 @@ class Bridge(threading.Thread):
 			time.sleep(int(self.paramMap["BRIDGE_SERVER_UPDATE_FREQ"]))
 
 	def connectToServer(self):
-		print >> sys.stderr, "Connecting to server: " + str(self.paramMap["BRIDGE_SERVER_ADDRESS"])
-		conn = httplib.HTTPConnection(self.paramMap["BRIDGE_SERVER_ADDRESS"])
 		params = {'tmp' : 'tmp'}
 		headers = {"Content-type": "application/json","Accept": "text/plain"}
-		conn.request("POST", "/connect", json.dumps(params), headers)
-		resp = conn.getresponse()
+		resp = self.sendMsg("POST", "/connect", params, headers)
 		if (int(resp.status) == 200):
 			self.connected = True
 
 	def sendHeartbeat(self):
 		params = {'tmp' : 'tmp'}
 		headers = {"Content-type": "application/json","Accept": "text/plain"}
-		conn = httplib.HTTPConnection(self.paramMap["BRIDGE_SERVER_ADDRESS"])
-		conn.request("POST", "/heartbeat", json.dumps(params), headers)
+		return self.sendMsg("POST", "/heartbeat", params, headers)
+
+	def sendMsg(self, cmd, url, params, headers):
+		if (params == None or headers == None):
+			self.conn.request(cmd, url)
+		else:
+			self.conn.request(cmd, url, json.dumps(params), headers)
 		return conn.getresponse()
 
 	def updateGateways(self):
-		conn = httplib.HTTPConnection(self.paramMap["BRIDGE_SERVER_ADDRESS"])
-		conn.request("GET", "/list-gateways")
-		resp = conn.getresponse()
+		resp = self.sendMsg("GET", "/list-gateways", None, None)
 		list = resp.read()
 		print(list)
 		dic = json.loads(list)
@@ -120,4 +124,5 @@ class Bridge(threading.Thread):
 		sock.send(interest)
 
 	def retrieveContent(self, content, sourceAddress):
+		# TODO
 		raise RuntimeError()
