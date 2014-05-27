@@ -8,13 +8,27 @@ import socket
 import os
 from multiprocessing import Queue
 
-class BridgeHandler(asyncore.dispatcher_with_send):
+socketMap = {}
+
+class BridgeHandler(asyncore.dispatcher_with_send, threading.Thread):
 	def __init__(self):
+		threading.Thread.__init__(self)
+		self.started = False
 		self.buffer = []
 
+		self.mod = int(self.paramMap["KEYGEN_GROUP_MODULUS"])
+		self.gen = int(self.paramMap["KEYGEN_GROUP_GENERATOR"])
+		self.bits = int(self.paramMap["KEYGEN_KEY_BITS"])
+		self.power = (os.urandom(bits) % (2 ** bits))
+		self.ours = (gen ** power) % mod
+
 	# self.request is the TCP socket connected to the client
-	def handleData(self): 
-		data = self.recv(8192)
+	def handle_read(self):
+		if (not self.started):
+			length = self.recv(4)
+			data = self.recv(length)
+
+
 		if data:
 			self.send(data)
 
