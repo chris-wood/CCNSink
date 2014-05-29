@@ -42,6 +42,7 @@ class BridgeServer(asyncore.dispatcher, threading.Thread):
 		self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
 		self.set_reuse_addr()
 		self.bind((host, port))
+		self.addr = (host, port)
 		self.listen(5) # this is the server queue size
 		self.bridge = bridge
 
@@ -53,7 +54,7 @@ class BridgeServer(asyncore.dispatcher, threading.Thread):
 			handler = BridgeHandler(bridge, sock, addr) # spins off a thread in the background
 
 	def run(self):
-		print >> sys.stderr, "Starting BridgeServer\n"
+		print >> sys.stderr, "Starting BridgeServer on " + str(self.addr) + "\n"
 		self.serve_forever()
 
 	def serve_forever(self):
