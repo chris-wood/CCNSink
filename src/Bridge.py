@@ -53,6 +53,7 @@ class BridgeServer(asyncore.dispatcher, threading.Thread):
 			handler = BridgeHandler(bridge, sock, addr) # spins off a thread in the background
 
 	def run(self):
+		print >> sys.stderr, "Starting BridgeServer"
 		asyncore.loop()
 
 class Bridge(threading.Thread):
