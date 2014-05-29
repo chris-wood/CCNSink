@@ -7,6 +7,9 @@ app.debug = True
 
 DATABASE = './db/directory.db'
 
+def debug(m):
+	print >> sys.stderr, m
+
 # Open up a DB connection before the request
 @app.before_request
 def before_request():
@@ -71,9 +74,9 @@ def post_connect():
 		if (match == None):
 			query_db('insert into gateways(address, last_update) values ("' + str(addr) + '", "' + str(datetime.datetime.now()) + '");')
 		else: # update the last_update time
-			print(match)
+			debug(str(match))
 			time = str(datetime.datetime.now())
-			gid = str(match['gateway_id'])
+			gid = str(match[0]['gateway_id'])
 			query_db('update gateways set last_update = "' + time + '" where gateway_id = ' + gid + ';')
 		
 		# TOOD: authenticate the client
@@ -93,8 +96,8 @@ def get_list_gateways():
 			addresses.append(gateway['address'])
 			print gateway['address'], 'has the id', gateway['gateway_id']
 		list = {'gateways' : addresses}
-		print(addresses)
-		print(list)
+		debug(str(addresses))
+		debug(str(list))
 		return jsonify(list)
 	except Exception as e:
 		print >> sys.stderr, str(e)
