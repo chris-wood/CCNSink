@@ -18,9 +18,9 @@ class BridgeHandler(asyncore.dispatcher_with_send, threading.Thread):
 		self.bridge = bridge
 
 		# Generate a random power and compute the DH half
-		rand = int(os.urandom(bridge.bits).encode('hex'), 16)
-		self.power = (rand % (2 ** bridge.bits))
-		self.ours = (bridge.gen ** power) % bridge.mod		
+		rand = int(os.urandom(self.bridge.bits).encode('hex'), 16)
+		self.power = (rand % (2 ** self.bridge.bits))
+		self.ours = (self.bridge.gen ** power) % self.bridge.mod		
 
 		# TODO: use address
 		self.address = addr
@@ -32,7 +32,7 @@ class BridgeHandler(asyncore.dispatcher_with_send, threading.Thread):
 			length = self.recv(4)
 			theirs = self.recv(length) # receive their DH half
 			key = (self.ours ** int(theirs)) % self.mod
-			bridge.keyMap[self.address] = key
+			self.bridge.keyMap[self.address] = key
 		if (data != None):
 			self.send(data)
 
