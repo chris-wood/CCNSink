@@ -86,10 +86,10 @@ class NDNHandle(pyccn.Closure):
 					prefixMatch = True
 					bridge.sendInterest(name, address)
 
-			if (not prefixMatch):
+			if (not prefixMatch): # broadcast to all gateways maintained by the bridge
 				for gateway in bridge.getGateways():
 					print(gateway)
-					# TODO: send the interest to this gateway
+					bridge.sendInterest(name, address)
 
 			return None
 
