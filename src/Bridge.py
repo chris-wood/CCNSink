@@ -40,8 +40,7 @@ class BridgeServer(asyncore.dispatcher, threading.Thread):
 		asyncore.dispatcher.__init__(self)
 		threading.Thread.__init__(self)
 		self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
-		if self.allow_reuse_address:
-			self.set_reuse_addr()
+		self.set_reuse_addr()
 		self.bind((host, port))
 		self.listen(5) # this is the server queue size
 		self.bridge = bridge
