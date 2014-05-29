@@ -66,10 +66,15 @@ def post_connect():
 		data = json.loads(request.data)
 		addr = request.remote_addr
 
-		# Insert the address into the database
-		query_db('insert into gateways(address, last_update) values ("' + str(addr) + '", "' + str(datetime.datetime.now()) + '");')
-
-		# TOOD: authenticate the client...
+		# Insert the address into the database - don't overwrite if already there
+		match = query_db('select * from gateways where address = "' + str(addr) + '";')
+		if (match == None):
+			query_db('insert into gateways(address, last_update) values ("' + str(addr) + '", "' + str(datetime.datetime.now()) + '");')
+		else: # update the last_update time
+			time = str(datetime.datetime.now())
+			query_db('update gateways set last_update = "' + str(addr) + '" where gateway_id = ' + time + ';')
+		
+		# TOOD: authenticate the client
 		# cert = data["certificate"]
 
 		return jsonify(result = {"status" : 200})
