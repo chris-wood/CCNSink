@@ -10,12 +10,14 @@ from multiprocessing import Queue
 
 socketMap = {}
 
-class BridgeHandler(asyncore.dispatcher_with_send, threading.Thread):
-	def __init__(self, bridge, sock, addr):
-		threading.Thread.__init__(self)
+class BridgeHandler(asyncore.dispatcher_with_send):
+
+	def setup(self, bridge, addr):
 		self.started = False
 		self.buffer = []
 		self.bridge = bridge
+
+		print("creating the handler...")
 
 		# Generate a random power and compute the DH half
 		self.mod = bridge.mod
@@ -64,7 +66,8 @@ class BridgeServer(asyncore.dispatcher, threading.Thread):
 		if pair is not None:
 			sock, addr = pair
 			print >> sys.stderr, 'Incoming connection from %s' % repr(addr)
-			handler = BridgeHandler(self.bridge, sock, addr) # spins off a thread in the background
+			handler = BridgeHandler(sock) # spins off a thread in the background
+			handler.setup(self.bridge, addr)
 
 	def run(self):
 		print >> sys.stderr, "Starting BridgeServer on " + str(self.addr) + "\n"
