@@ -71,7 +71,7 @@ class Bridge(threading.Thread):
 		self.socketMap = {}
 		self.keyMap = {}
 		self.connected = False
-		self.server = BridgeServer(self, self.paramMap["LOCALHOST"], self.paramMap["BRIDGE_LOCAL_PORT"])
+		self.server = BridgeServer(self, self.paramMap["LOCALHOST"], int(self.paramMap["BRIDGE_LOCAL_PORT"]))
 		self.mod = int(self.paramMap["KEYGEN_GROUP_MODULUS"])
 		self.gen = int(self.paramMap["KEYGEN_GROUP_GENERATOR"])
 		self.bits = int(self.paramMap["KEYGEN_KEY_BITS"])
@@ -186,11 +186,11 @@ class Bridge(threading.Thread):
 
 if __name__ == "__main__":
 	if (sys.argv[1] == "s"):
-		server = BridgeServer(None, "192.168.1.10", 5000)
+		server = BridgeServer(None, "192.168.1.10", 9000)
 		server.start()
 	else:
 		sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		addrtuple = ("192.168.1.10", 5000)
+		addrtuple = ("192.168.1.10", 9000)
 		print(addrtuple)
 		sock.connect(addrtuple) # address is a tuple, e.g., targetAddress = ("www.python.org", 80)
 		sock.send("hello world")
