@@ -156,7 +156,8 @@ class Bridge(threading.Thread):
 		if (not (targetAddress in self.socketMap)):
 			print("TODO: establish a socket connection to the address")
 			sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-			sock.connect(targetAddress) # address is a tuple, e.g., targetAddress = ("www.python.org", 80)
+			addrtuple = (targetAddress, int(self.paramMap["BRIDGE_LOCAL_PORT"]))
+			sock.connect(addrtuple) # address is a tuple, e.g., targetAddress = ("www.python.org", 80)
 			self.socketMap[targetAddress] = sock
 		else:
 			sock = self.socketMap[targetAddress]
