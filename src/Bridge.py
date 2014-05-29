@@ -18,9 +18,12 @@ class BridgeHandler(asyncore.dispatcher_with_send, threading.Thread):
 		self.bridge = bridge
 
 		# Generate a random power and compute the DH half
-		rand = int(os.urandom(self.bridge.bits).encode('hex'), 16)
-		self.power = (rand % (2 ** self.bridge.bits))
-		self.ours = (self.bridge.gen ** power) % self.bridge.mod		
+		self.mod = bridge.mod
+		self.gen = bridge.gen
+		self.bits = bridge.bits
+		rand = int(os.urandom(self.bits).encode('hex'), 16)
+		self.power = (rand % (2 ** self.bits))
+		self.ours = (self.gen ** self.power) % self.mod
 
 		# TODO: use address
 		self.address = addr
@@ -29,10 +32,18 @@ class BridgeHandler(asyncore.dispatcher_with_send, threading.Thread):
 	def handle_read(self):
 		data = None
 		if (not self.started):
+
+			# retrieve key material
 			length = self.recv(4)
 			theirs = self.recv(length) # receive their DH half
 			key = (self.ours ** int(theirs)) % self.mod
 			self.bridge.keyMap[self.address] = key
+			print("establishe key: " + str(key))
+
+			# retrieve interest
+			length = self.recv(4)
+			interest = self.recv(length) # receive their DH half
+			print("received interest = " + str(interest))
 		if (data != None):
 			self.send(data)
 
@@ -52,7 +63,7 @@ class BridgeServer(asyncore.dispatcher, threading.Thread):
 		if pair is not None:
 			sock, addr = pair
 			print >> sys.stderr, 'Incoming connection from %s' % repr(addr)
-			handler = BridgeHandler(bridge, sock, addr) # spins off a thread in the background
+			handler = BridgeHandler(self.bridge, sock, addr) # spins off a thread in the background
 
 	def run(self):
 		print >> sys.stderr, "Starting BridgeServer on " + str(self.addr) + "\n"
@@ -181,7 +192,7 @@ class Bridge(threading.Thread):
 		# With a working socket and shared key, send the message
 		nameLen = len(interest)
 		sock.send(nameLen)
-		sock.send(interest)
+		sock.send(str(interest))
 
 	def retrieveContent(self, content, sourceAddress):
 		# TODO
