@@ -30,6 +30,7 @@ class BridgeHandler(asyncore.dispatcher_with_send, threading.Thread):
 
 	# self.request is the TCP socket connected to the client
 	def handle_read(self):
+		print("inside handle_read")
 		data = None
 		if (not self.started):
 
