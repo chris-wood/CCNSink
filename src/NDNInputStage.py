@@ -72,26 +72,29 @@ class NDNHandle(pyccn.Closure):
 			# return msg
 
 			return None
-		else: # Must be a general interest, see if we can bridge it
-			bridge = self.stage.bridge
-			prefixMatch = False
-			match = None
-			for i in range(1, len(name.components)):
-				prefix = ""
-				for j in range(0, i - 1):
-					prefix = prefix + name.components[j] + "/"
-				prefix = prefix + name.components[i]
-				(match, address) =  bridge.lookupPrefix(prefix)
-				if (match != None):
-					prefixMatch = True
-					bridge.sendInterest(name, address)
+		elif: # invalid case
+			raise RuntimeError()
 
-			if (not prefixMatch): # broadcast to all gateways maintained by the bridge
-				for gateway in bridge.getGateways():
-					print(gateway)
-					bridge.sendInterest(name, address)
+	def forwardGeneralInterest(self, name):
+		bridge = self.stage.bridge
+		prefixMatch = False
+		match = None
+		for i in range(1, len(name.components)):
+			prefix = ""
+			for j in range(0, i - 1):
+				prefix = prefix + name.components[j] + "/"
+			prefix = prefix + name.components[i]
+			(match, address) =  bridge.lookupPrefix(prefix)
+			if (match != None):
+				prefixMatch = True
+				bridge.sendInterest(name, address)
 
-			return None
+		if (not prefixMatch): # broadcast to all gateways maintained by the bridge
+			for gateway in bridge.getGateways():
+				print(gateway)
+				bridge.sendInterest(name, address)
+
+		return pyccn.RESULT_OK
 
 	def upcall(self, kind, info):
 		if kind in [pyccn.UPCALL_FINAL, pyccn.UPCALL_CONSUMED_INTEREST]:
@@ -105,7 +108,7 @@ class NDNHandle(pyccn.Closure):
 		print(info.Interest)
 		if (len(info.Interest.name.components) <= self.baseOffset):
 			print >> sys.stderr, "Error: No protocol specified"
-			return pyccn.RESULT_ERR
+			return self.forwardGeneralInterest(name)
 		protocol = str(info.Interest.name.components[self.baseOffset]).lower()
 
 		# Construct a unique message for each of the supported protocols
