@@ -11,42 +11,46 @@ from multiprocessing import Queue
 socketMap = {}
 
 class BridgeHandler(asyncore.dispatcher_with_send, threading.Thread):
-	def __init__(self):
+	def __init__(self, bridge, sock, addr):
 		threading.Thread.__init__(self)
 		self.started = False
 		self.buffer = []
+		self.bridge = bridge
 
-		self.mod = int(self.paramMap["KEYGEN_GROUP_MODULUS"])
-		self.gen = int(self.paramMap["KEYGEN_GROUP_GENERATOR"])
-		self.bits = int(self.paramMap["KEYGEN_KEY_BITS"])
-		self.power = (os.urandom(bits) % (2 ** bits))
-		self.ours = (gen ** power) % mod
+		# Generate a random power and compute the DH half
+		self.power = (os.urandom(bridge.bits) % (2 ** bridge.bits))
+		self.ours = (bridge.gen ** power) % bridge.mod		
+
+		# TODO: use address
+		self.address = addr
 
 	# self.request is the TCP socket connected to the client
 	def handle_read(self):
+		data = None
 		if (not self.started):
 			length = self.recv(4)
-			data = self.recv(length)
-
-
-		if data:
+			theirs = self.recv(length) # receive their DH half
+			key = (self.ours ** int(theirs)) % self.mod
+			bridge.keyMap[self.address] = key
+		if (data != None):
 			self.send(data)
 
 class BridgeServer(asyncore.dispatcher, threading.Thread):
-	def __init__(self, host, port):
+	def __init__(self, bridge, host, port):
 		asyncore.dispatcher.__init__(self)
 		threading.Thread.__init__(self)
 		self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
 		self.set_reuse_addr()
 		self.bind((host, port))
 		self.listen(5)
+		self.bridge = bridge
 
 	def handle_accept(self):
 		pair = self.accept()
 		if pair is not None:
 			sock, addr = pair
-			print 'Incoming connection from %s' % repr(addr)
-			handler = BridgeHandler(sock)
+			print >> sys.stderr, 'Incoming connection from %s' % repr(addr)
+			handler = BridgeHandler(bridge, sock, addr) # spins off a thread in the background
 
 	def run(self):
 		asyncore.loop()
@@ -60,7 +64,10 @@ class Bridge(threading.Thread):
 		self.socketMap = {}
 		self.keyMap = {}
 		self.connected = False
-		self.server = BridgeServer(self.paramMap["LOCALHOST"], self.paramMap["BRIDGE_LOCAL_PORT"])
+		self.server = BridgeServer(self, self.paramMap["LOCALHOST"], self.paramMap["BRIDGE_LOCAL_PORT"])
+		self.mod = int(self.paramMap["KEYGEN_GROUP_MODULUS"])
+		self.gen = int(self.paramMap["KEYGEN_GROUP_GENERATOR"])
+		self.bits = int(self.paramMap["KEYGEN_KEY_BITS"])
 
 	def run(self):
 		self.running = True
@@ -103,7 +110,7 @@ class Bridge(threading.Thread):
 			self.conn.request(cmd, url)
 		else:
 			self.conn.request(cmd, url, json.dumps(params), headers)
-		return conn.getresponse()
+		return self.conn.getresponse()
 
 	def updateGateways(self):
 		resp = self.sendMsg("GET", "/list-gateways", None, None)
@@ -125,11 +132,8 @@ class Bridge(threading.Thread):
 
 	def establishPairwiseKey(self, targetAddress, sock):
 		# Generate our half of the DH share
-		mod = int(self.paramMap["KEYGEN_GROUP_MODULUS"])
-		gen = int(self.paramMap["KEYGEN_GROUP_GENERATOR"])
-		bits = int(self.paramMap["KEYGEN_KEY_BITS"])
-		power = (os.urandom(bits) % (2 ** bits))
-		ours = (gen ** power) % mod
+		power = (os.urandom(self.bits) % (2 ** self.bits))
+		ours = (self.gen ** power) % self.mod
 
 		# Send our half of the share to the other guy
 		sharestr = str(ours)
