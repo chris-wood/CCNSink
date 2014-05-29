@@ -71,6 +71,7 @@ def post_connect():
 		if (match == None):
 			query_db('insert into gateways(address, last_update) values ("' + str(addr) + '", "' + str(datetime.datetime.now()) + '");')
 		else: # update the last_update time
+			print(match)
 			time = str(datetime.datetime.now())
 			gid = str(match['gateway_id'])
 			query_db('update gateways set last_update = "' + time + '" where gateway_id = ' + gid + ';')
