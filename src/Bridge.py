@@ -60,8 +60,8 @@ class BridgeServer(asyncore.dispatcher, threading.Thread):
 	def server_forever(self):
 		asyncore.loop()
 
-    def handle_close(self):
-        self.close()
+	def handle_close(self):
+		self.close()
 
 class Bridge(threading.Thread):
 	def __init__(self, paramMap):
