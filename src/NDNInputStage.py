@@ -107,8 +107,8 @@ class NDNHandle(pyccn.Closure):
 		# Extract the interest information and shove it into the pipeline
 		print(info.Interest)
 		if (len(info.Interest.name.components) <= self.baseOffset):
-			print >> sys.stderr, "Error: No protocol specified"
-			return self.forwardGeneralInterest(name)
+			print >> sys.stderr, "Error: No protocol specified in name: " + str(info.Interest.name)
+			return self.forwardGeneralInterest(info.Interest.name)
 		protocol = str(info.Interest.name.components[self.baseOffset]).lower()
 
 		# Construct a unique message for each of the supported protocols
