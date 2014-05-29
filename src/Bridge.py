@@ -183,3 +183,14 @@ class Bridge(threading.Thread):
 	def retrieveContent(self, content, sourceAddress):
 		# TODO
 		raise RuntimeError()
+
+
+if __name__ == "__main__":
+	if (sys.argv == "s"):
+		server = BridgeServer(None, "192.168.1.10", 5000)
+		server.run()
+	else:
+		sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+		addrtuple = ("192.168.1.10", 5000)
+		sock.connect(addrtuple) # address is a tuple, e.g., targetAddress = ("www.python.org", 80)
+		sock.send("hello world")
