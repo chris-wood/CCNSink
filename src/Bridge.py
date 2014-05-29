@@ -122,7 +122,7 @@ class Bridge(threading.Thread):
 			self.gateways.append(gateway) # gateway should be the address
 
 	def getGateways(self):
-		return gateways
+		return self.gateways
 
 	def lookupPrefix(self, prefix):
 		if (self.prefixGatewayMap.contains(prefix)):
