@@ -72,7 +72,7 @@ class NDNHandle(pyccn.Closure):
 			# return msg
 
 			return None
-		elif: # invalid case
+		else: # invalid case
 			raise RuntimeError()
 
 	def forwardGeneralInterest(self, name):
