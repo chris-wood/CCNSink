@@ -58,14 +58,18 @@ class NDNGateway(threading.Thread):
 """
 def main():
 	# Parse cmd line arguments
-	if len(sys.argv) != 2:
-		print >> sys.stderr, "Usage: python NDNGateway.py <config_file>"
+	if len(sys.argv) != 3:
+		print >> sys.stderr, "Usage: python NDNGateway.py <config_file> <ipaddress>"
 		return
 
 	# Parse the config file
 	cfgFile = open(sys.argv[1], 'r')
 	paramMap = yaml.load(cfgFile)
 	print(paramMap)
+
+	# Retrieve IP address
+	ip = sys.argv[2]
+	paramMap["PUBLIC_IP"] = ip
 
 	# Create the gateway
 	gateway = NDNGateway(paramMap = paramMap)

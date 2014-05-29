@@ -26,7 +26,7 @@ class IPInputStageHTTPHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 		targetInterestName = (stage.paramMap["NDN_URI_PREFIX"] + str(path)).replace("//", "/")
 
 		# Build the message and drop it into the table
-		myAddr = (stage.paramMap["LOCALHOST"], stage.paramMap["HTTP_PORT"])
+		myAddr = (stage.paramMap["PUBLIC_IP"], stage.paramMap["HTTP_PORT"])
 		msg = OutgoingMessage(addr, myAddr, targetInterestName, "http")
 		semaphore = multiprocessing.BoundedSemaphore(0)
 		stage.table.insertIPEntry(msg, semaphore)
@@ -89,7 +89,7 @@ class IPTCPSocketHandler(threading.Thread):
 				if (self.pathEaten):
 					# Send the chunk to the application
 					interest = self.buildInterest(chunk)
-					# myAddr = (stage.paramMap["LOCALHOST"], stage.paramMap["HTTP_PORT"])
+					# myAddr = (stage.paramMap["PUBLIC_IP"], stage.paramMap["HTTP_PORT"])
 					# msg = OutgoingMessage(addr, myAddr, targetInterestName, "http")
 					# self.nextStage.put(msg)
 				else:
@@ -114,7 +114,7 @@ class IPTCPSocketHandler(threading.Thread):
 		targetInterestName = (stage.paramMap["NDN_URI_PREFIX"] + str(path)).replace("//", "/")
 
 		# Build the message and drop it into the table
-		# myAddr = (stage.paramMap["LOCALHOST"], stage.paramMap["HTTP_PORT"])
+		# myAddr = (stage.paramMap["PUBLIC_IP"], stage.paramMap["HTTP_PORT"])
 		# msg = OutgoingMessage(addr, myAddr, targetInterestName, "http")
 		# semaphore = multiprocessing.BoundedSemaphore(0)
 		# stage.table.insertIPEntry(msg, semaphore)
@@ -132,8 +132,8 @@ class IPInputStage(PipelineStage, threading.Thread):
 
 	def run(self):
 		# Setup the HTTP handler
-		print >> sys.stderr, "HTTP server on: " + str(self.paramMap["LOCALHOST"]) + ":" + str(self.paramMap["HTTP_PORT"])
-		httpd = HTTPServer((self.paramMap["LOCALHOST"], int(self.paramMap["HTTP_PORT"])), IPInputStageHTTPHandler)
+		print >> sys.stderr, "HTTP server on: " + str(self.paramMap["PUBLIC_IP"]) + ":" + str(self.paramMap["HTTP_PORT"])
+		httpd = HTTPServer((self.paramMap["PUBLIC_IP"], int(self.paramMap["HTTP_PORT"])), IPInputStageHTTPHandler)
 		httpd.serve_forever()
 		print >> sys.stderr, "Started server..."
 

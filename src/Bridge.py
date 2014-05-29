@@ -72,7 +72,7 @@ class Bridge(threading.Thread):
 		self.socketMap = {}
 		self.keyMap = {}
 		self.connected = False
-		self.server = BridgeServer(self, self.paramMap["LOCALHOST"], int(self.paramMap["BRIDGE_LOCAL_PORT"]))
+		self.server = BridgeServer(self, self.paramMap["PUBLIC_IP"], int(self.paramMap["BRIDGE_LOCAL_PORT"]))
 		self.mod = int(self.paramMap["KEYGEN_GROUP_MODULUS"])
 		self.gen = int(self.paramMap["KEYGEN_GROUP_GENERATOR"])
 		self.bits = int(self.paramMap["KEYGEN_KEY_BITS"])
