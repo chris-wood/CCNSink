@@ -18,7 +18,8 @@ class BridgeHandler(asyncore.dispatcher_with_send, threading.Thread):
 		self.bridge = bridge
 
 		# Generate a random power and compute the DH half
-		self.power = (os.urandom(bridge.bits) % (2 ** bridge.bits))
+		rand = int(os.urandom(bridge.bits).encode('hex'), 16)
+		self.power = (rand % (2 ** bridge.bits))
 		self.ours = (bridge.gen ** power) % bridge.mod		
 
 		# TODO: use address
@@ -140,7 +141,8 @@ class Bridge(threading.Thread):
 
 	def establishPairwiseKey(self, targetAddress, sock):
 		# Generate our half of the DH share
-		power = (os.urandom(self.bits) % (2 ** self.bits))
+		rand = int(os.urandom(self.bits).encode('hex'), 16)
+		power = (rand % (2 ** self.bits))
 		ours = (self.gen ** power) % self.mod
 
 		# Send our half of the share to the other guy
