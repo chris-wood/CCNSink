@@ -72,7 +72,8 @@ def post_connect():
 			query_db('insert into gateways(address, last_update) values ("' + str(addr) + '", "' + str(datetime.datetime.now()) + '");')
 		else: # update the last_update time
 			time = str(datetime.datetime.now())
-			query_db('update gateways set last_update = "' + str(addr) + '" where gateway_id = ' + time + ';')
+			gid = str(match['gateway_id'])
+			query_db('update gateways set last_update = "' + time + '" where gateway_id = ' + gid + ';')
 		
 		# TOOD: authenticate the client
 		# cert = data["certificate"]
