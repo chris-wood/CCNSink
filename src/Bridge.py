@@ -119,7 +119,7 @@ class Bridge(threading.Thread):
 		dic = json.loads(list)
 		self.gateways = []
 		for gateway in dic["gateways"]:
-			self.gateways.append(gateway) # gateway should be the address
+			self.gateways.append(str(gateway)) # gateway should be the address
 
 	def getGateways(self):
 		return self.gateways

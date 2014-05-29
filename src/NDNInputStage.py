@@ -84,15 +84,15 @@ class NDNHandle(pyccn.Closure):
 			for j in range(0, i - 1):
 				prefix = prefix + name.components[j] + "/"
 			prefix = prefix + name.components[i]
-			(match, address) =  bridge.lookupPrefix(prefix)
+			(match, address) =  bridge.lookupPrefix(prefix) # address is a subset of bridge.gateways
 			if (match != None):
 				prefixMatch = True
 				bridge.sendInterest(name, address)
 
 		if (not prefixMatch): # broadcast to all gateways maintained by the bridge
 			for gateway in bridge.getGateways():
-				print(gateway)
-				bridge.sendInterest(name, address)
+				print(gateway) # this is the address of the gateway
+				bridge.sendInterest(name, gateway)
 
 		return pyccn.RESULT_OK
 
