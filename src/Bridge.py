@@ -157,6 +157,7 @@ class Bridge(threading.Thread):
 			print("TODO: establish a socket connection to the address")
 			sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 			addrtuple = (targetAddress, int(self.paramMap["BRIDGE_LOCAL_PORT"]))
+			print >> sys.stderr, str(addrtuple)
 			sock.connect(addrtuple) # address is a tuple, e.g., targetAddress = ("www.python.org", 80)
 			self.socketMap[targetAddress] = sock
 		else:
