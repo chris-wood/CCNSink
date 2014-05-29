@@ -56,7 +56,7 @@ class BridgeServer(asyncore.dispatcher, threading.Thread):
 		print >> sys.stderr, "Starting BridgeServer\n"
 		self.serve_forever()
 
-	def server_forever(self):
+	def serve_forever(self):
 		asyncore.loop()
 
 	def handle_close(self):
