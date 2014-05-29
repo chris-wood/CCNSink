@@ -125,7 +125,7 @@ class Bridge(threading.Thread):
 		return self.gateways
 
 	def lookupPrefix(self, prefix):
-		if (self.prefixGatewayMap.contains(prefix)):
+		if (prefix in self.prefixGatewayMap):
 			return self.prefixGatewayMap[prefix]
 		else:
 			return None
@@ -153,7 +153,7 @@ class Bridge(threading.Thread):
 		sock = None
 
 		# Retrieve socket
-		if (not self.socketMap.contains(targetAddress)):
+		if (not (targetAddress in self.socketMap)):
 			print("TODO: establish a socket connection to the address")
 			sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 			sock.connect(targetAddress) # address is a tuple, e.g., targetAddress = ("www.python.org", 80)
@@ -163,7 +163,7 @@ class Bridge(threading.Thread):
 
 		# Check to see if we have a shared key pair before sending an interest
 		# This occurs when we have not previously established a connection to the target
-		if (not self.keyMap.contains(targetAddress)):
+		if (not (targetAddress in self.keyMap)):
 			self.establishPairwiseKey(targetAddress, sock)
 		
 		# With a working socket and shared key, send the message
