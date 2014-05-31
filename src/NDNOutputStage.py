@@ -48,7 +48,6 @@ class NDNFetcher(threading.Thread):
 		# Perform time difference calc and log it
 		end = time.time()
 		entry = stage.table.lookupIPEntry(msg.tag) # entry is (msg, log, None, time)
-		print(entry)
 		if (entry != None):
 			diff = end - entry[3]
 			logger.info('IP-TO-NDN: ' + str(diff))

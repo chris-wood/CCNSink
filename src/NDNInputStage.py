@@ -55,12 +55,16 @@ class NDNHandle(pyccn.Closure):
 
 	def buildMessage(self, name, protocol):
 		if (protocol == "http"):
-			srcInfo = (self.paramMap["HTTP_HOST"], self.paramMap["HTTP_PORT"])
+			srcInfo = (self.paramMap["PUBLIC_IP"], self.paramMap["HTTP_PORT"])
 			dstInfo = (name.components[self.baseOffset + 1], name.components[self.baseOffset + 2])
-			path = str(name.components[self.baseOffset + 3:])
-			if (len(path[0] == 0)):
-				path = "/" # workaround
-			msg = OutgoingMessage(srcInfo, dstInfo, path, protocol)
+			path = name.components[self.baseOffset + 3:] # e.g., skip over protocol, dst IP, dst port, and go to 0 -> /gateway/http/google.com/80/0
+			if (len(path) == 0):
+				path = ["/"] # workaround
+			realPath = ""
+			for c in path:
+				realPath = c + "/"
+			print(realPath)
+			msg = OutgoingMessage(srcInfo, dstInfo, realPath, protocol)
 			return msg
 		# elif (protocol == "tcp"):
 		# 	# srcInfo = (self.paramMap["HTTP_HOST"], self.paramMap["HTTP_PORT"])
@@ -110,7 +114,6 @@ class NDNHandle(pyccn.Closure):
 			print >> sys.stderr, "Error: No protocol specified in name: " + str(info.Interest.name)
 			return self.forwardGeneralInterest(info.Interest.name)
 		protocol = str(info.Interest.name.components[self.baseOffset]).lower()
-		print("protocol = " + str(protocol))
 
 		# Construct a unique message for each of the supported protocols
 		msg = self.buildMessage(info.Interest.name, protocol)
@@ -123,8 +126,9 @@ class NDNHandle(pyccn.Closure):
 
 		# Put the message in the PMT, throw it to the next stage, and then block
 		semaphore = multiprocessing.BoundedSemaphore(0)
-		self.stage.table.insertNDNEntry(msg, semaphore, time)
+		self.stage.table.insertNDNEntry(msg, semaphore, start)
 		tup = (protocol, msg)
+		print("inserting msg to next stage")
 		self.stage.nextStage.put(tup)
 		semaphore.acquire()
 
@@ -133,10 +137,11 @@ class NDNHandle(pyccn.Closure):
 		data = None
 		if (entry != None):
 			self.stage.table.clearNDNEntry(msg.tag)
-			content = entry[2]
-			data = content
-			content = self.buildContentObject(info.Interest.name, data)
-			self.handle.put(content)
+			#data = entry[2]
+			data = "test...."
+			co = self.buildContentObject(info.Interest.name, data)
+			print(co.content)
+			self.handle.put(co)
 			return pyccn.RESULT_INTEREST_CONSUMED
 		else:
 			data = "Error: internal gateway error."

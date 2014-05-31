@@ -1,5 +1,6 @@
 import time
 import sys
+import pyccn
 
 class NDNOutputClosure(pyccn.Closure):
 	def __init__(self):
@@ -17,21 +18,19 @@ class NDNOutputClosure(pyccn.Closure):
 		co = self.handle.get(name = interest.name, template = interest)
 		return co
 
-handle = NDNOutputClosure(name, self, table, paramMap)
+handle = NDNOutputClosure()
 
 prefix = str(sys.argv[1])
 n = int(sys.argv[2])
 data = []
 for i in range(n):
-	name = pyccn.Name(msg.dstName)
+	start = time.time()
+	name = pyccn.Name(prefix + "/?nonce=" + str(i))
 	interest = pyccn.Interest(name = name, minSuffixComponents = 1)
-
-	# url = prefix + "/" + str(i)
-	# start = time.time()
-	# conn.request("GET", url)
-	# resp = conn.getresponse()
-	# end = time.time()
-	# data.append((n, url, resp, (end - start)))
+	print(interest.name)
+	co = handle.handle.get(name = interest.name, template = interest)
+	end = time.time()
+	data.append((n, str(interest.name), co.content, (end - start)))
 
 total = 0
 for i in range(n):
