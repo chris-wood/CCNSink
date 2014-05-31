@@ -55,7 +55,12 @@ class NDNFetcher(threading.Thread):
 
 		# Shoot out the interest and wait for the response
 		co = stage.handle.dispatch(interest)
-		if (stage.table.updateIPEntry(msg.tag, co.content) == False):
+		content = None
+		if (co != None):
+			content = co.content
+		else:
+			logger.error("NDN interest failed (None returned): " + str(msg))
+		if (stage.table.updateIPEntry(msg.tag, content) == False):
 			logger.error("Failed to update an entry")
 		entry[1].release() # release the lock now that we've updated the table
 
