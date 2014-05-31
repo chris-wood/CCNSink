@@ -1,6 +1,7 @@
 import sys
 import threading
 import pyccn
+import time
 from multiprocessing import Queue
 from PipelineStage import *
 from OutgoingMessage import *
@@ -17,9 +18,6 @@ class NDNOutputClosure(pyccn.Closure):
 	def upcall(self, kind, info):
 		if (kind == pyccn.UPCALL_FINAL):
 			return pyccn.RESULT_OK
-
-		# TODO: any special handling should go here..
-
 		return pyccn.RESULT_OK
 
 	def dispatch(self, interest):
@@ -50,6 +48,7 @@ class NDNOutputStage(PipelineStage, threading.Thread):
 		while (self.running):
 			msg = self.queue.get()
 			interest = self.buildInterest(msg)
+			end = time.time()
 			co = self.handle.dispatch(interest)
 			if (self.table.updateIPEntry(msg.tag, co) == False):
 				print >> sys.stderr, "FAILED TO UPDATE AN ENTRY"

@@ -15,6 +15,7 @@ class IPInputStageHTTPHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 
 	def do_GET(self):
 		global stage
+		start = time.time()
 		self.send_response(200)
 		self.send_header("Content-type", "text/html")
 		self.end_headers()
@@ -29,7 +30,7 @@ class IPInputStageHTTPHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 		myAddr = (stage.paramMap["PUBLIC_IP"], stage.paramMap["HTTP_PORT"])
 		msg = OutgoingMessage(addr, myAddr, targetInterestName, "http")
 		semaphore = multiprocessing.BoundedSemaphore(0)
-		stage.table.insertIPEntry(msg, semaphore)
+		stage.table.insertIPEntry(msg, semaphore, time)
 
 		# Drop the message into the pipeline and wait for a response
 		stage.nextStage.put(msg)
