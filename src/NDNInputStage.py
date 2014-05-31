@@ -62,16 +62,15 @@ class NDNHandle(pyccn.Closure):
 				path = "/" # workaround
 			msg = OutgoingMessage(srcInfo, dstInfo, path, protocol)
 			return msg
-		elif (protocol == "tcp"):
-			# srcInfo = (self.paramMap["HTTP_HOST"], self.paramMap["HTTP_PORT"])
-			# dstInfo = (name.components[self.baseOffset + 1], name.components[self.baseOffset + 2])
-			# path = str(name.components[self.baseOffset + 3:])
-			# if (len(path[0] == 0)):
-			# 	path = "/" # workaround
-			# msg = OutgoingMessage(srcInfo, dstInfo, path, protocol)
-			# return msg
-
-			return None
+		# elif (protocol == "tcp"):
+		# 	# srcInfo = (self.paramMap["HTTP_HOST"], self.paramMap["HTTP_PORT"])
+		# 	# dstInfo = (name.components[self.baseOffset + 1], name.components[self.baseOffset + 2])
+		# 	# path = str(name.components[self.baseOffset + 3:])
+		# 	# if (len(path[0] == 0)):
+		# 	# 	path = "/" # workaround
+		# 	# msg = OutgoingMessage(srcInfo, dstInfo, path, protocol)
+		# 	# return msg
+		# 	return None
 		else: # invalid case
 			raise RuntimeError()
 
@@ -97,6 +96,7 @@ class NDNHandle(pyccn.Closure):
 		return pyccn.RESULT_OK
 
 	def upcall(self, kind, info):
+		start = time.time()
 		if kind in [pyccn.UPCALL_FINAL, pyccn.UPCALL_CONSUMED_INTEREST]:
 			return pyccn.RESULT_OK
 
@@ -123,7 +123,7 @@ class NDNHandle(pyccn.Closure):
 
 		# Put the message in the PMT, throw it to the next stage, and then block
 		semaphore = multiprocessing.BoundedSemaphore(0)
-		self.stage.table.insertNDNEntry(msg, semaphore)
+		self.stage.table.insertNDNEntry(msg, semaphore, time)
 		tup = (protocol, msg)
 		self.stage.nextStage.put(tup)
 		semaphore.acquire()

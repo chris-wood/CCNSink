@@ -45,7 +45,7 @@ class NDNFetcher(threading.Thread):
 		stage = self.stage
 		interest = stage.buildInterest(msg)
 
-		# Perform time difference calc
+		# Perform time difference calc and log it
 		end = time.time()
 		entry = stage.table.lookupIPEntry(msg.tag) # entry is (msg, log, None, time)
 		print(entry)

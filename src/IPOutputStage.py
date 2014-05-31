@@ -46,58 +46,58 @@ class HTTPOutputStage(PipelineStage, threading.Thread):
 			else:
 				print >> sys.stderr, "Error deliverying message: " + str(msg)
 
-class FTPOutputStage(PipelineStage, threading.Thread):
-	def __init__(self, name, table, paramMap):
-		threading.Thread.__init__(self)
-		self.name = name
-		self.table = table
-		self.queue = Queue()
+# class FTPOutputStage(PipelineStage, threading.Thread):
+# 	def __init__(self, name, table, paramMap):
+# 		threading.Thread.__init__(self)
+# 		self.name = name
+# 		self.table = table
+# 		self.queue = Queue()
 
-	def put(self, msg):
-		self.queue.put(msg)
+# 	def put(self, msg):
+# 		self.queue.put(msg)
 
-	def outputMessage(self, msg, protocol):
-		raise RuntimeError()
-		# ip = msg.dstInfo[0]
-		# port = msg.dstInfo[1]
-		# target = str(ip) + ":" + str(port)
+# 	def outputMessage(self, msg, protocol):
+# 		raise RuntimeError()
+# 		# ip = msg.dstInfo[0]
+# 		# port = msg.dstInfo[1]
+# 		# target = str(ip) + ":" + str(port)
 
-		# # Connect to the server and login
-		# ftp = FTP(target)
-		# ftp.login()
+# 		# # Connect to the server and login
+# 		# ftp = FTP(target)
+# 		# ftp.login()
 
-		# # Fetch the file and pipe its contents back as content
-		# f = open("ftp-tmp", "wb")
-		# ftp.retrbinary("RETR " + file,f.write)
-		# f.close
-		# contents = []
-		# with open("myfile", "rb") as f:
-		# 	byte = f.read(1)
-		# 	contents.append(byte)
-		# 	while byte != "":
-  #       		byte = f.read(1)
-  #       		contents.append(byte)
-  #       ba = bytearray(h.decode("hex") for h in contents)
-		# return ba
+# 		# # Fetch the file and pipe its contents back as content
+# 		# f = open("ftp-tmp", "wb")
+# 		# ftp.retrbinary("RETR " + file,f.write)
+# 		# f.close
+# 		# contents = []
+# 		# with open("myfile", "rb") as f:
+# 		# 	byte = f.read(1)
+# 		# 	contents.append(byte)
+# 		# 	while byte != "":
+#   #       		byte = f.read(1)
+#   #       		contents.append(byte)
+#   #       ba = bytearray(h.decode("hex") for h in contents)
+# 		# return ba
 
-	def run(self):
-		self.running = True
-		while (self.running):
-			tup = self.queue.get()
+# 	def run(self):
+# 		self.running = True
+# 		while (self.running):
+# 			tup = self.queue.get()
 
-			print >> sys.stderr, "FTPOutputStage processing a message..."
-			protocol = tup[0]
-			msg = tup[1]
+# 			print >> sys.stderr, "FTPOutputStage processing a message..."
+# 			protocol = tup[0]
+# 			msg = tup[1]
 
-			# Output the message and get the response back
-			res = self.outputMessage(msg, protocol)
-			if (res != None):
-				if (self.table.updateNDNEntry(msg.tag, res) == False):
-					print >> sys.stderr, "FAILED TO UPDATE AN ENTRY"
-				entry = self.table.lookupNDNEntry(msg.tag)
-				entry[1].release() # release the lock now that we've updated the table
-			else:
-				print >> sys.stderr, "Error deliverying message: " + str(msg)
+# 			# Output the message and get the response back
+# 			res = self.outputMessage(msg, protocol)
+# 			if (res != None):
+# 				if (self.table.updateNDNEntry(msg.tag, res) == False):
+# 					print >> sys.stderr, "FAILED TO UPDATE AN ENTRY"
+# 				entry = self.table.lookupNDNEntry(msg.tag)
+# 				entry[1].release() # release the lock now that we've updated the table
+# 			else:
+# 				print >> sys.stderr, "Error deliverying message: " + str(msg)
 
 class IPOutputStage(PipelineStage):
 	def __init__(self, name, table, paramMap):
