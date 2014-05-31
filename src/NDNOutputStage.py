@@ -2,11 +2,20 @@ import sys
 import threading
 import pyccn
 import time
+import logging
 from multiprocessing import Queue
 from PipelineStage import *
 from OutgoingMessage import *
 
 stage = None
+
+# Setup logging redirection
+logger = logging.getLogger('gateway')
+hdlr = logging.FileHandler('./gateway.log')
+formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+hdlr.setFormatter(formatter)
+logger.addHandler(hdlr) 
+logger.setLevel(logging.INFO)
 
 class NDNOutputClosure(pyccn.Closure):
 	def __init__(self, name, stage, table = None, paramMap = {}):
@@ -23,6 +32,32 @@ class NDNOutputClosure(pyccn.Closure):
 	def dispatch(self, interest):
 		co = self.handle.get(name = interest.name, template = interest)
 		return co
+
+class NDNFetcher(threading.Thread):
+	def __init__(self, stage, msg):
+		threading.Thread.__init__(self)
+		self.stage = stage
+		self.msg = msg
+
+	def run(self):
+		# Build the interest
+		msg = self.msg
+		stage = self.stage
+		interest = stage.buildInterest(msg)
+
+		# Perform time difference calc
+		end = time.time()
+		entry = stage.table.lookupIPEntry(msg.tag) # entry is (msg, log, None, time)
+		print(entry)
+		if (entry != None):
+			diff = end - entry[3]
+			logger.info('IP-TO-NDN: ' + str(diff))
+
+		# Shoot out the interest and wait for the response
+		co = stage.handle.dispatch(interest)
+		if (stage.table.updateIPEntry(msg.tag, co.content) == False):
+			logger.error("Failed to update an entry")
+		entry[1].release() # release the lock now that we've updated the table
 
 class NDNOutputStage(PipelineStage, threading.Thread):
 	def __init__(self, name, table = None, paramMap = {}):
@@ -47,12 +82,6 @@ class NDNOutputStage(PipelineStage, threading.Thread):
 		self.running = True
 		while (self.running):
 			msg = self.queue.get()
-			interest = self.buildInterest(msg)
-			end = time.time()
-			co = self.handle.dispatch(interest)
-			if (self.table.updateIPEntry(msg.tag, co) == False):
-				print >> sys.stderr, "FAILED TO UPDATE AN ENTRY"
-			entry = stage.table.lookupIPEntry(msg.tag)
-			entry[1].release() # release the lock now that we've updated the table
-
+			fetcher = NDNFetcher(self, msg)
+			fetcher.run()
 

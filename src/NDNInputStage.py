@@ -110,6 +110,7 @@ class NDNHandle(pyccn.Closure):
 			print >> sys.stderr, "Error: No protocol specified in name: " + str(info.Interest.name)
 			return self.forwardGeneralInterest(info.Interest.name)
 		protocol = str(info.Interest.name.components[self.baseOffset]).lower()
+		print("protocol = " + str(protocol))
 
 		# Construct a unique message for each of the supported protocols
 		msg = self.buildMessage(info.Interest.name, protocol)

@@ -30,7 +30,7 @@ class IPInputStageHTTPHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 		myAddr = (stage.paramMap["PUBLIC_IP"], stage.paramMap["HTTP_PORT"])
 		msg = OutgoingMessage(addr, myAddr, targetInterestName, "http")
 		semaphore = multiprocessing.BoundedSemaphore(0)
-		stage.table.insertIPEntry(msg, semaphore, time)
+		stage.table.insertIPEntry(msg, semaphore, start)
 
 		# Drop the message into the pipeline and wait for a response
 		stage.nextStage.put(msg)
