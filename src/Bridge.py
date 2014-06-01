@@ -185,28 +185,29 @@ class Bridge(threading.Thread):
 
 	# Messages are sent as follows: |name length|name|
 	def sendInterest(self, interest, targetAddress):
-		sock = None
+		if (targetAddress != self.paramMap["PUBLIC_IP"]): # don't forward to ourselves..
+			sock = None
 
-		# Retrieve socket
-		if (not (targetAddress in self.socketMap)):
-			sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-			addrtuple = (targetAddress, int(self.paramMap["BRIDGE_LOCAL_PORT"]))
-			print >> sys.stderr, "Establishing socket connection to " + str(addrtuple)
-			logger.info("Establishing socket connection to " + str(addrtuple))
-			sock.connect(addrtuple) # address is a tuple, e.g., targetAddress = ("www.python.org", 80)
-			self.socketMap[targetAddress] = sock
-		else:
-			sock = self.socketMap[targetAddress]
+			# Retrieve socket
+			if (not (targetAddress in self.socketMap)):
+				sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+				addrtuple = (targetAddress, int(self.paramMap["BRIDGE_LOCAL_PORT"]))
+				print >> sys.stderr, "Establishing socket connection to " + str(addrtuple)
+				logger.info("Establishing socket connection to " + str(addrtuple))
+				sock.connect(addrtuple) # address is a tuple, e.g., targetAddress = ("www.python.org", 80)
+				self.socketMap[targetAddress] = sock
+			else:
+				sock = self.socketMap[targetAddress]
 
-		# Check to see if we have a shared key pair before sending an interest
-		# This occurs when we have not previously established a connection to the target
-		if (not (targetAddress in self.keyMap)):
-			self.establishPairwiseKey(targetAddress, sock)
-		
-		# With a working socket and shared key, send the message
-		nameLen = len(interest)
-		sock.send(nameLen)
-		sock.send(str(interest))
+			# Check to see if we have a shared key pair before sending an interest
+			# This occurs when we have not previously established a connection to the target
+			if (not (targetAddress in self.keyMap)):
+				self.establishPairwiseKey(targetAddress, sock)
+			
+			# With a working socket and shared key, send the message
+			nameLen = len(interest)
+			sock.send(nameLen)
+			sock.send(str(interest))
 
 	def retrieveContent(self, content, sourceAddress):
 		raise RuntimeError()
