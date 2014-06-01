@@ -6,9 +6,18 @@ import json
 import asyncore
 import socket
 import os
+import logging
 from multiprocessing import Queue
 
 socketMap = {}
+
+# Setup logging redirection
+logger = logging.getLogger('bridge')
+hdlr = logging.FileHandler('./bridge.log')
+formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+hdlr.setFormatter(formatter)
+logger.addHandler(hdlr) 
+logger.setLevel(logging.INFO)
 
 class BridgeHandler(asyncore.dispatcher_with_send):
 
@@ -16,8 +25,7 @@ class BridgeHandler(asyncore.dispatcher_with_send):
 		self.started = False
 		self.buffer = []
 		self.bridge = bridge
-
-		print("creating the handler...")
+		self.address = addr
 
 		# Generate a random power and compute the DH half
 		self.mod = bridge.mod
@@ -27,12 +35,12 @@ class BridgeHandler(asyncore.dispatcher_with_send):
 		self.power = (rand % (2 ** self.bits))
 		self.ours = (self.gen ** self.power) % self.mod
 
-		# TODO: use address
-		self.address = addr
+		print >> sys.stderr, "Handler initialized"
+		logger.info("Handler initialized")
 
 	# self.request is the TCP socket connected to the client
 	def handle_read(self):
-		print("inside handle_read")
+		print >> sys.stderr, "inside handle_read"
 		data = None
 		if (not self.started):
 
@@ -41,12 +49,12 @@ class BridgeHandler(asyncore.dispatcher_with_send):
 			theirs = self.recv(length) # receive their DH half
 			key = (self.ours ** int(theirs)) % self.mod
 			self.bridge.keyMap[self.address] = key
-			print("establishe key: " + str(key))
+			print >> sys.stderr, "established key: " + str(key)
 
 			# retrieve interest
 			length = self.recv(4)
 			interest = self.recv(length) # receive their DH half
-			print("received interest = " + str(interest))
+			print >> sys.stderr, "received interest = " + str(interest)
 		if (data != None):
 			self.send(data)
 
@@ -66,11 +74,13 @@ class BridgeServer(asyncore.dispatcher, threading.Thread):
 		if pair is not None:
 			sock, addr = pair
 			print >> sys.stderr, 'Incoming connection from %s' % repr(addr)
+			logger.info('Incoming connection from %s' % repr(addr))
 			handler = BridgeHandler(sock) # spins off a thread in the background
 			handler.setup(self.bridge, addr)
 
 	def run(self):
 		print >> sys.stderr, "Starting BridgeServer on " + str(self.addr) + "\n"
+		logger.info("Starting BridgeServer on " + str(self.addr))
 		self.serve_forever()
 
 	def serve_forever(self):
@@ -179,10 +189,10 @@ class Bridge(threading.Thread):
 
 		# Retrieve socket
 		if (not (targetAddress in self.socketMap)):
-			print("TODO: establish a socket connection to the address")
 			sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 			addrtuple = (targetAddress, int(self.paramMap["BRIDGE_LOCAL_PORT"]))
-			print >> sys.stderr, str(addrtuple)
+			print >> sys.stderr, "Establishing socket connection to " + str(addrtuple)
+			logger.info("Establishing socket connection to " + str(addrtuple))
 			sock.connect(addrtuple) # address is a tuple, e.g., targetAddress = ("www.python.org", 80)
 			self.socketMap[targetAddress] = sock
 		else:
@@ -199,7 +209,6 @@ class Bridge(threading.Thread):
 		sock.send(str(interest))
 
 	def retrieveContent(self, content, sourceAddress):
-		# TODO
 		raise RuntimeError()
 
 if __name__ == "__main__":

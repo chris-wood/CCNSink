@@ -2,10 +2,19 @@ from FlaskBackend import *
 import sys
 import json
 import datetime
+import logging
 
 app.debug = True
 
 DATABASE = './db/directory.db'
+
+# Setup logging redirection
+logger = logging.getLogger('directory')
+hdlr = logging.FileHandler('./directory.log')
+formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+hdlr.setFormatter(formatter)
+logger.addHandler(hdlr) 
+logger.setLevel(logging.INFO)
 
 def debug(m):
 	print >> sys.stderr, m
