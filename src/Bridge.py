@@ -226,6 +226,7 @@ class Bridge(threading.Thread):
 			if (not (targetAddress in self.socketMap)):
 				print("checking key map")
 				if (not (targetAddress in self.keyMap)):
+					print >> sys.stderr, "Creating key share"
 					ours = self.generateKeyHalf()
 					print >> sys.stderr, "Creating client"
 					sock = BridgeClient(targetAddress, int(self.paramMap["BRIDGE_LOCAL_PORT"]), ours)
@@ -234,6 +235,10 @@ class Bridge(threading.Thread):
 					self.keyMap[targetAddress] = key
 					print >> sys.stderr, "Key = " + str(key)
 					logger.info("Key = " + str(key))
+				else:
+					print >> sys.stderr, "not generating key"
+			else:
+				print >> sys.stderr, "not generating socket"
 
 			print >> sys.stderr, "Socket retrieved - sending data"
 			logger.info("Socket retrieved - sending data")
