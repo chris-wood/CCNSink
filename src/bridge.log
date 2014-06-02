@@ -8,3 +8,5 @@
 2014-06-01 17:27:04,549 INFO Establishing socket connection to 192.168.1.6
 2014-06-01 17:39:35,104 INFO Starting BridgeServer on ('192.168.1.10', 9000)
 2014-06-01 17:41:48,751 INFO Starting BridgeServer on ('192.168.1.10', 9000)
+2014-06-01 17:42:59,475 INFO Starting BridgeServer on ('192.168.1.10', 9000)
+2014-06-01 17:44:35,254 INFO Starting BridgeServer on ('192.168.1.10', 9000)

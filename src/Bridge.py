@@ -217,11 +217,14 @@ class Bridge(threading.Thread):
 
 	# Messages are sent as follows: |name length|name|
 	def sendInterest(self, interest, targetAddress):
+		print("sending interest")
 		if (targetAddress != self.paramMap["PUBLIC_IP"]): # don't forward to ourselves..
 			sock = None
 
 			# Retrieve socket
+			print("checking socket map")
 			if (not (targetAddress in self.socketMap)):
+				print("checking key map")
 				if (not (targetAddress in self.keyMap)):
 					ours = self.generateKeyHalf()
 					print >> sys.stderr, "Creating client"
