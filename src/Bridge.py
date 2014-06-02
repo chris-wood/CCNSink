@@ -200,9 +200,9 @@ class Bridge(threading.Thread):
 		if b == 0:
 			ret = 1
 		elif b%2:
-			ret = a * modExp(a,b-1,m)
+			ret = a * self.modExp(a,b-1,m)
 		else:
-			ret = modExp(a,b//2,m)
+			ret = self.modExp(a,b//2,m)
 			ret *= ret
 		return ret%m
 
