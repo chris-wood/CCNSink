@@ -246,10 +246,12 @@ class Bridge(threading.Thread):
 					print >> sys.stderr, "Creating client"
 					sock = BridgeClient(targetAddress, int(self.paramMap["BRIDGE_LOCAL_PORT"]), ours)
 					theirs = sock.receiveBuffer
-					key = (ours ** int(theirs)) % mod
-					self.keyMap[targetAddress] = key
-					print >> sys.stderr, "Key = " + str(key)
-					logger.info("Key = " + str(key))
+					print >> sys.stderr, "Received: " + str(theirs)
+					### TODO: convert list of bytes
+					# key = (ours ** int(theirs)) % mod
+					self.keyMap[targetAddress] = theirs
+					print >> sys.stderr, "Key = " + str(theirs)
+					logger.info("Key = " + str(theirs))
 				else:
 					print >> sys.stderr, "not generating key"
 			else:
