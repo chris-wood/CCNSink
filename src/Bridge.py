@@ -50,13 +50,17 @@ class BridgeHandler(asyncore.dispatcher_with_send):
 			key = (self.ours ** int(theirs)) % self.mod
 			self.bridge.keyMap[self.address] = key
 			print >> sys.stderr, "established key: " + str(key)
+			logger.info("established key: " + str(key))
 
 			# retrieve interest
 			length = self.recv(4)
 			interest = self.recv(length) # receive their DH half
 			print >> sys.stderr, "received interest = " + str(interest)
+			logger.info("received interest = " + str(interest))
+
+		# Shove the data into the output buffer
 		if (data != None):
-			self.send(data)
+			self.out_bfufer = data
 
 class BridgeServer(asyncore.dispatcher, threading.Thread):
 	def __init__(self, bridge, host, port):
@@ -88,6 +92,29 @@ class BridgeServer(asyncore.dispatcher, threading.Thread):
 
 	def handle_close(self):
 		self.close()
+
+class BridgeClient(asyncore.dispatcher_with_send):
+	def __init__(self, host, port):
+		asyncore.dispatcher.__init__(self)
+		self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
+		self.connect((host, port))
+		self.receiveBuffer = []
+		print >> sys.stderr, "Establishing socket connection to " + str(addrtuple)
+		logger.info("Establishing socket connection to " + str(addrtuple))
+		# self.out_buffer = data
+
+	def send_data(self, data):
+		self.out_buffer = data
+
+	def handle_close(self):
+		self.close()
+
+	def handle_read(self):
+		length = self.recv(4)
+		self.receiveBuffer.append(length)
+		data = self.recv(length)
+		self.receiveBuffer.append(data)
+		print >> sys.stderr, "Received: "  + str(data)
 
 class Bridge(threading.Thread):
 	def __init__(self, paramMap):
@@ -172,16 +199,17 @@ class Bridge(threading.Thread):
 
 		# Send our half of the share to the other guy
 		sharestr = str(ours)
-		sock.send(len(sharestr))
-		sock.send(sharestr)
+		sock.send_data(len(sharestr))
+		sock.send_data(sharestr)
 
 		# Receive their share
-		length = sock.recv(4)
-		theirs = sock.recv(length)
+		print >> sys.stderr, "receving data...."
+		# length = sock.recv(4)
+		# theirs = sock.recv(length)
 
 		# Compute and save the key
-		key = (ours ** int(theirs)) % mod
-		self.keyMap[targetAddress] = key
+		# key = (ours ** int(theirs)) % mod
+		# self.keyMap[targetAddress] = key
 
 	# Messages are sent as follows: |name length|name|
 	def sendInterest(self, interest, targetAddress):
@@ -190,12 +218,11 @@ class Bridge(threading.Thread):
 
 			# Retrieve socket
 			if (not (targetAddress in self.socketMap)):
-				sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-				addrtuple = (targetAddress, int(self.paramMap["BRIDGE_LOCAL_PORT"]))
-				print >> sys.stderr, "Establishing socket connection to " + str(addrtuple)
-				logger.info("Establishing socket connection to " + str(addrtuple))
-				sock.connect(addrtuple) # address is a tuple, e.g., targetAddress = ("www.python.org", 80)
-				self.socketMap[targetAddress] = sock
+				# sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+				# addrtuple = (targetAddress, int(self.paramMap["BRIDGE_LOCAL_PORT"]))
+				# sock.connect(addrtuple) # address is a tuple, e.g., targetAddress = ("www.python.org", 80)
+				# self.socketMap[targetAddress] = sock
+				self.socketMap[targetAddress] = BridgeClient(targetAddress, int(self.paramMap["BRIDGE_LOCAL_PORT"]))
 			else:
 				sock = self.socketMap[targetAddress]
 
@@ -206,8 +233,8 @@ class Bridge(threading.Thread):
 			
 			# With a working socket and shared key, send the message
 			nameLen = len(interest)
-			sock.send(nameLen)
-			sock.send(str(interest))
+			sock.send_data(nameLen)
+			sock.send_data(str(interest))
 
 	def retrieveContent(self, content, sourceAddress):
 		raise RuntimeError()
