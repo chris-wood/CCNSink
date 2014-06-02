@@ -5,7 +5,7 @@ Consider the typical hourglass network stack in IP-based networks as shown in le
 \begin{center}
 \includegraphics[scale=0.32]{./images/hourglass_conn.pdf}
 \label{fig:hourglass}
-\caption{A visual comparison of the network stacks for the IP and NDN network architectures.}
+\caption{A visual comparison of the network stacks for the IP and NDN network architectures (figure from \cite{ndn-techreport}).}
 \end{center}
 \end{figure}
 
@@ -89,8 +89,6 @@ Due to their architectural differences, there does not exist a native correspond
 
 <tcp-param>: <uri-encoded-string>.
 
-<uri-encoded-string>: TODO
-
 % <number>:	<real-number>;
 % 		"$\{$" <real-number> "," <real-number> "$\}$";
 % 		{$\backslash$}b[01][01]+;
@@ -131,7 +129,7 @@ A visual depiction of this scenario is shown in Figure \ref{fig:islands}. To inc
 \begin{center}
 \includegraphics[scale=0.45]{./images/island_tunnel.pdf}
 \label{fig:islands}
-\caption{TODO.}
+\caption{Visual depiction of a bridge between CCN islands.}
 \end{center}
 \end{figure}
 
@@ -141,7 +139,7 @@ In the latter case, one issue is the method for locating and retrieving cryptogr
 
 	\item[\textbf{Full PKI-based Digital Signatures}:] The only modification required for this variant is that gateways must be given the certificate for each gateway with which it will communicate. Certificates are exchanged and stored via the control channel between adjacent gateways.
 
-	\item[\textbf{Pair-Wise Keyed MAC Tags}:] In this variant, each pair of gateways will run the DH protocol to establish a shared common symmetric key to use for generating MAC tags. The DH protocol is run over the control channel between adjacent gateways. With $n$ gateway routers, this variant requires $(n(n-1))/2$ key pairs. MAC keys need to only be refreshed when they expire out or the gateway connectivity changes. New gateways can discover all other gateways by querying a central ``gateway directory'' server, obtaining a list of all corresponding IP addresses, and then initiating control channel connections with them.
+	\item[\textbf{Pair-Wise Keyed MAC Tags}:] In this variant, each pair of gateways will run the DH protocol to establish a shared common symmetric key to use for generating MAC tags. The DH protocol is run over the control channel between adjacent gateways. With $n$ gateway routers, this variant requires $frac{n(n-1)}{2}$ key pairs. MAC keys need to only be refreshed when they expire out or the gateway connectivity changes. New gateways can discover all other gateways by querying a central ``gateway directory'' server, obtaining a list of all corresponding IP addresses, and then initiating control channel connections with them.
 
 	\item[\textbf{Group-Based Keyed MAC Tags}:] When all groups share a common key, the ``gateway directory'' server is repurposed as a distributed director for all registered gateways that is responsible for coordinating group key agreement protocols (i.e., TGDH). After a single invocation of TGDH, each gateway will possess the same MAC key $k$ used for tagging and verifying content. Each individual gateway is also required to periodically send heartbeat messages to the director in order to maintain an active list of available gateways. The director will initiate new instances of the TGDH protocol to establish a new shared group key whenever gateway connectivity changes, i.e., when new gateways are added or time out. 
 

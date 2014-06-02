@@ -1,5 +1,8 @@
 \section{Implementation Overview}
-\todo[inline]{pipeline stage defers parsing to subclasses - template pattern}
+\sink\ is implemented entirely in Python using the PyCCN \cite{pyccn} wrapper around CCNx. Its design can be viewed from two perspective: the gateway component and the bridge component. Though the bridge component uses elements of the gateway to minimize redundant code, the designs of each are mostly independent. In this section we describe each of the respective designs in more detail. 
+
+\subsection{Gateway Design}
+The core design of the gateway can be perceived as the composition of two flexible pipelines that route traffic from NDN (resp. IP) networks to IP (resp. NDN) networks (see Figure \ref{fig:pipeline}). Each pipeline begins and ends with an {\tt InputStage} and {\tt OutputStage}, respectively, one for the IP network and one for the NDN network. Each {\tt InputStage} instance runs an appropriate interface to the network from which it receives traffic. Specifically, the {\tt IPInputStage} runs an HTTP server to intercept IP-to-NDN interests, and the {\tt NDNInputStage} registers a CCNx handle and configures an interest filter for incoming interests. 
 
 \begin{figure*}[ht!]
 \begin{center}
@@ -8,3 +11,18 @@
 \caption{Bidirectional message pipeline for IP-to-NDN and NDN-to-IP message traversal.}
 \end{center}
 \end{figure*}
+
+It is important to emphasize that the {\tt NDNInputStage} operates independently of the underlying network implementation. In a true deployment, CCNx would not be used to interface with the NDN network. Rather, a CCN network stack would be implemented on top of the NDN network interface controller. The mechanism for registering an interest filter on top of this network stack would change, but the functionality that happens after an interest is intercepted will remain the same. Using CCnx for the preliminary development of this gateway was necessary since there does not yet exist NDN NICs or CCN software stacks that are not built upon the TCP/IP stack.
+
+After an input stage receives an incoming message (i.e., an IP packet or NDN interest), the asynchronous message handler will allocate an entry in the \emph{pending message table} for the network interface, decompose the components of the message into its ``raw form'' and save them in common message object wrapper, and forward the resulting object to the next pipeline stage. For example, the {\tt IPInputStage} will save the IP source host and port information in the {\tt IPPendingMessageTable}, extract the URI path and set it as the ``destination'' field in the outgoing message object, and forward this object to the next pipeline stage. In addition to the message source information for each entry in the pending message table, a binary semaphore is also stored. After forwarding the object, each handler will acquire a lock on this binary semaphore until the content associated with this message is retrieved from the target network. 
+
+The pipeline is designed so that each stage (with the exception of the {\tt InputStage}) has a thread-safe input queue and a reference to the next stage (with the exception of the {\tt OutputStage}). This simple interface enables any number of intermediate stages to be configured between the input and output stages. For simplicity, the \sink\ implementation only uses two stages - input and output stages. 
+
+Once a message reaches the output stage a new message for the target network is created and issued to the network. For example, an NDN interest will be formatted based on the contents of the outgoing message object retrieved from the output stage queue. 
+
+After the network responds with content, the input stage of the target network performs the following tasks. First, the pending message table is checked for the an entry corresponding to the input message (e.g., an interest name that matches name of a previously issued interest). If an entry is found, the content field of the matching entry is populated and the binary semaphore associated with the semaphore is released. The latter step unblocks the original asynchronous input stage message handler, which then retrieves the content from the pending message table entry and sends it to the original consumer. If a matching entry in the pending message table is not found, the incoming message is treated as a ``new'' message, and it is formatted and flows through the pipeline in the opposite direction. 
+
+% \todo[inline]{pipeline stage defers parsing to subclasses - template pattern}
+
+\subsection{Bridge Design}
+As illustrated by Figure \ref{fig:pipeline}, the bridge component of \sink\ is designed to interoperate with the {\tt NDNInputStage} and {\tt NDNOutputStage} stages. 
