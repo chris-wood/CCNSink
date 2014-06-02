@@ -94,14 +94,14 @@ class BridgeServer(asyncore.dispatcher, threading.Thread):
 		self.close()
 
 class BridgeClient(asyncore.dispatcher_with_send):
-	def __init__(self, host, port):
+	def __init__(self, host, port, data):
 		asyncore.dispatcher.__init__(self)
 		self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
 		self.connect((host, port))
 		self.receiveBuffer = []
 		print >> sys.stderr, "Establishing socket connection to " + str(host)
 		logger.info("Establishing socket connection to " + str(host))
-		# self.out_buffer = data
+		self.out_buffer = data
 
 	def send_data(self, data):
 		print >> sys.stderr, "Sending: " + str(data)
@@ -116,6 +116,7 @@ class BridgeClient(asyncore.dispatcher_with_send):
 		data = self.recv(length)
 		self.receiveBuffer.append(data)
 		print >> sys.stderr, "Received: "  + str(data)
+		self.close()
 
 class Bridge(threading.Thread):
 	def __init__(self, paramMap):
@@ -192,19 +193,21 @@ class Bridge(threading.Thread):
 		else:
 			return None
 
-	def establishPairwiseKey(self, targetAddress, sock):
-		# Generate our half of the DH share
+	# Generate our half of the DH share
+	def generateKeyHalf(self):
 		rand = int(os.urandom(self.bits).encode('hex'), 16)
 		power = (rand % (2 ** self.bits))
 		ours = (self.gen ** power) % self.mod
+		return outs
 
 		# Send our half of the share to the other guy
-		sharestr = str(ours)
-		sock.send_data(len(sharestr))
-		sock.send_data(sharestr)
+		# sharestr = str(ours)
+		# sock.send_data(len(sharestr))
+		# sock.send_data(sharestr)
+		# return ours
 
 		# Receive their share
-		print >> sys.stderr, "receving data...."
+		# print >> sys.stderr, "receving data...."
 		# length = sock.recv(4)
 		# theirs = sock.recv(length)
 
@@ -219,27 +222,28 @@ class Bridge(threading.Thread):
 
 			# Retrieve socket
 			if (not (targetAddress in self.socketMap)):
-				# sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-				# addrtuple = (targetAddress, int(self.paramMap["BRIDGE_LOCAL_PORT"]))
-				# sock.connect(addrtuple) # address is a tuple, e.g., targetAddress = ("www.python.org", 80)
-				# self.socketMap[targetAddress] = sock
-				self.socketMap[targetAddress] = BridgeClient(targetAddress, int(self.paramMap["BRIDGE_LOCAL_PORT"]))
-			else:
-				sock = self.socketMap[targetAddress]
+				if (not (targetAddress in self.keyMap)):
+					ours = self.generateKeyHalf()
+					sock = BridgeClient(targetAddress, int(self.paramMap["BRIDGE_LOCAL_PORT"]), ours)
+					theirs = sock.receiveBuffer
+					key = (ours ** int(theirs)) % mod
+					self.keyMap[targetAddress] = key
+					print >> sys.stderr, "Key = " + str(key)
+					logger.info("Key = " + str(key))
 
-			# Check to see if we have a shared key pair before sending an interest
-			# This occurs when we have not previously established a connection to the target
-			if (not (targetAddress in self.keyMap)):
-				self.establishPairwiseKey(targetAddress, sock)
+			print >> sys.stderr, "Socket retrieved - sending data"
+			logger.info("Socket retrieved - sending data")
 			
-			# With a working socket and shared key, send the message
-			nameLen = len(interest)
-			sock.send_data(nameLen)
-			sock.send_data(str(interest))
+			# Send the interest now...
+			sock = BridgeClient(targetAddress, int(self.paramMap["BRIDGE_LOCAL_PORT"]), interest)
+			output = sock.receiveBuffer
+			print >> sys.stderr, "Received " + str(output)
+			logger.info("Received " + str(output))
 
 	def retrieveContent(self, content, sourceAddress):
 		raise RuntimeError()
 
+# Runnable unit for testing...
 if __name__ == "__main__":
 	if (sys.argv[1] == "s"):
 		server = BridgeServer(None, "192.168.1.10", 9000)
