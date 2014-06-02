@@ -102,7 +102,7 @@ class BridgeClient(asyncore.dispatcher_with_send):
 		self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
 		self.connect((host, port))
 		self.receiveBuffer = []
-		self.out_buffer = data
+		self.out_buffer = str(data).split(' ')
 
 	# def send_data(self, data):
 	# 	print >> sys.stderr, "Sending: " + str(data)
@@ -114,7 +114,7 @@ class BridgeClient(asyncore.dispatcher_with_send):
 	def handle_read(self):
 		length = self.recv(4)
 		self.receiveBuffer.append(length)
-		data = self.recv(length)
+		data = str(self.recv(length)).split(' ')
 		self.receiveBuffer.append(data)
 		print >> sys.stderr, "Received: "  + str(data)
 		self.close()
