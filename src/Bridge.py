@@ -213,7 +213,7 @@ class Bridge(threading.Thread):
 		power = (rand % (2 ** self.bits))
 		# ours = (self.gen ** power) % self.mod
 		ours = self.modExp(self.gen, power, self.mod)
-		return outs
+		return ours
 
 		# Send our half of the share to the other guy
 		# sharestr = str(ours)
