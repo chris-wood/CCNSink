@@ -1,7 +1,7 @@
 \section{Implementation Overview}
 \sink\ is implemented entirely in Python using the PyCCN \cite{pyccn} wrapper around CCNx. Its design can be viewed from two perspective: the gateway component and the bridge component. Though the bridge component uses elements of the gateway to minimize redundant code, the designs of each are mostly independent. In this section we describe each of the respective designs in more detail. 
 
-\subsection{Gateway Design}
+\subsection{Gateway Implementation}
 The core design of the gateway can be perceived as the composition of two flexible pipelines that route traffic from NDN (resp. IP) networks to IP (resp. NDN) networks (see Figure \ref{fig:pipeline}). Each pipeline begins and ends with an {\tt InputStage} and {\tt OutputStage}, respectively, one for the IP network and one for the NDN network. Each {\tt InputStage} instance runs an appropriate interface to the network from which it receives traffic. Specifically, the {\tt IPInputStage} runs an HTTP server to intercept IP-to-NDN interests, and the {\tt NDNInputStage} registers a CCNx handle and configures an interest filter for incoming interests. 
 
 \begin{figure*}[ht!]
@@ -24,5 +24,14 @@ After the network responds with content, the input stage of the target network p
 
 % \todo[inline]{pipeline stage defers parsing to subclasses - template pattern}
 
-\subsection{Bridge Design}
-As illustrated by Figure \ref{fig:pipeline}, the bridge component of \sink\ is designed to interoperate with the {\tt NDNInputStage} and {\tt NDNOutputStage} stages. 
+\subsection{Bridge Implementation}
+As illustrated by Figure \ref{fig:pipeline}, the bridge component of \sink\ is designed to interoperate with the {\tt NDNInputStage} and {\tt NDNOutputStage} stages. The current implementation uses a central directory to manage bridge locations and status updates (see Section \ref{sec:bridge}). Additionally, due to the small scale at which \sink\ was tested, the pair-wise MAC key management scheme is implemented. The design and implementation does not impede the integration of the more efficient TGDH protocol that is also discussed in Section \ref{sec:bridge}. Each instance of \sink\ runs a separate thread for the bridge component that manages the following tasks:
+\begin{compactitem}
+	\item Sending periodic heartbeat messages to the bridge.
+	\item Establishing and storing pair-wise MAC keys with all known bridges.
+	\item Managing the {\sf PTGMap} table.
+	\item Controlling selective interest forwarding to specific bridges or broadcasting to all known bridges.
+\end{compactitem}
+
+%%% TODO: finish discussion after complete test of bridge is complete
+%%% TODO: talk about how interests are intercepted (if they don't have a prefix matching the gateway prefix), broadcasted/forwarded after key establishment

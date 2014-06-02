@@ -115,7 +115,7 @@ Unlike traditional NDN routing, the gateway pending message table does not colla
 
 It is important to note that stateful protocols such as TCP must explicitly embed identifying information about the consumer in order to operate correctly. The reason is that one TCP stream must be associated with at most one consumer, and since NDN does not have any notion of host addresses or identifiers, the consumer application must explicitly encode its identity in the interest. Our grammar enforces identities based on consumer public keys and a corresponding digital signature of the entire interest for such protocols so that consumers can be explicitly identified and their sessions cannot be hijacked by other consumers (doing so would require compromising a consumer and its private key).
 
-\section{Bridging Isolated Networks}
+\section{Bridging Isolated Networks} \label{sec:bridge}
 The second type of interoperability scenario that may arise during the deployment of NDN networks is when two or more physically disjoint NDN networks need to communicate with eachother. Let $I_i$ and $I_j$ be two such dijoint NDN networks, and let $A_i$ and $A_j$ be two applications running on hosts in $I_i$ and $I_j$, respectively. Without any additional mechanisms, $A_i$ and $A_j$ would not be able to communicate. However, if there existed two gateways at the edges of $I_i$ and $I_j$, each of which connected to the same IP-based network (i.e., the Internet), then interests from $A_i$ ($A_j$) could be sent to $A_j$ ($A_i)$ as follows:
 \begin{compactenum} 
 	\item An interest from $A_i$ is intercepted a gateway $G_i$.

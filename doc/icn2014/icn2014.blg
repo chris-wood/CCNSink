@@ -4,46 +4,45 @@ The top-level auxiliary file: icn2014.aux
 The style file: abbrv.bst
 Database file #1: ref.bib
 Warning--I didn't find a database entry for "ghali2014elements"
-Warning--I didn't find a database entry for "pyccn"
-You've used 2 entries,
+You've used 3 entries,
             2118 wiz_defined-function locations,
-            513 strings with 4354 characters,
-and the built_in function-call counts, 1061 in all, are:
-= -- 94
-> -- 91
+            517 strings with 4489 characters,
+and the built_in function-call counts, 1301 in all, are:
+= -- 117
+> -- 104
 < -- 1
-+ -- 36
-- -- 34
-* -- 91
-:= -- 193
-add.period$ -- 7
-call.type$ -- 2
-change.case$ -- 22
++ -- 41
+- -- 38
+* -- 103
+:= -- 238
+add.period$ -- 10
+call.type$ -- 3
+change.case$ -- 27
 chr.to.int$ -- 0
-cite$ -- 2
-duplicate$ -- 29
-empty$ -- 52
-format.name$ -- 34
-if$ -- 207
+cite$ -- 3
+duplicate$ -- 39
+empty$ -- 69
+format.name$ -- 38
+if$ -- 255
 int.to.chr$ -- 0
-int.to.str$ -- 2
-missing$ -- 2
-newline$ -- 13
-num.names$ -- 4
-pop$ -- 22
+int.to.str$ -- 3
+missing$ -- 3
+newline$ -- 18
+num.names$ -- 6
+pop$ -- 27
 preamble$ -- 1
-purify$ -- 20
+purify$ -- 24
 quote$ -- 0
-skip$ -- 21
+skip$ -- 29
 stack$ -- 0
-substring$ -- 29
-swap$ -- 7
+substring$ -- 34
+swap$ -- 8
 text.length$ -- 1
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 8
+type$ -- 12
 warning$ -- 0
-while$ -- 7
-width$ -- 3
-write$ -- 26
-(There were 2 warnings)
+while$ -- 9
+width$ -- 4
+write$ -- 36
+(There was 1 warning)
