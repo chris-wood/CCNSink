@@ -20,41 +20,63 @@ hdlr.setFormatter(formatter)
 logger.addHandler(hdlr) 
 logger.setLevel(logging.INFO)
 
+# Global ref to the singleton bridge server running on this node
+bridgeServer = None
+
+def modExp(self, a, b, m):
+	a %= m
+	ret = None
+	if b == 0:
+		ret = 1
+	elif b % 2:
+		ret = a * modExp(a, b-1, m)
+	else:
+		ret = modExp(a, b//2, m)
+		ret *= ret
+	return (ret % m)
+
 class BridgeHandler((SocketServer.BaseRequestHandler):
 
 	def __init__(self, request, client_address, server):
 		SocketServer.BaseRequestHandler.__init__(self, request, client_address, server)
 
-	def setup(self, bridge, addr):
-		self.started = False
-		self.buffer = []
-		self.bridge = bridge
-		self.address = addr
-
-		# Generate a random power and compute the DH half
-		self.mod = bridge.mod
-		self.gen = bridge.gen
-		self.bits = bridge.bits
-		rand = int(os.urandom(self.bits).encode('hex'), 16)
-		self.power = (rand % (2 ** self.bits))
-		self.ours = (self.gen ** self.power) % self.mod
-
-		print >> sys.stderr, "Handler initialized"
+	def setup(self):
+		print >> sys.stderr, "Handler initialized for address: " + str(client_address)
 		logger.info("Handler initialized")
-
         return SocketServer.BaseRequestHandler.setup(self)
 
 	def handle(self):
+		global bridgeServer
 		length = self.request.recv(4)
 		print >> sys.stderr, "received: " + str(length)
 		data = self.request.recv(1024)
 		print >> sys.stderr, "received: " + str(data)
 
-		# TODO: should send back DH key half
+		# Check to see if this is key data or an interest
+		if (not (client_address in self.stage.keyMap)):	
+			print >> "generating and returning key..."
 
-		# Send the response
-		self.request.send(data)
-		return
+			mod = bridgeServer.mod
+			gen = bridgeServer.gen
+			bits = bridgeServer.bits
+			rand = random.randint(0, mod)
+			power = (rand % (2 ** bits))
+			ours = modExp(gen, power, mod)
+
+			# Send our half back on down
+			self.request.send(ours)
+			
+			# Compute and save our key
+			theirs = data
+			key = (ours ** int(theirs)) % mod
+			self.stage.keyMap[client_address] = key
+		else:
+			print >> "forwarding interest..."
+			
+			# issue interest to NDNOutputStage and 
+
+			self.request.send(data)
+			return
 
 	def finish(self):
 		logger.info("BridgeHandler closing")
@@ -85,7 +107,7 @@ class BridgeHandler((SocketServer.BaseRequestHandler):
 	# 		self.out_bfufer = data
 
 class BridgeServer(SocketServer.TCPServer, threading.Thread):
-	def __init__(self, bridge, host, port, handler_class = BridgeHandler):
+	def __init__(self, host, port, handler_class = BridgeHandler):
 		# asyncore.dispatcher.__init__(self)
 		threading.Thread.__init__(self)
 		# self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -93,7 +115,6 @@ class BridgeServer(SocketServer.TCPServer, threading.Thread):
 		# self.bind((host, port))
 		# self.addr = (host, port)
 		# self.listen(5) # this is the server queue size
-		self.bridge = bridge
 		SocketServer.TCPServer.__init__(self, (host, port), handler_class)
 
 	def server_activate(self):
@@ -171,7 +192,7 @@ class BridgeServer(SocketServer.TCPServer, threading.Thread):
 # 		self.close()
 
 class Bridge(threading.Thread):
-	def __init__(self, paramMap):
+	def __init__(self, paramMap, ndnOutputStage):
 		threading.Thread.__init__(self)
 		self.paramMap = paramMap
 		self.gateways = []
@@ -179,14 +200,17 @@ class Bridge(threading.Thread):
 		self.socketMap = {}
 		self.keyMap = {}
 		self.connected = False
-		self.server = BridgeServer(self, self.paramMap["PUBLIC_IP"], int(self.paramMap["BRIDGE_LOCAL_PORT"]))
+		self.ndnOutputStage = ndnOutputStage
 		self.mod = int(self.paramMap["KEYGEN_GROUP_MODULUS"])
 		self.gen = int(self.paramMap["KEYGEN_GROUP_GENERATOR"])
 		self.bits = int(self.paramMap["KEYGEN_KEY_BITS"])
 
+		# Create the global server 
+		bridgeServer = BridgeServer(self.paramMap["PUBLIC_IP"], int(self.paramMap["BRIDGE_LOCAL_PORT"]))
+
 	def run(self):
 		self.running = True
-		self.server.start()
+		bridgeServer.start()
 
 		# Establish long-term connection
 		print >> sys.stderr, "Establishing connection with directory: " + str(self.paramMap["BRIDGE_SERVER_ADDRESS"])
@@ -245,25 +269,13 @@ class Bridge(threading.Thread):
 		else:
 			return None
 
-	def modExp(self, a, b, m):
-		a %= m
-		ret = None
-		if b == 0:
-			ret = 1
-		elif b % 2:
-			ret = a * self.modExp(a, b-1, m)
-		else:
-			ret = self.modExp(a, b//2, m)
-			ret *= ret
-		return (ret % m)
-
 	# Generate our half of the DH share
 	def generatePairwiseKey(self, sock):
 		# rand = int(os.urandom(self.bits).encode('hex'), 16)
 		rand = random.randint(0, self.mod)
 		power = (rand % (2 ** self.bits))
 		# ours = (self.gen ** power) % self.mod
-		ours = self.modExp(self.gen, power, self.mod)
+		ours = modExp(self.gen, power, self.mod)
 		return ours
 
 		# Send our half of the share to the other guy
@@ -288,13 +300,9 @@ class Bridge(threading.Thread):
 			sock = None
 
 			# Retrieve socket
-			print("checking socket map")
-			if (not (targetAddress in self.socketMap)):
-				sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-				sock.connect((targetAddress, int(self.paramMap["BRIDGE_LOCAL_PORT"])))
-				socketMap[targetAddress] = sock
-			else:
-				sock = socketMap[targetAddress]
+			sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+			sock.connect((targetAddress, int(self.paramMap["BRIDGE_LOCAL_PORT"])))
+			socketMap[targetAddress] = sock
 
 			print >> sys.stderr, "Socket retrieved - sending data"
 			logger.info("Socket retrieved - sending data")
@@ -305,8 +313,13 @@ class Bridge(threading.Thread):
 				self.keyMap[targetAddress] = key
 				print >> sys.stderr, "New key establsihed"
 				logger.info("New key established")
+
+				# Refresh the socket
+				sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+				sock.connect((targetAddress, int(self.paramMap["BRIDGE_LOCAL_PORT"])))
+				socketMap[targetAddress] = sock
 			
-			# Send the interest now...
+			# Send the interest now
 			sock.send(len(interest))
 			sock.send(interest)
 
