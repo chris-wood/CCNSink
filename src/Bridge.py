@@ -224,6 +224,7 @@ class Bridge(threading.Thread):
 			if (not (targetAddress in self.socketMap)):
 				if (not (targetAddress in self.keyMap)):
 					ours = self.generateKeyHalf()
+					print >> sys.stderr, "Creating client"
 					sock = BridgeClient(targetAddress, int(self.paramMap["BRIDGE_LOCAL_PORT"]), ours)
 					theirs = sock.receiveBuffer
 					key = (ours ** int(theirs)) % mod
