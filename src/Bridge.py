@@ -10,8 +10,6 @@ import logging
 import random
 from multiprocessing import Queue
 
-socketMap = {}
-
 # Setup logging redirection
 logger = logging.getLogger('bridge')
 hdlr = logging.FileHandler('./bridge.log')
@@ -197,7 +195,6 @@ class Bridge(threading.Thread):
 		self.paramMap = paramMap
 		self.gateways = []
 		self.prefixGatewayMap = {}
-		self.socketMap = {}
 		self.keyMap = {}
 		self.connected = False
 		self.ndnOutputStage = ndnOutputStage
@@ -302,7 +299,6 @@ class Bridge(threading.Thread):
 			# Retrieve socket
 			sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 			sock.connect((targetAddress, int(self.paramMap["BRIDGE_LOCAL_PORT"])))
-			socketMap[targetAddress] = sock
 
 			print >> sys.stderr, "Socket retrieved - sending data"
 			logger.info("Socket retrieved - sending data")
@@ -317,7 +313,6 @@ class Bridge(threading.Thread):
 				# Refresh the socket
 				sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 				sock.connect((targetAddress, int(self.paramMap["BRIDGE_LOCAL_PORT"])))
-				socketMap[targetAddress] = sock
 			
 			# Send the interest now
 			sock.send(len(interest))
