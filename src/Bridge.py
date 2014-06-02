@@ -7,6 +7,7 @@ import asyncore
 import socket
 import os
 import logging
+import random
 from multiprocessing import Queue
 
 socketMap = {}
@@ -193,11 +194,25 @@ class Bridge(threading.Thread):
 		else:
 			return None
 
+	def modExp(self, a, b, m):
+		a %= m
+		ret = None
+		if b == 0:
+			ret = 1
+		elif b%2:
+			ret = a * modExp(a,b-1,m)
+		else:
+			ret = modExp(a,b//2,m)
+			ret *= ret
+		return ret%m
+
 	# Generate our half of the DH share
 	def generateKeyHalf(self):
-		rand = int(os.urandom(self.bits).encode('hex'), 16)
+		# rand = int(os.urandom(self.bits).encode('hex'), 16)
+		rand = random.randint(0, self.mod)
 		power = (rand % (2 ** self.bits))
-		ours = (self.gen ** power) % self.mod
+		# ours = (self.gen ** power) % self.mod
+		ours = self.modExp(self.gen, power, self.mod)
 		return outs
 
 		# Send our half of the share to the other guy
