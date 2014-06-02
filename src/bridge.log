@@ -21,3 +21,9 @@
 2014-06-01 17:56:51,280 INFO Socket retrieved - sending data
 2014-06-01 17:56:51,280 INFO Establishing socket connection to 192.168.1.6
 2014-06-01 17:56:51,280 INFO Received []
+2014-06-01 18:00:52,740 INFO Starting BridgeServer on ('192.168.1.10', 9000)
+2014-06-01 18:01:10,840 INFO Establishing socket connection to 192.168.1.6
+2014-06-01 18:01:10,841 INFO Key = []
+2014-06-01 18:01:10,841 INFO Socket retrieved - sending data
+2014-06-01 18:01:10,841 INFO Establishing socket connection to 192.168.1.6
+2014-06-01 18:01:10,841 INFO Received []
