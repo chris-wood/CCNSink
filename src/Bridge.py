@@ -96,16 +96,16 @@ class BridgeServer(asyncore.dispatcher, threading.Thread):
 class BridgeClient(asyncore.dispatcher_with_send):
 	def __init__(self, host, port, data):
 		asyncore.dispatcher.__init__(self)
+		print >> sys.stderr, "Establishing socket connection to " + str(host)
+		logger.info("Establishing socket connection to " + str(host))
 		self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
 		self.connect((host, port))
 		self.receiveBuffer = []
-		print >> sys.stderr, "Establishing socket connection to " + str(host)
-		logger.info("Establishing socket connection to " + str(host))
 		self.out_buffer = data
 
-	def send_data(self, data):
-		print >> sys.stderr, "Sending: " + str(data)
-		self.out_buffer = data
+	# def send_data(self, data):
+	# 	print >> sys.stderr, "Sending: " + str(data)
+	# 	self.out_buffer = data
 
 	def handle_close(self):
 		self.close()
