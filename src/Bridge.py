@@ -79,7 +79,15 @@ class BridgeHandler(SocketServer.BaseRequestHandler):
 			self.stage.keyMap[client_address] = key
 		elif (dtype == 'i'):
 			print >> sys.stderr, "received, forwarding interest..."
-			interestName = data
+		
+			fin = self.request.makefile()
+			bytes = ""
+			byte = fin.read(1)
+			while byte != "":
+				bytes = bytes + byte
+				byte = fin.read(1)
+			interestName = bytes
+
 			msg = OutgoingMessage(None, None, interestName, None, True)
 			semaphore = multiprocessing.BoundedSemaphore(0)
 
