@@ -299,12 +299,12 @@ class Bridge(threading.Thread):
 		power = (rand % (2 ** self.bits))
 		# ours = (self.gen ** power) % self.mod
 		ours = modExp(self.gen, power, self.mod)
-		return ours
 
 		# Send our half of the share to the other guy
 		sharestr = str(ours)
 		print >> sys.stderr, "sending data..."
 		payload = "k" + sharestr
+		print("sending: " + payload)
 		sock.send(payload)
 		# sock.send_data(len(sharestr))
 		# sock.send_data(sharestr)
@@ -350,7 +350,7 @@ class Bridge(threading.Thread):
 			if (not (targetAddress in self.keyMap)):
 				key = self.generatePairwiseKey(sock)
 				self.keyMap[targetAddress] = key
-				print >> sys.stderr, "New key establsihed"
+				print >> sys.stderr, "New key establsihed: " + str(key)
 				logger.info("New key established")
 
 				# Refresh the socket
