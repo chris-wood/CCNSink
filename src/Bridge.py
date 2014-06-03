@@ -141,7 +141,7 @@ class BridgeHandler(SocketServer.BaseRequestHandler):
 	# 		self.out_bfufer = data
 
 class BridgeServer(SocketServer.TCPServer, threading.Thread):
-	def __init__(self, host, port, handler_class = BridgeHandler, mod, gen, bits):
+	def __init__(self, host, port, mod, gen, bits, handler_class = BridgeHandler):
 		# asyncore.dispatcher.__init__(self)
 		threading.Thread.__init__(self)
 		# self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
