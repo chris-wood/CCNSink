@@ -409,6 +409,7 @@ class Bridge(threading.Thread):
 				bytes = bytes + byte
 				byte = fin.read(1)
 			content = int(bytes)
+			print("retrieved content = " + content)
 
 			return content
 		else:
