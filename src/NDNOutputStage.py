@@ -53,6 +53,7 @@ class NDNFetcher(threading.Thread):
 			logger.info('IP-TO-NDN: ' + str(diff))
 
 		# Shoot out the interest and wait for the response
+		print("SENDING INTEREST: " + str(interest))
 		co = stage.handle.dispatch(interest)
 		content = None
 		if (co != None):
