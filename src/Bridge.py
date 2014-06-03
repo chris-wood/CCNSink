@@ -78,7 +78,7 @@ class BridgeHandler(SocketServer.BaseRequestHandler):
 			key = (ours ** int(theirs)) % mod
 			self.stage.keyMap[client_address] = key
 		elif (dtype == 'i'):
-			print >> "received, forwarding interest..."
+			print >> sys.stderr, "received, forwarding interest..."
 			interestName = data
 			msg = OutgoingMessage(None, None, interestName, None, True)
 			semaphore = multiprocessing.BoundedSemaphore(0)
