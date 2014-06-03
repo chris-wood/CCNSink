@@ -59,9 +59,14 @@ class BridgeHandler(SocketServer.BaseRequestHandler):
 			fin = self.request.makefile()
 			bytes = ""
 			byte = fin.read(1)
+			print("read: " + byte)
 			while byte != "":
 				bytes = bytes + byte
 				byte = fin.read(1)
+				print("read: " + byte)
+			data = bytes
+
+			print("key = " + bytes)
 
 			mod = bridgeServer.mod
 			gen = bridgeServer.gen
