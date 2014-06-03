@@ -141,7 +141,7 @@ class BridgeHandler(SocketServer.BaseRequestHandler):
 	# 		self.out_bfufer = data
 
 class BridgeServer(SocketServer.TCPServer, threading.Thread):
-	def __init__(self, host, port, handler_class = BridgeHandler):
+	def __init__(self, host, port, handler_class = BridgeHandler, mod, gen, bits):
 		# asyncore.dispatcher.__init__(self)
 		threading.Thread.__init__(self)
 		# self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -149,6 +149,9 @@ class BridgeServer(SocketServer.TCPServer, threading.Thread):
 		# self.bind((host, port))
 		# self.addr = (host, port)
 		# self.listen(5) # this is the server queue size
+		self.gen = gen
+		self.mod = mod
+		self.bits = bits
 		SocketServer.TCPServer.__init__(self, (host, port), handler_class)
 
 	def server_activate(self):
@@ -240,10 +243,7 @@ class Bridge(threading.Thread):
 		self.bits = int(self.paramMap["KEYGEN_KEY_BITS"])
 
 		# Create the global server 
-		bridgeServer = BridgeServer(self.paramMap["PUBLIC_IP"], int(self.paramMap["BRIDGE_LOCAL_PORT"]))
-		bridgeServer.mode = self.mod
-		bridgeServer.gen = self.gen
-		bridgeServer.bits = self.bits
+		bridgeServer = BridgeServer(self.paramMap["PUBLIC_IP"], int(self.paramMap["BRIDGE_LOCAL_PORT"]), self.mod, self.gen, self.bits)
 
 	def run(self):
 		global bridgeServer
