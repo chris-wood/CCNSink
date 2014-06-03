@@ -84,7 +84,7 @@ class BridgeHandler(SocketServer.BaseRequestHandler):
 			
 			# Compute and save our key
 			theirs = int(data) # it was written as a string
-			key = (ours ** int(theirs)) % mod
+			key = modExp(ours, int(theirs), mod)
 			self.stage.keyMap[client_address] = key
 			print("key = " + str(key))
 			return
