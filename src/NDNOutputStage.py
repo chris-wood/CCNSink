@@ -81,7 +81,7 @@ class NDNOutputStage(PipelineStage, threading.Thread):
 		self.handle = NDNOutputClosure(name, self, table, paramMap)
 
 	def put(self, msg, semaphore = None):
-		if (sempahore != None):
+		if (semaphore != None):
 			self.bridgeFIT[msg.tag] = (semaphore, None)
 		self.queue.put(msg)
 
