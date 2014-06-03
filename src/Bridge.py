@@ -241,6 +241,9 @@ class Bridge(threading.Thread):
 
 		# Create the global server 
 		bridgeServer = BridgeServer(self.paramMap["PUBLIC_IP"], int(self.paramMap["BRIDGE_LOCAL_PORT"]))
+		bridgeServer.mode = self.mod
+		bridgeServer.gen = self.gen
+		bridgeServer.bits = self.bits
 
 	def run(self):
 		global bridgeServer
