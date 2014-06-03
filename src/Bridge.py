@@ -25,7 +25,7 @@ bridgeServer = None
 FIT = {} # map from interest name to (semaphore, content) tuples (this blocks the exit bridge)
 PIT = {} # map from interest name to (semaphore, content) tuples (this blocks the entry bridge)
 
-def modExp(self, a, b, m):
+def modExp(a, b, m):
 	a %= m
 	ret = None
 	if b == 0:
@@ -40,10 +40,12 @@ def modExp(self, a, b, m):
 class BridgeHandler(SocketServer.BaseRequestHandler):
 
 	def __init__(self, request, client_address, server):
+		self.client_address = client_address
+		self.server = server
 		SocketServer.BaseRequestHandler.__init__(self, request, client_address, server)
 
 	def setup(self):
-		print >> sys.stderr, "Handler initialized for address: " + str(client_address)
+		print >> sys.stderr, "Handler initialized for address: " + str(self.client_address)
 		logger.info("Handler initialized")
 		return SocketServer.BaseRequestHandler.setup(self)
 
