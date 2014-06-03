@@ -51,26 +51,17 @@ class BridgeHandler(SocketServer.BaseRequestHandler):
 
 	def handle(self):
 		global bridgeServer
-		l1 = self.request.recv(1)
-		print("l1 = " + l1)
-		l1 = int(l1)
-		l2 = self.request.recv(1)
-		print("l2 = " + l2)
-		l2 = int(l2)
-		l3 = self.request.recv(1)
-		print("l3 = " + l3)
-		l3 = int(l3)
-		l4 = self.request.recv(1)
-		print("l4 = " + l4)
-		l4 = int(l4)
+		lengths = []
+		dtype = self.request.recv(1)
+		if (dtype == 'k'):
+			print >> "received generating and returning key..."
 
-		print >> sys.stderr, "received length: " + str(length)
-		data = self.request.recv(int(length))
-		print >> sys.stderr, "received content: " + str(data)
-
-		# Check to see if this is key data or an interest
-		if (not (client_address in self.stage.keyMap)):	
-			print >> "generating and returning key..."
+			fin = self.request.makefile()
+			bytes = ""
+			byte = fin.read(1)
+			while byte != "":
+				bytes = bytes + byte
+				byte = fin.read(1)
 
 			mod = bridgeServer.mod
 			gen = bridgeServer.gen
@@ -86,8 +77,8 @@ class BridgeHandler(SocketServer.BaseRequestHandler):
 			theirs = int(data) # it was written as a string
 			key = (ours ** int(theirs)) % mod
 			self.stage.keyMap[client_address] = key
-		else:
-			print >> "forwarding interest..."
+		elif (dtype == 'i'):
+			print >> "received, forwarding interest..."
 			interestName = data
 			msg = OutgoingMessage(None, None, interestName, None, True)
 			semaphore = multiprocessing.BoundedSemaphore(0)
@@ -304,18 +295,28 @@ class Bridge(threading.Thread):
 		# Send our half of the share to the other guy
 		sharestr = str(ours)
 		print >> sys.stderr, "sending data..."
-		payload = str(len(sharestr)) + sharestr
+		payload = "k" + sharestr
 		sock.send(payload)
 		# sock.send_data(len(sharestr))
 		# sock.send_data(sharestr)
 
 		# Receive their share
 		print >> sys.stderr, "receving data...."
-		length = int(sock.recv(4))
-		theirs = sock.recv(length)
+
+		fin = sock.makefile()
+		bytes = ""
+		byte = fin.read(1)
+		while byte != "":
+			bytes = bytes + byte
+			byte = fin.read(1)
+		theirs = int(bytes)
+
+		# length = int(sock.recv(4))
+		# theirs = sock.recv(length)
 
 		# Compute and save the key
-		key = (ours ** int(theirs)) % mod
+		# key = (ours ** int(theirs)) % mod
+		key = modExp(ours, theirs, self.mod)
 		return key
 
 	# Messages are sent as follows: |name length|name|
@@ -353,7 +354,7 @@ class Bridge(threading.Thread):
 			PIT[interest] = (semaphore, None) 
 
 			# Send the interest now
-			payload = str(len(interest)) + interest
+			payload = "i" + interest
 			# sock.send(len(interest))
 			# sock.send(interest)
 			# fout.write(payload)
@@ -362,8 +363,17 @@ class Bridge(threading.Thread):
 
 			# Block and wait for the content 
 			# TODO: should implement a timeout mechanism here
-			length = int(sock.recv(4))
-			content = sock.recv(length)
+			# length = int(sock.recv(4))
+			# content = sock.recv(length)
+
+			fin = sock.makefile()
+			bytes = ""
+			byte = fin.read(1)
+			while byte != "":
+				bytes = bytes + byte
+				byte = fin.read(1)
+			content = int(bytes)
+
 			return content
 		else:
 			return None
