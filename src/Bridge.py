@@ -35,7 +35,7 @@ def modExp(self, a, b, m):
 		ret *= ret
 	return (ret % m)
 
-class BridgeHandler((SocketServer.BaseRequestHandler):
+class BridgeHandler(SocketServer.BaseRequestHandler):
 
 	def __init__(self, request, client_address, server):
 		SocketServer.BaseRequestHandler.__init__(self, request, client_address, server)
