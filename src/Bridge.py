@@ -51,7 +51,19 @@ class BridgeHandler(SocketServer.BaseRequestHandler):
 
 	def handle(self):
 		global bridgeServer
-		length = int(self.request.recv(4))
+		l1 = self.request.recv(1)
+		print("l1 = " + l1)
+		l1 = int(l1)
+		l2 = self.request.recv(1)
+		print("l2 = " + l2)
+		l2 = int(l2)
+		l3 = self.request.recv(1)
+		print("l3 = " + l3)
+		l3 = int(l3)
+		l4 = self.request.recv(1)
+		print("l4 = " + l4)
+		l4 = int(l4)
+
 		print >> sys.stderr, "received length: " + str(length)
 		data = self.request.recv(int(length))
 		print >> sys.stderr, "received content: " + str(data)
