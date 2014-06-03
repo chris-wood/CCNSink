@@ -35,3 +35,5 @@
 2014-06-01 18:02:47,617 INFO Establishing socket connection to 192.168.1.6
 2014-06-01 18:02:47,618 INFO Received []
 2014-06-03 11:10:51,458 INFO Socket retrieved - sending data
+2014-06-03 11:12:58,719 INFO Socket retrieved - sending data
+2014-06-03 11:12:58,720 INFO New key established

@@ -292,8 +292,10 @@ class Bridge(threading.Thread):
 		# Send our half of the share to the other guy
 		sharestr = str(ours)
 		print >> sys.stderr, "sending data..."
-		sock.send_data(len(sharestr))
-		sock.send_data(sharestr)
+		payload = str(len(sharestr)) + sharestr
+		sock.send(payload)
+		# sock.send_data(len(sharestr))
+		# sock.send_data(sharestr)
 
 		# Receive their share
 		print >> sys.stderr, "receving data...."
@@ -317,6 +319,7 @@ class Bridge(threading.Thread):
 			# Retrieve socket
 			sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 			sock.connect((targetAddress, int(self.paramMap["BRIDGE_LOCAL_PORT"])))
+			# fout = sock.makefile()
 
 			print >> sys.stderr, "Socket retrieved - sending data"
 			logger.info("Socket retrieved - sending data")
@@ -331,14 +334,19 @@ class Bridge(threading.Thread):
 				# Refresh the socket
 				sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 				sock.connect((targetAddress, int(self.paramMap["BRIDGE_LOCAL_PORT"])))
+				# fout = sock.makefile()
 
 			# Wait until the content is retrieved
 			semaphore = multiprocessing.BoundedSemaphore(0)
 			PIT[interest] = (semaphore, None) 
 
 			# Send the interest now
-			sock.send(len(interest))
-			sock.send(interest)
+			payload = str(len(interest)) + interest
+			# sock.send(len(interest))
+			# sock.send(interest)
+			# fout.write(payload)
+			# fout.flush()
+			sock.send(payload)
 
 			# Block and wait for the content 
 			# TODO: should implement a timeout mechanism here
