@@ -10,6 +10,7 @@ import logging
 import random
 import multiprocessing
 import SocketServer
+from OutgoingMessage import *
 from multiprocessing import Queue
 
 # Setup logging redirection
@@ -85,8 +86,9 @@ class BridgeHandler(SocketServer.BaseRequestHandler):
 			# Compute and save our key
 			theirs = int(data) # it was written as a string
 			key = modExp(ours, int(theirs), mod)
-			self.stage.keyMap[client_address] = key
+			bridgeServer.stage.keyMap[self.client_address[0]] = key
 			print("key = " + str(key))
+			
 			return
 		elif (dtype == 'i'):
 			print >> sys.stderr, "received, forwarding interest..."
@@ -113,6 +115,8 @@ class BridgeHandler(SocketServer.BaseRequestHandler):
 			fout.write(content)
 			fout.flush()
 			# self.request.send(content)
+
+			return
 
 	def finish(self):
 		logger.info("BridgeHandler closing")
@@ -143,7 +147,7 @@ class BridgeHandler(SocketServer.BaseRequestHandler):
 	# 		self.out_bfufer = data
 
 class BridgeServer(SocketServer.TCPServer, threading.Thread):
-	def __init__(self, host, port, mod, gen, bits, handler_class = BridgeHandler):
+	def __init__(self, host, port, mod, gen, bits, stage, handler_class = BridgeHandler):
 		# asyncore.dispatcher.__init__(self)
 		threading.Thread.__init__(self)
 		# self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -154,6 +158,7 @@ class BridgeServer(SocketServer.TCPServer, threading.Thread):
 		self.gen = gen
 		self.mod = mod
 		self.bits = bits
+		self.stage = stage
 		SocketServer.TCPServer.__init__(self, (host, port), handler_class)
 
 	def server_activate(self):
@@ -245,7 +250,7 @@ class Bridge(threading.Thread):
 		self.bits = int(self.paramMap["KEYGEN_KEY_BITS"])
 
 		# Create the global server 
-		bridgeServer = BridgeServer(self.paramMap["PUBLIC_IP"], int(self.paramMap["BRIDGE_LOCAL_PORT"]), self.mod, self.gen, self.bits)
+		bridgeServer = BridgeServer(self.paramMap["PUBLIC_IP"], int(self.paramMap["BRIDGE_LOCAL_PORT"]), self.mod, self.gen, self.bits, self)
 
 	def run(self):
 		global bridgeServer
