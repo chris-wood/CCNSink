@@ -60,7 +60,7 @@ class BridgeHandler(SocketServer.BaseRequestHandler):
 			bytes = ""
 			byte = fin.read(1)
 			print("read: " + byte)
-			while byte != "":
+			while (byte != "\n"):
 				bytes = bytes + byte
 				byte = fin.read(1)
 				print("read: " + byte)
@@ -77,7 +77,8 @@ class BridgeHandler(SocketServer.BaseRequestHandler):
 
 			# Send our half back on down
 			fout = self.request.makefile()
-			fout.write(str(ours))
+			returnData = str(ours) + "\n"
+			fout.write(returnData)
 			fout.flush()
 			# self.request.send(ours)
 			
@@ -91,7 +92,7 @@ class BridgeHandler(SocketServer.BaseRequestHandler):
 			fin = self.request.makefile()
 			bytes = ""
 			byte = fin.read(1)
-			while byte != "":
+			while (byte != "\n"):
 				bytes = bytes + byte
 				byte = fin.read(1)
 			interestName = bytes
@@ -105,9 +106,9 @@ class BridgeHandler(SocketServer.BaseRequestHandler):
 			semaphore.acquire()
 
 			# We've returned - fetch the content
-			content = bridgeServer.ndnOutputStage.bridgeFIT[msg.tag][1]
+			content = str(bridgeServer.ndnOutputStage.bridgeFIT[msg.tag][1]) + "\n"
 			fout = self.request.makefile()
-			fout.write(str(content))
+			fout.write(content)
 			fout.flush()
 			# self.request.send(content)
 
@@ -314,7 +315,7 @@ class Bridge(threading.Thread):
 		# Send our half of the share to the other guy
 		sharestr = str(ours)
 		print >> sys.stderr, "sending data..."
-		payload = "k" + sharestr
+		payload = "k" + sharestr + "\n"
 		print("sending: " + payload)
 		fout = sock.makefile()
 		fout.write(payload)
@@ -327,7 +328,7 @@ class Bridge(threading.Thread):
 		fin = sock.makefile()
 		bytes = ""
 		byte = fin.read(1)
-		while byte != "":
+		while (byte != "\n"):
 			bytes = bytes + byte
 			byte = fin.read(1)
 		theirs = int(bytes)
@@ -375,7 +376,7 @@ class Bridge(threading.Thread):
 			# PIT[interest] = (semaphore, None) 
 
 			# Send the interest now
-			payload = "i" + interest
+			payload = "i" + interest + "\n"
 			# sock.send(len(interest))
 			# sock.send(interest)
 			# fout.write(payload)
@@ -394,7 +395,7 @@ class Bridge(threading.Thread):
 			fin = sock.makefile()
 			bytes = ""
 			byte = fin.read(1)
-			while byte != "":
+			while (byte != "\n"):
 				bytes = bytes + byte
 				byte = fin.read(1)
 			content = int(bytes)
