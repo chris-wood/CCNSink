@@ -111,6 +111,9 @@ class BridgeHandler(SocketServer.BaseRequestHandler):
 
 			# We've returned - fetch the content
 			content = str(bridgeServer.stage.ndnOutputStage.bridgeFIT[msg.tag][1]) + "\n"
+
+			# TODO: need to sign the content here
+
 			fout = self.request.makefile()
 			fout.write(content)
 			fout.flush()
