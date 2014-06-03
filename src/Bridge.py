@@ -106,11 +106,11 @@ class BridgeHandler(SocketServer.BaseRequestHandler):
 			semaphore = multiprocessing.BoundedSemaphore(0)
 
 			# Send the interest now and block
-			bridgeServer.ndnOutputStage.put(msg, semaphore)
+			bridgeServer.stage.ndnOutputStage.put(msg, semaphore)
 			semaphore.acquire()
 
 			# We've returned - fetch the content
-			content = str(bridgeServer.ndnOutputStage.bridgeFIT[msg.tag][1]) + "\n"
+			content = str(bridgeServer.stage.ndnOutputStage.bridgeFIT[msg.tag][1]) + "\n"
 			fout = self.request.makefile()
 			fout.write(content)
 			fout.flush()
