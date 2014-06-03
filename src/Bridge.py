@@ -8,6 +8,7 @@ import socket
 import os
 import logging
 import random
+import multiprocessing
 from multiprocessing import Queue
 
 # Setup logging redirection
@@ -20,6 +21,7 @@ logger.setLevel(logging.INFO)
 
 # Global ref to the singleton bridge server running on this node
 bridgeServer = None
+blockingMap = {}
 
 def modExp(self, a, b, m):
 	a %= m
@@ -45,7 +47,8 @@ class BridgeHandler((SocketServer.BaseRequestHandler):
 
 	def handle(self):
 		global bridgeServer
-		length = self.request.recv(4)
+		global blockingMap
+		length = int(self.request.recv(4))
 		print >> sys.stderr, "received: " + str(length)
 		data = self.request.recv(1024)
 		print >> sys.stderr, "received: " + str(data)
@@ -65,15 +68,14 @@ class BridgeHandler((SocketServer.BaseRequestHandler):
 			self.request.send(ours)
 			
 			# Compute and save our key
-			theirs = data
+			theirs = int(data) # it was written as a string
 			key = (ours ** int(theirs)) % mod
 			self.stage.keyMap[client_address] = key
 		else:
 			print >> "forwarding interest..."
-			
-			# issue interest to NDNOutputStage and 
-
-			self.request.send(data)
+			interestName = data
+			msg = OutgoingMessage(None, None, interestName, None, True)
+			bridgeServer.ndnOutputStage.put(msg)
 			return
 
 	def finish(self):
@@ -283,7 +285,7 @@ class Bridge(threading.Thread):
 
 		# Receive their share
 		print >> sys.stderr, "receving data...."
-		length = sock.recv(4)
+		length = int(sock.recv(4))
 		theirs = sock.recv(length)
 
 		# Compute and save the key
@@ -293,6 +295,7 @@ class Bridge(threading.Thread):
 	# Messages are sent as follows: |name length|name|
 	def sendInterest(self, interest, targetAddress):
 		print("sending interest")
+		global blockingMap
 		if (targetAddress != self.paramMap["PUBLIC_IP"]): # don't forward to ourselves..
 			sock = None
 
@@ -318,7 +321,14 @@ class Bridge(threading.Thread):
 			sock.send(len(interest))
 			sock.send(interest)
 
-	def retrieveContent(self, content, sourceAddress):
+			semaphore = multiprocessing.BoundedSemaphore(0)
+			blockingMap[str(interest)] = semaphore # save reference for later on down the road
+
+			return CONTENT HERE
+		else:
+			return None
+
+	def returnContent(self, content, sourceAddress):
 		raise RuntimeError()
 
 # Runnable unit for testing...
