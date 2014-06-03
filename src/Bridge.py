@@ -76,7 +76,10 @@ class BridgeHandler(SocketServer.BaseRequestHandler):
 			ours = modExp(gen, power, mod)
 
 			# Send our half back on down
-			self.request.send(ours)
+			fout = self.request.makefile()
+			fout.write(str(ours))
+			fout.flush()
+			# self.request.send(ours)
 			
 			# Compute and save our key
 			theirs = int(data) # it was written as a string
@@ -103,7 +106,10 @@ class BridgeHandler(SocketServer.BaseRequestHandler):
 
 			# We've returned - fetch the content
 			content = bridgeServer.ndnOutputStage.bridgeFIT[msg.tag][1]
-			self.request.send(content)
+			fout = self.request.makefile()
+			fout.write(str(content))
+			fout.flush()
+			# self.request.send(content)
 
 	def finish(self):
 		logger.info("BridgeHandler closing")
@@ -310,13 +316,14 @@ class Bridge(threading.Thread):
 		print >> sys.stderr, "sending data..."
 		payload = "k" + sharestr
 		print("sending: " + payload)
-		sock.send(payload)
+		fout = sock.makefile()
+		fout.write(payload)
+		fout.flush()
 		# sock.send_data(len(sharestr))
 		# sock.send_data(sharestr)
 
 		# Receive their share
 		print >> sys.stderr, "receving data...."
-
 		fin = sock.makefile()
 		bytes = ""
 		byte = fin.read(1)
@@ -374,7 +381,10 @@ class Bridge(threading.Thread):
 			# fout.write(payload)
 			# fout.flush()
 			print("sending: " + payload)
-			sock.send(payload)
+			# sock.send(payload)
+			fout = sock.makefile()
+			fout.write(payload)
+			fout.flush()
 
 			# Block and wait for the content 
 			# TODO: should implement a timeout mechanism here
