@@ -54,7 +54,7 @@ class BridgeHandler(SocketServer.BaseRequestHandler):
 		lengths = []
 		dtype = self.request.recv(1)
 		if (dtype == 'k'):
-			print >> "received generating and returning key..."
+			print >> sys.stderr, "received generating and returning key..."
 
 			fin = self.request.makefile()
 			bytes = ""
