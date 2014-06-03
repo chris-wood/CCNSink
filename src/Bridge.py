@@ -87,6 +87,7 @@ class BridgeHandler(SocketServer.BaseRequestHandler):
 				bytes = bytes + byte
 				byte = fin.read(1)
 			interestName = bytes
+			print(interestName)
 
 			msg = OutgoingMessage(None, None, interestName, None, True)
 			semaphore = multiprocessing.BoundedSemaphore(0)
@@ -358,8 +359,8 @@ class Bridge(threading.Thread):
 				# fout = sock.makefile()
 
 			# Wait until the content is retrieved
-			semaphore = multiprocessing.BoundedSemaphore(0)
-			PIT[interest] = (semaphore, None) 
+			# semaphore = multiprocessing.BoundedSemaphore(0)
+			# PIT[interest] = (semaphore, None) 
 
 			# Send the interest now
 			payload = "i" + interest
@@ -367,6 +368,7 @@ class Bridge(threading.Thread):
 			# sock.send(interest)
 			# fout.write(payload)
 			# fout.flush()
+			print("sending: " + payload)
 			sock.send(payload)
 
 			# Block and wait for the content 
