@@ -86,6 +86,8 @@ class BridgeHandler(SocketServer.BaseRequestHandler):
 			theirs = int(data) # it was written as a string
 			key = (ours ** int(theirs)) % mod
 			self.stage.keyMap[client_address] = key
+			print("key = " + str(key))
+			return
 		elif (dtype == 'i'):
 			print >> sys.stderr, "received, forwarding interest..."
 		
