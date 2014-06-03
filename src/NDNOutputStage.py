@@ -63,6 +63,11 @@ class NDNFetcher(threading.Thread):
 			logger.error("Failed to update an entry")
 		entry[1].release() # release the lock now that we've updated the table
 
+		# Save the bridge content and release the bridge as well
+		if (msg.tag in stage.bridgeFIT):
+			stage.bridgeFIT[msg.tag][1] = content
+			stage.bridgeFIT[msg.tag][0].release()
+
 class NDNOutputStage(PipelineStage, threading.Thread):
 	def __init__(self, name, table = None, paramMap = {}):
 		threading.Thread.__init__(self)
@@ -72,9 +77,12 @@ class NDNOutputStage(PipelineStage, threading.Thread):
 		self.table = table
 		self.name = name
 		self.queue = Queue()
+		self.bridgeFIT = {}
 		self.handle = NDNOutputClosure(name, self, table, paramMap)
 
-	def put(self, msg):
+	def put(self, msg, semaphore = None):
+		if (sempahore != None):
+			self.bridgeFIT[msg.tag] = (semaphore, None)
 		self.queue.put(msg)
 
 	def buildInterest(self, msg):

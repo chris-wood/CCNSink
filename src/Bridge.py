@@ -9,6 +9,7 @@ import os
 import logging
 import random
 import multiprocessing
+import SocketServer
 from multiprocessing import Queue
 
 # Setup logging redirection
@@ -21,7 +22,8 @@ logger.setLevel(logging.INFO)
 
 # Global ref to the singleton bridge server running on this node
 bridgeServer = None
-blockingMap = {}
+FIT = {} # map from interest name to (semaphore, content) tuples (this blocks the exit bridge)
+PIT = {} # map from interest name to (semaphore, content) tuples (this blocks the entry bridge)
 
 def modExp(self, a, b, m):
 	a %= m
@@ -43,15 +45,14 @@ class BridgeHandler(SocketServer.BaseRequestHandler):
 	def setup(self):
 		print >> sys.stderr, "Handler initialized for address: " + str(client_address)
 		logger.info("Handler initialized")
-        return SocketServer.BaseRequestHandler.setup(self)
+		return SocketServer.BaseRequestHandler.setup(self)
 
 	def handle(self):
 		global bridgeServer
-		global blockingMap
 		length = int(self.request.recv(4))
-		print >> sys.stderr, "received: " + str(length)
-		data = self.request.recv(1024)
-		print >> sys.stderr, "received: " + str(data)
+		print >> sys.stderr, "received length: " + str(length)
+		data = self.request.recv(int(length))
+		print >> sys.stderr, "received content: " + str(data)
 
 		# Check to see if this is key data or an interest
 		if (not (client_address in self.stage.keyMap)):	
@@ -75,8 +76,15 @@ class BridgeHandler(SocketServer.BaseRequestHandler):
 			print >> "forwarding interest..."
 			interestName = data
 			msg = OutgoingMessage(None, None, interestName, None, True)
-			bridgeServer.ndnOutputStage.put(msg)
-			return
+			semaphore = multiprocessing.BoundedSemaphore(0)
+
+			# Send the interest now and block
+			bridgeServer.ndnOutputStage.put(msg, semaphore)
+			semaphore.acquire()
+
+			# We've returned - fetch the content
+			content = bridgeServer.ndnOutputStage.bridgeFIT[msg.tag][1]
+			self.request.send(content)
 
 	def finish(self):
 		logger.info("BridgeHandler closing")
@@ -194,6 +202,7 @@ class BridgeServer(SocketServer.TCPServer, threading.Thread):
 class Bridge(threading.Thread):
 	def __init__(self, paramMap, ndnOutputStage):
 		threading.Thread.__init__(self)
+		global bridgeServer
 		self.paramMap = paramMap
 		self.gateways = []
 		self.prefixGatewayMap = {}
@@ -208,6 +217,7 @@ class Bridge(threading.Thread):
 		bridgeServer = BridgeServer(self.paramMap["PUBLIC_IP"], int(self.paramMap["BRIDGE_LOCAL_PORT"]))
 
 	def run(self):
+		global bridgeServer
 		self.running = True
 		bridgeServer.start()
 
@@ -294,8 +304,11 @@ class Bridge(threading.Thread):
 
 	# Messages are sent as follows: |name length|name|
 	def sendInterest(self, interest, targetAddress):
-		print("sending interest")
-		global blockingMap
+		global PIT
+
+		interest = str(interest)
+		print >> sys.stderr, "sending interest"
+
 		if (targetAddress != self.paramMap["PUBLIC_IP"]): # don't forward to ourselves..
 			sock = None
 
@@ -316,15 +329,20 @@ class Bridge(threading.Thread):
 				# Refresh the socket
 				sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 				sock.connect((targetAddress, int(self.paramMap["BRIDGE_LOCAL_PORT"])))
-			
+
+			# Wait until the content is retrieved
+			semaphore = multiprocessing.BoundedSemaphore(0)
+			PIT[interest] = (semaphore, None) 
+
 			# Send the interest now
 			sock.send(len(interest))
 			sock.send(interest)
 
-			semaphore = multiprocessing.BoundedSemaphore(0)
-			blockingMap[str(interest)] = semaphore # save reference for later on down the road
-
-			return CONTENT HERE
+			# Block and wait for the content 
+			# TODO: should implement a timeout mechanism here
+			length = int(sock.recv(4))
+			content = sock.recv(length)
+			return content
 		else:
 			return None
 

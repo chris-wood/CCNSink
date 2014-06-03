@@ -82,6 +82,7 @@ class NDNHandle(pyccn.Closure):
 		bridge = self.stage.bridge
 		prefixMatch = False
 		match = None
+		content = None
 		for i in range(1, len(name.components)):
 			prefix = ""
 			for j in range(0, i - 1):
@@ -90,14 +91,18 @@ class NDNHandle(pyccn.Closure):
 			(match, address) =  bridge.lookupPrefix(prefix) # address is a subset of bridge.gateways
 			if (match != None):
 				prefixMatch = True
-				bridge.sendInterest(name, address)
+				content = bridge.sendInterest(name, address)
 
 		if (not prefixMatch): # broadcast to all gateways maintained by the bridge
+			data = []
 			for gateway in bridge.getGateways():
-				print(gateway) # this is the address of the gateway
-				bridge.sendInterest(name, gateway)
-
-		return pyccn.RESULT_OK
+				print >> sys.stderr, "Gateway = " + str(gateway) # this is the address of the gateway
+				data.append(bridge.sendInterest(name, gateway))
+			for c in data:
+				if (c != None): # pick the first one that returned something meaningful
+					content = c
+					break
+		return content
 
 	def upcall(self, kind, info):
 		start = time.time()
@@ -112,7 +117,9 @@ class NDNHandle(pyccn.Closure):
 		print(info.Interest)
 		if (len(info.Interest.name.components) <= self.baseOffset):
 			print >> sys.stderr, "Error: No protocol specified in name: " + str(info.Interest.name)
-			return self.forwardGeneralInterest(info.Interest.name)
+			content = self.forwardGeneralInterest(info.Interest.name)
+			self.handle.put(content)
+			return pyccn.RESULT_OK
 		protocol = str(info.Interest.name.components[self.baseOffset]).lower()
 
 		# Construct a unique message for each of the supported protocols
@@ -150,11 +157,11 @@ class NDNHandle(pyccn.Closure):
 			return pyccn.RESULT_ERR
 
 class NDNInputStage(PipelineStage):
-	def __init__(self, name, nextStage, table, paramMap):
+	def __init__(self, name, nextStage, ndnOutputStage, table, paramMap):
 		self.table = table
 		self.nextStage = nextStage
 		self.baseName = pyccn.Name(paramMap["NDN_URI_ROOT"])
-		self.bridge = Bridge(paramMap)
+		self.bridge = Bridge(paramMap, ndnOutputStage)
 		self.ndnHandler = NDNHandle(self, paramMap)
 
 		# Create and start the input handler and gateway helper
