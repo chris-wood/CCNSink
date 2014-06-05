@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.5.30)  2 JUN 2014 16:15
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.5.30)  5 JUN 2014 16:14
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1072,37 +1072,34 @@ Package pdftex.def Info: ./images/pipeline.pdf used on input line 9.
  [6 <./images/gateway_group.pdf>]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-)
-(./05-performance.tex) [7 <./images/pipeline.pdf>] (./icn2014.bbl) [8
-
-]
-(./icn2014.aux) ) 
+ [7 <./images/pipeline.pdf>]) (./05-performance.tex) (./icn2014.bbl) [8] (./icn
+2014.aux) ) 
 Here is how much of TeX's memory you used:
- 18793 strings out of 493315
- 345541 string characters out of 6137904
- 394770 words of memory out of 5000000
- 21797 multiletter control sequences out of 15000+600000
+ 18794 strings out of 493315
+ 345554 string characters out of 6137904
+ 394778 words of memory out of 5000000
+ 21798 multiletter control sequences out of 15000+600000
  57228 words of font info for 83 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
  63i,13n,80p,1540b,582s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/local/texlive/2013/texmf-dist/fonts/enc/dvips/base/8r.en
-c}</usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
-></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb>
-</usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></
-usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></us
-r/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/l
-ocal/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmsl10.pfb></usr/lo
-cal/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmss10.pfb></usr/loc
-al/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/loca
-l/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/local/
-texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/t
-exlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/te
-xlive/2013/texmf-dist/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/local/texlive/2
-013/texmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/local/texlive/2013/tex
-mf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2013/texmf-dist/fo
-nts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/
-urw/times/utmri8a.pfb>
-Output written on icn2014.pdf (8 pages, 415269 bytes).
+{/usr/local/texlive/2013/texmf-dist/fonts/enc/dvips/base/8r.enc}</us
+r/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr
+/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/
+local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/lo
+cal/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/loca
+l/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/t
+exlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmsl10.pfb></usr/local/te
+xlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmss10.pfb></usr/local/tex
+live/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texl
+ive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/local/texliv
+e/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive
+/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive/
+2013/texmf-dist/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/local/texlive/2013/te
+xmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/local/texlive/2013/texmf-dis
+t/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2013/texmf-dist/fonts/ty
+pe1/urw/times/utmr8a.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/urw/ti
+mes/utmri8a.pfb>
+Output written on icn2014.pdf (8 pages, 418668 bytes).
 PDF statistics:
  176 PDF objects out of 1000 (max. 8388607)
  129 compressed objects within 2 object streams
