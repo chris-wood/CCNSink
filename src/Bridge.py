@@ -107,12 +107,14 @@ class BridgeHandler(SocketServer.BaseRequestHandler):
 
 			# Send the interest now and block
 			bridgeServer.stage.ndnOutputStage.put(msg, semaphore)
+			print("BLOCKING AND WAITING FOR CONTENT")
 			semaphore.acquire()
+			print("AAAAAND we're back")
 
 			# We've returned - fetch the content
 			content = str(bridgeServer.stage.ndnOutputStage.bridgeFIT[msg.tag][1]) + "\n"
 
-			# TODO: need to sign the content here
+			###### TODO: need to sign the content here
 
 			fout = self.request.makefile()
 			fout.write(content)
