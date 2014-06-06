@@ -72,6 +72,7 @@ class NDNFetcher(threading.Thread):
 		# Save the bridge content and release the bridge as well
 		if (msg.tag in stage.bridgeFIT):
 			stage.bridgeFIT[msg.tag][1] = content
+			print("Value = " + str(stage.bridgeFIT[msg.tag][0].get_value()))
 			stage.bridgeFIT[msg.tag][0].release()
 
 class NDNOutputStage(PipelineStage, threading.Thread):
