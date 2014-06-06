@@ -1,2 +1,7 @@
 2014-06-05 20:32:24,748 INFO Socket retrieved - sending data
 2014-06-05 20:32:24,758 INFO New key established
+2014-06-05 20:35:59,584 INFO Socket retrieved - sending data
+2014-06-05 20:35:59,594 INFO New key established
+2014-06-05 20:35:59,637 INFO BRIDGE-LATENCY: 0.0568330287933
+2014-06-05 20:36:00,676 INFO Handler initialized
+2014-06-05 20:36:00,682 INFO BridgeHandler closing
