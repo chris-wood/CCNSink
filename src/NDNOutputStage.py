@@ -51,6 +51,8 @@ class NDNFetcher(threading.Thread):
 		if (entry != None):
 			diff = end - entry[3]
 			logger.info('IP-TO-NDN: ' + str(diff))
+		else:
+			print("NULL ENTRY!!!")
 
 		# Shoot out the interest and wait for the response
 		print("SENDING INTEREST: " + str(interest))
