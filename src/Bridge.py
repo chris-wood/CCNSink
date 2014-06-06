@@ -110,7 +110,7 @@ class BridgeHandler(SocketServer.BaseRequestHandler):
 			event = threading.Event()
 
 			# Send the interest now and block
-			bridgeServer.stage.ndnOutputStage.put(msg, semaphore)
+			bridgeServer.stage.ndnOutputStage.put(msg, event)
 			print("BLOCKING AND WAITING FOR CONTENT")
 			event.clear()
 			event.wait()
