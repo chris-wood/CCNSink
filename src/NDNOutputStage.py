@@ -64,7 +64,10 @@ class NDNFetcher(threading.Thread):
 			logger.error("NDN interest failed (None returned): " + str(msg))
 		if (stage.table.updateIPEntry(msg.tag, content) == False):
 			logger.error("Failed to update an entry")
-		entry[1].release() # release the lock now that we've updated the table
+
+		# Release the lock now that we've updated the table
+		if (entry != None):
+			entry[1].release() 
 
 		# Save the bridge content and release the bridge as well
 		if (msg.tag in stage.bridgeFIT):
