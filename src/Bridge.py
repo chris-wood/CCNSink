@@ -10,6 +10,7 @@ import logging
 import random
 import multiprocessing
 import SocketServer
+from asyncio import *
 from OutgoingMessage import *
 from multiprocessing import Queue
 
@@ -103,12 +104,15 @@ class BridgeHandler(SocketServer.BaseRequestHandler):
 			print(interestName)
 
 			msg = OutgoingMessage(None, None, interestName, None, True)
-			semaphore = multiprocessing.BoundedSemaphore(1)
+			# semaphore = multiprocessing.BoundedSemaphore(0)
+			semaphore = asyncio.Event()
+			semaphore.clear()
 
 			# Send the interest now and block
 			bridgeServer.stage.ndnOutputStage.put(msg, semaphore)
 			print("BLOCKING AND WAITING FOR CONTENT")
-			semaphore.acquire()
+			# semaphore.acquire()
+			semaphore.wait()
 			print("AAAAAND we're back")
 
 			# We've returned - fetch the content
@@ -413,7 +417,7 @@ class Bridge(threading.Thread):
 			while (byte != "\n"):
 				bytes = bytes + byte
 				byte = fin.read(1)
-			content = int(bytes)
+			content = str(bytes)
 			print("retrieved content = " + content)
 
 			return content
