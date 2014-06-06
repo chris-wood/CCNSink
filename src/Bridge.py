@@ -103,7 +103,7 @@ class BridgeHandler(SocketServer.BaseRequestHandler):
 			print(interestName)
 
 			msg = OutgoingMessage(None, None, interestName, None, True)
-			semaphore = multiprocessing.BoundedSemaphore(0)
+			semaphore = multiprocessing.BoundedSemaphore(1)
 
 			# Send the interest now and block
 			bridgeServer.stage.ndnOutputStage.put(msg, semaphore)
