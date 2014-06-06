@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.5.30)  5 JUN 2014 21:55
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.5.30)  5 JUN 2014 22:55
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -954,7 +954,7 @@ Overfull \hbox (17.62457pt too wide) in paragraph at lines 1--1
 []\secfnt MOTVATING IN-TER-OP-ER-A-BLE HET-ERO-
  []
 
-[2] <./images/hourglass_conn.pdf, id=24, 756.8275pt x 369.38pt>
+[2] <./images/hourglass_conn.pdf, id=23, 756.8275pt x 369.38pt>
 File: ./images/hourglass_conn.pdf Graphic file (type pdf)
 
 <use ./images/hourglass_conn.pdf>
@@ -999,15 +999,17 @@ Overfull \hbox (15.13622pt too wide) in paragraph at lines 44--45
 ''.
  []
 
-
-Underfull \vbox (badness 6396) has occurred while \output is active []
-
- [4]
 Package mdframed Info: mdframed works in twoside mode on input line 76.
 Package mdframed Info: mdframed inside float 
  mdframed uses option nobreak mdframed on input line 110.
 Package mdframed Info: mdframed inside a box 
  mdframed uses option nobreak mdframed on input line 110.
+
+Underfull \vbox (badness 6396) has occurred while \output is active []
+
+ [4]
+Underfull \vbox (badness 1448) has occurred while \output is active []
+
 
 <./images/island_tunnel.pdf, id=51, 486.81876pt x 202.7575pt>
 File: ./images/island_tunnel.pdf Graphic file (type pdf)
@@ -1021,7 +1023,17 @@ Underfull \hbox (badness 10000) in paragraph at lines 138--139
  []
 
 [5 <./images/island_tunnel.pdf>]
-<./images/gateway_group.pdf, id=75, 546.04pt x 238.8925pt>
+Overfull \hbox (30.66115pt too wide) in paragraph at lines 144--145
+\T1/aer/m/n/10 With $\OML/cmm/m/it/10 n$ \T1/aer/m/n/10 bridge routers, this va
+ri-ant re-quires $\OML/cmm/m/it/10 frac[]\OT1/cmr/m/n/10 2$
+ []
+
+
+Overfull \hbox (4.56677pt too wide) in paragraph at lines 144--145
+\T1/aer/m/n/10 and then ini-ti-at-ing con-trol chan-nel con-nec-tions with
+ []
+
+<./images/gateway_group.pdf, id=76, 546.04pt x 238.8925pt>
 File: ./images/gateway_group.pdf Graphic file (type pdf)
 
 <use ./images/gateway_group.pdf>
@@ -1032,78 +1044,79 @@ Overfull \hbox (5.71573pt too wide) in paragraph at lines 152--154
  [] 
  []
 
-
-Overfull \hbox (7.04729pt too wide) in paragraph at lines 158--159
-\T1/aer/m/n/10 net-work. We achieve this by main-tain-ing a prefix-gateway
- []
-
-) (./04-implementation.tex [6 <./images/gateway_group.pdf>]
-<./images/pipeline.pdf, id=96, 961.5925pt x 355.3275pt>
+) (./04-implementation.tex
+<./images/pipeline.pdf, id=77, 961.5925pt x 355.3275pt>
 File: ./images/pipeline.pdf Graphic file (type pdf)
 
 <use ./images/pipeline.pdf>
 Package pdftex.def Info: ./images/pipeline.pdf used on input line 9.
 (pdftex.def)             Requested size: 432.71263pt x 159.89589pt.
-
+ [6 <./images/gateway_group.pdf>]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-
-Underfull \vbox (badness 6396) has occurred while \output is active []
-
- [7])
-(./05-performance.tex <./images/small.png, id=101, 602.25pt x 372.39125pt>
+ [7 <./images/pipeline.pdf>]) (./05-performance.tex
+<./images/small.png, id=125, 602.25pt x 372.39125pt>
 File: ./images/small.png Graphic file (type png)
+ <use ./images/small.png>
+Package pdftex.def Info: ./images/small.png used on input line 10.
+(pdftex.def)             Requested size: 240.89572pt x 148.95386pt.
 
-<use ./images/small.png>
-Package pdftex.def Info: ./images/small.png used on input line 14.
-(pdftex.def)             Requested size: 301.12425pt x 186.19516pt.
-
-Overfull \hbox (61.12425pt too wide) in paragraph at lines 14--15
+Overfull \hbox (0.89572pt too wide) in paragraph at lines 10--12
  [] 
  []
 
-<./images/large.png, id=103, 602.25pt x 372.39125pt>
+<./images/large.png, id=127, 602.25pt x 372.39125pt>
 File: ./images/large.png Graphic file (type png)
  <use ./images/large.png>
-Package pdftex.def Info: ./images/large.png used on input line 20.
-(pdftex.def)             Requested size: 301.12425pt x 186.19516pt.
+Package pdftex.def Info: ./images/large.png used on input line 18.
+(pdftex.def)             Requested size: 240.89572pt x 148.95386pt.
 
-Overfull \hbox (61.12425pt too wide) in paragraph at lines 20--21
+Overfull \hbox (0.89572pt too wide) in paragraph at lines 18--20
  [] 
  []
 
-) (./icn2014.bbl) [8 <./images/pipeline.pdf> <./images/small.png> <./images/lar
-ge.png>] (./icn2014.aux) ) 
+)
+Overfull \hbox (1.98848pt too wide) in paragraph at lines 55--56
+\T1/aer/m/n/10 Fur-ther-more, the de-sign and im-ple-men-ta-tion of \T1/aess/m/
+n/10 CC-NSink
+ []
+
+[8 <./images/small.png>]
+Overfull \hbox (1.23822pt too wide) in paragraph at lines 57--58
+\T1/aer/m/n/10 etc. From an im-ple-men-ta-tion per-spec-tive, the the bridge
+ []
+
+(./icn2014.bbl) [9 <./images/large.png>] (./icn2014.aux) ) 
 Here is how much of TeX's memory you used:
- 18771 strings out of 493315
- 344787 string characters out of 6137904
- 392700 words of memory out of 5000000
- 21768 multiletter control sequences out of 15000+600000
+ 18775 strings out of 493315
+ 344828 string characters out of 6137904
+ 393722 words of memory out of 5000000
+ 21772 multiletter control sequences out of 15000+600000
  61536 words of font info for 89 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
  63i,11n,57p,1556b,328s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/local/texlive/2013/texmf-dist/fonts/enc/dvips/b
-ase/8r.enc}</usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/c
-mbx10.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cm
-mi10.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmm
-i7.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10
-.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pf
-b></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb><
-/usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></us
-r/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmsl10.pfb></usr
-/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmss10.pfb></usr/
-local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/l
-ocal/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/lo
-cal/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/loc
-al/texlive/2013/texmf-dist/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/local/texl
-ive/2013/texmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/local/texlive/201
-3/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2013/texmf-di
-st/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2013/texmf-dist/fonts/t
-ype1/urw/times/utmri8a.pfb>
-Output written on icn2014.pdf (8 pages, 492774 bytes).
+{/usr/local/texlive/2
+013/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/local/texlive/2013/texmf-dist/
+fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2013/texmf-dist/f
+onts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2013/texmf-dist/fo
+nts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/texlive/2013/texmf-dist/font
+s/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2013/texmf-dist/fonts/
+type1/public/amsfonts/cm/cmr6.pfb></usr/local/texlive/2013/texmf-dist/fonts/typ
+e1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/
+public/amsfonts/cm/cmr9.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/pub
+lic/amsfonts/cm/cmsl10.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/publ
+ic/amsfonts/cm/cmss10.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/publi
+c/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public
+/amsfonts/cm/cmti10.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/
+amsfonts/cm/cmtt10.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/urw/helv
+etic/uhvb8a.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/urw/helvetic/uh
+vr8a.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/urw/times/utmb8a.pfb><
+/usr/local/texlive/2013/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local
+/texlive/2013/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
+Output written on icn2014.pdf (9 pages, 499025 bytes).
 PDF statistics:
- 189 PDF objects out of 1000 (max. 8388607)
- 136 compressed objects within 2 object streams
+ 192 PDF objects out of 1000 (max. 8388607)
+ 138 compressed objects within 2 object streams
  0 named destinations out of 1000 (max. 500000)
  43 words of extra memory for PDF output out of 10000 (max. 10000000)
 

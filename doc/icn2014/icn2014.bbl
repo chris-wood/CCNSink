@@ -19,6 +19,18 @@ V.~Jacobson, D.~K. Smetters, J.~D. Thornton, M.~F. Plass, N.~H. Briggs, and
   Networking Experiments and Technologies}, CoNEXT '09, pages 1--12, New York,
   NY, USA, 2009. ACM.
 
+\bibitem{kim2004tree}
+Y.~Kim, A.~Perrig, and G.~Tsudik.
+\newblock Tree-based group key agreement.
+\newblock {\em ACM Transactions on Information and System Security (TISSEC)},
+  7(1):60--96, 2004.
+
+\bibitem{ccnx}
+PARC.
+\newblock {CCNx}.
+\newblock Available online at: \url{https://github.com/ProjectCCNx/ccnx}, May
+  2014.
+
 \bibitem{ndn-techreport}
 L.~Zhang, D.~Estrin, J.~Burke, V.~Jacobson, J.~D. Thornton, D.~K. Smetters,
   B.~Zhang, G.~Tsudik, D.~Massey, C.~Papadopoulos, et~al.
