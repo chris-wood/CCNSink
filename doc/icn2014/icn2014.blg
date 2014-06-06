@@ -3,46 +3,44 @@ Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
 The top-level auxiliary file: icn2014.aux
 The style file: abbrv.bst
 Database file #1: ref.bib
-Warning--I didn't find a database entry for "ghali2014elements"
-You've used 3 entries,
+You've used 4 entries,
             2118 wiz_defined-function locations,
-            517 strings with 4489 characters,
-and the built_in function-call counts, 1301 in all, are:
-= -- 117
-> -- 104
+            521 strings with 4610 characters,
+and the built_in function-call counts, 1572 in all, are:
+= -- 142
+> -- 122
 < -- 1
-+ -- 41
-- -- 38
-* -- 103
-:= -- 238
-add.period$ -- 10
-call.type$ -- 3
-change.case$ -- 27
++ -- 48
+- -- 44
+* -- 120
+:= -- 289
+add.period$ -- 13
+call.type$ -- 4
+change.case$ -- 33
 chr.to.int$ -- 0
-cite$ -- 3
-duplicate$ -- 39
-empty$ -- 69
-format.name$ -- 38
-if$ -- 255
+cite$ -- 4
+duplicate$ -- 49
+empty$ -- 86
+format.name$ -- 44
+if$ -- 308
 int.to.chr$ -- 0
-int.to.str$ -- 3
-missing$ -- 3
-newline$ -- 18
-num.names$ -- 6
-pop$ -- 27
+int.to.str$ -- 4
+missing$ -- 4
+newline$ -- 23
+num.names$ -- 8
+pop$ -- 33
 preamble$ -- 1
-purify$ -- 24
+purify$ -- 29
 quote$ -- 0
-skip$ -- 29
+skip$ -- 36
 stack$ -- 0
-substring$ -- 34
-swap$ -- 8
+substring$ -- 39
+swap$ -- 9
 text.length$ -- 1
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 12
+type$ -- 16
 warning$ -- 0
-while$ -- 9
-width$ -- 4
-write$ -- 36
-(There was 1 warning)
+while$ -- 11
+width$ -- 5
+write$ -- 46

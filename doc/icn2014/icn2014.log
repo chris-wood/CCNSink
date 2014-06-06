@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.5.30)  5 JUN 2014 16:20
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.5.30)  5 JUN 2014 21:55
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -944,21 +944,17 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
  [1{/usr/local/texlive/2013/texmf-var/fonts/map/pdftex/updmap/pdftex.map}
 
 
-])
-(./02-prelims.tex
-Underfull \vbox (badness 1062) has occurred while \output is active []
+]
+LaTeX Font Info:    Try loading font information for T1+aess on input line 10.
 
-
-
-LaTeX Warning: Citation `ghali2014elements' on page 2 undefined on input line 6
-.
-
-) (./03-design.tex
+(/usr/local/texlive/2013/texmf-dist/tex/latex/ae/t1aess.fd
+File: t1aess.fd 1997/11/16 Font definitions for T1/aess.
+)) (./02-prelims.tex) (./03-design.tex
 Overfull \hbox (17.62457pt too wide) in paragraph at lines 1--1
 []\secfnt MOTVATING IN-TER-OP-ER-A-BLE HET-ERO-
  []
 
-<./images/hourglass_conn.pdf, id=17, 756.8275pt x 369.38pt>
+[2] <./images/hourglass_conn.pdf, id=24, 756.8275pt x 369.38pt>
 File: ./images/hourglass_conn.pdf Graphic file (type pdf)
 
 <use ./images/hourglass_conn.pdf>
@@ -969,7 +965,7 @@ Overfull \hbox (2.18974pt too wide) in paragraph at lines 6--8
  [] 
  []
 
-[2]
+
 Overfull \hbox (7.65266pt too wide) in paragraph at lines 29--29
 []\secfnt NETWORK SE-MAN-TIC TRANS-LA-TIONS
  []
@@ -982,11 +978,6 @@ Overfull \hbox (4.64716pt too wide) in paragraph at lines 30--31
 
 Overfull \hbox (1.24733pt too wide) in paragraph at lines 32--33
 []\T1/aer/m/n/10 The di-rec-tion of traf-fic across the gate-way has a strong
- []
-
-
-Overfull \hbox (6.21693pt too wide) in paragraph at lines 35--36
-\T1/aer/m/n/10 hosts to com-mu-ni-cate with ap-pli-ca-tions run-ning on NDN-
  []
 
 
@@ -1003,100 +994,116 @@ Overfull \hbox (8.82706pt too wide) in paragraph at lines 40--41
  []
 
 
-Overfull \hbox (32.61739pt too wide) in paragraph at lines 40--41
-\T1/aer/m/n/10 pings. There-fore, the gate-way sup-ports IP-to-NDN application-
-
- []
-
-
 Overfull \hbox (15.13622pt too wide) in paragraph at lines 44--45
 \T1/aer/m/n/10 the full in-ter-est name is ex-plic-itly ``ccnx:/name/of/content
 ''.
  []
 
 
-Overfull \hbox (3.64511pt too wide) in paragraph at lines 44--45
-\T1/aer/m/n/10 pair $\OT1/cmr/m/n/10 ([]\OML/cmm/m/it/10 ; \OT1/cmr/m/n/10 ([]\
-OML/cmm/m/it/10 ; []\OT1/cmr/m/n/10 ))$ \T1/aer/m/n/10 in the IP pend-ing mes-
- []
+Underfull \vbox (badness 6396) has occurred while \output is active []
 
+ [4]
 Package mdframed Info: mdframed works in twoside mode on input line 76.
 Package mdframed Info: mdframed inside float 
- mdframed uses option nobreak mdframed on input line 109.
+ mdframed uses option nobreak mdframed on input line 110.
 Package mdframed Info: mdframed inside a box 
- mdframed uses option nobreak mdframed on input line 109.
-[4] <./images/island_tunnel.pdf, id=48, 486.81876pt x 202.7575pt>
+ mdframed uses option nobreak mdframed on input line 110.
+
+<./images/island_tunnel.pdf, id=51, 486.81876pt x 202.7575pt>
 File: ./images/island_tunnel.pdf Graphic file (type pdf)
 
 <use ./images/island_tunnel.pdf>
-Package pdftex.def Info: ./images/island_tunnel.pdf used on input line 130.
+Package pdftex.def Info: ./images/island_tunnel.pdf used on input line 132.
 (pdftex.def)             Requested size: 219.0664pt x 91.24002pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 136--137
+Underfull \hbox (badness 10000) in paragraph at lines 138--139
 
  []
 
 [5 <./images/island_tunnel.pdf>]
-<./images/gateway_group.pdf, id=69, 546.04pt x 238.8925pt>
+<./images/gateway_group.pdf, id=75, 546.04pt x 238.8925pt>
 File: ./images/gateway_group.pdf Graphic file (type pdf)
 
 <use ./images/gateway_group.pdf>
-Package pdftex.def Info: ./images/gateway_group.pdf used on input line 150.
+Package pdftex.def Info: ./images/gateway_group.pdf used on input line 152.
 (pdftex.def)             Requested size: 245.71573pt x 107.50063pt.
 
-Overfull \hbox (5.71573pt too wide) in paragraph at lines 150--152
+Overfull \hbox (5.71573pt too wide) in paragraph at lines 152--154
  [] 
  []
 
 
-Overfull \hbox (7.04729pt too wide) in paragraph at lines 156--157
+Overfull \hbox (7.04729pt too wide) in paragraph at lines 158--159
 \T1/aer/m/n/10 net-work. We achieve this by main-tain-ing a prefix-gateway
  []
 
-) (./04-implementation.tex
-LaTeX Font Info:    Try loading font information for T1+aess on input line 2.
-
-(/usr/local/texlive/2013/texmf-dist/tex/latex/ae/t1aess.fd
-File: t1aess.fd 1997/11/16 Font definitions for T1/aess.
-)
-<./images/pipeline.pdf, id=70, 961.5925pt x 355.3275pt>
+) (./04-implementation.tex [6 <./images/gateway_group.pdf>]
+<./images/pipeline.pdf, id=96, 961.5925pt x 355.3275pt>
 File: ./images/pipeline.pdf Graphic file (type pdf)
 
 <use ./images/pipeline.pdf>
 Package pdftex.def Info: ./images/pipeline.pdf used on input line 9.
 (pdftex.def)             Requested size: 432.71263pt x 159.89589pt.
- [6 <./images/gateway_group.pdf>]
+
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [7 <./images/pipeline.pdf>]) (./05-performance.tex) (./icn2014.bbl) [8] (./icn
-2014.aux) ) 
+
+Underfull \vbox (badness 6396) has occurred while \output is active []
+
+ [7])
+(./05-performance.tex <./images/small.png, id=101, 602.25pt x 372.39125pt>
+File: ./images/small.png Graphic file (type png)
+
+<use ./images/small.png>
+Package pdftex.def Info: ./images/small.png used on input line 14.
+(pdftex.def)             Requested size: 301.12425pt x 186.19516pt.
+
+Overfull \hbox (61.12425pt too wide) in paragraph at lines 14--15
+ [] 
+ []
+
+<./images/large.png, id=103, 602.25pt x 372.39125pt>
+File: ./images/large.png Graphic file (type png)
+ <use ./images/large.png>
+Package pdftex.def Info: ./images/large.png used on input line 20.
+(pdftex.def)             Requested size: 301.12425pt x 186.19516pt.
+
+Overfull \hbox (61.12425pt too wide) in paragraph at lines 20--21
+ [] 
+ []
+
+) (./icn2014.bbl) [8 <./images/pipeline.pdf> <./images/small.png> <./images/lar
+ge.png>] (./icn2014.aux) ) 
 Here is how much of TeX's memory you used:
- 18767 strings out of 493315
- 345307 string characters out of 6137904
- 394777 words of memory out of 5000000
- 21783 multiletter control sequences out of 15000+600000
- 51766 words of font info for 66 fonts, out of 8000000 for 9000
+ 18771 strings out of 493315
+ 344787 string characters out of 6137904
+ 392700 words of memory out of 5000000
+ 21768 multiletter control sequences out of 15000+600000
+ 61536 words of font info for 89 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
- 63i,11n,80p,1540b,582s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/local/texlive/2013/texmf-dist/fonts/enc/dvips/base/8r.enc}</us
-r/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr
-/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/
-local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/lo
-cal/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/loca
-l/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmsl10.pfb></usr/local
-/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmss10.pfb></usr/local/
-texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/t
-exlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/te
-xlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/tex
-live/2013/texmf-dist/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/local/texlive/20
-13/texmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/local/texlive/2013/texm
-f-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2013/texmf-dist/fon
-ts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/u
-rw/times/utmri8a.pfb>
-Output written on icn2014.pdf (8 pages, 401305 bytes).
+ 63i,11n,57p,1556b,328s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/usr/local/texlive/2013/texmf-dist/fonts/enc/dvips/b
+ase/8r.enc}</usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/c
+mbx10.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cm
+mi10.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmm
+i7.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10
+.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pf
+b></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb><
+/usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></us
+r/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmsl10.pfb></usr
+/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmss10.pfb></usr/
+local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/l
+ocal/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/lo
+cal/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/loc
+al/texlive/2013/texmf-dist/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/local/texl
+ive/2013/texmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/local/texlive/201
+3/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2013/texmf-di
+st/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2013/texmf-dist/fonts/t
+ype1/urw/times/utmri8a.pfb>
+Output written on icn2014.pdf (8 pages, 492774 bytes).
 PDF statistics:
- 168 PDF objects out of 1000 (max. 8388607)
- 123 compressed objects within 2 object streams
+ 189 PDF objects out of 1000 (max. 8388607)
+ 136 compressed objects within 2 object streams
  0 named destinations out of 1000 (max. 500000)
- 33 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 43 words of extra memory for PDF output out of 10000 (max. 10000000)
 

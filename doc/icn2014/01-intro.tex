@@ -7,10 +7,12 @@ As of today there are several information-centric networking proposals being exp
 
 Consequently, the primary objective of this work is to aid the integration of future content-centric networking resources into the existing IP-centric Internet by providing an application and transport layer gateway between IP and NDN resources. We assume that NDN \emph{will not} be deployed over the IP network, as such a deployment scheme would nullify the need for a gateway between the two networks. Application-layer traffic corresponding to protocols such as HTTP, FTP, SMTP, IMAP, etc. will be translated by middleware running in such gateways to correctly interface with the NDN resources, thereby serving as a semantic bridge between these two fundamentally different networking architectures. Similarly, using a custom NDN-to-IP protocol, NDN \emph{interests} for content will be translated to the messages adhereing to the corresponding application-layer protocol to traverse the IP network. When serving as a bridge between islands of NDN resources, two gateways will leverage the features of the IP network to move messages among two separate NDN beds. Specifically, NDN interests may be encapsulated in UDP datagrams composed of IP packets traversing an IP network between two NDN islands. The primary benefit of this semi-transparent gateway is that existing IP-centric applications need not be modified at any layer in the network stack to interoperate with NDN resources. 
 
+The rest of this paper is outlined as follows. Section 2 provides an overview of NDN and CCNx as they pertain to this work, and Section 3 highlights some of the motivations for the gateway and bridge. The design of \sink\ is presented in Section 4, followed by implementation and performance details in Section 5 and 6, respectively. Finally, we conclude with a discussion of unfinished work and avenues for further development in Section 7. 
+
 % \todo[inline]{Emphasize notlike a broker}
 
 % \todo[inline]{we assume NDN is NOT deployed over IP-i.e., computers may speak IP or NDN, but not both}
 
-\todo[inline]{The rest of this paper is outlined as follows...}
+% \todo[inline]{The rest of this paper is outlined as follows...}
 
 

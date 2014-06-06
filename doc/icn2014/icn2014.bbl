@@ -6,6 +6,11 @@ J.~Burke and D.~Kulinski.
 \newblock {\em {University of California, Los Angeles}},
   https://github.com/named-data/PyCCN.
 
+\bibitem{ghali2014elements}
+C.~Ghali, G.~Tsudik, and E.~Uzun.
+\newblock Elements of trust in named-data networking.
+\newblock {\em arXiv preprint arXiv:1402.3332}, 2014.
+
 \bibitem{first}
 V.~Jacobson, D.~K. Smetters, J.~D. Thornton, M.~F. Plass, N.~H. Briggs, and
   R.~L. Braynard.
