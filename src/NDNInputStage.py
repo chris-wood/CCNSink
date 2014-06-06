@@ -116,10 +116,14 @@ class NDNHandle(pyccn.Closure):
 		# Extract the interest information and shove it into the pipeline
 		print(info.Interest)
 		if (len(info.Interest.name.components) <= self.baseOffset):
+			start = time.time()
 			print >> sys.stderr, "Error: No protocol specified in name: " + str(info.Interest.name)
 			content = self.forwardGeneralInterest(info.Interest.name)
 			co = self.buildContentObject(info.Interest.name, content)
 			self.handle.put(co)
+			end = time.time()
+			diff = end - start
+			logger.info('BRIDGE-LATENCY: ' + str(diff))
 			return pyccn.RESULT_OK
 		protocol = str(info.Interest.name.components[self.baseOffset]).lower()
 
