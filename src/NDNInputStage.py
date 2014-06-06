@@ -118,7 +118,8 @@ class NDNHandle(pyccn.Closure):
 		if (len(info.Interest.name.components) <= self.baseOffset):
 			print >> sys.stderr, "Error: No protocol specified in name: " + str(info.Interest.name)
 			content = self.forwardGeneralInterest(info.Interest.name)
-			self.handle.put(content)
+			co = self.buildContentObject(info.Interest.name, content)
+			self.handle.put(co)
 			return pyccn.RESULT_OK
 		protocol = str(info.Interest.name.components[self.baseOffset]).lower()
 

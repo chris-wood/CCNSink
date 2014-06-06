@@ -421,7 +421,7 @@ class Bridge(threading.Thread):
 				byte = fin.read(1)
 			content = str(bytes)
 			print("retrieved content = " + content)
-
+			
 			return content
 		else:
 			return None
