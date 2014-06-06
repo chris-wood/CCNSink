@@ -88,7 +88,7 @@ class NDNOutputStage(PipelineStage, threading.Thread):
 
 	def put(self, msg, semaphore = None):
 		if (semaphore != None):
-			self.bridgeFIT[msg.tag] = (semaphore, None)
+			self.bridgeFIT[msg.tag] = [semaphore, None]
 		self.queue.put(msg)
 
 	def buildInterest(self, msg):
