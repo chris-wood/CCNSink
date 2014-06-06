@@ -104,15 +104,17 @@ class BridgeHandler(SocketServer.BaseRequestHandler):
 			print(interestName)
 
 			msg = OutgoingMessage(None, None, interestName, None, True)
-			semaphore = multiprocessing.BoundedSemaphore(0)
+			# semaphore = multiprocessing.BoundedSemaphore(0)
 			# semaphore = asyncio.Event()
 			# semaphore.clear()
+			event = threading.Event()
 
 			# Send the interest now and block
 			bridgeServer.stage.ndnOutputStage.put(msg, semaphore)
 			print("BLOCKING AND WAITING FOR CONTENT")
-			semaphore.acquire()
-			# semaphore.wait()
+			event.clear()
+			event.wait()
+			# semaphore.acquire()
 			print("AAAAAND we're back")
 
 			# We've returned - fetch the content

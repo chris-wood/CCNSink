@@ -72,8 +72,7 @@ class NDNFetcher(threading.Thread):
 		# Save the bridge content and release the bridge as well
 		if (msg.tag in stage.bridgeFIT):
 			stage.bridgeFIT[msg.tag][1] = content
-			print("Value = " + str(stage.bridgeFIT[msg.tag][0].get_value()))
-			stage.bridgeFIT[msg.tag][0].release()
+			stage.bridgeFIT[msg.tag][0].set()
 
 class NDNOutputStage(PipelineStage, threading.Thread):
 	def __init__(self, name, table = None, paramMap = {}):
@@ -87,9 +86,9 @@ class NDNOutputStage(PipelineStage, threading.Thread):
 		self.bridgeFIT = {}
 		self.handle = NDNOutputClosure(name, self, table, paramMap)
 
-	def put(self, msg, semaphore = None):
-		if (semaphore != None):
-			self.bridgeFIT[msg.tag] = [semaphore, None]
+	def put(self, msg, event = None):
+		if (event != None):
+			self.bridgeFIT[msg.tag] = [event, None]
 		self.queue.put(msg)
 
 	def buildInterest(self, msg):
