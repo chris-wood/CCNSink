@@ -1,3 +1,6 @@
+all:
+	rm *.pyc *.log
+
 rungw:
 	kill -9 `lsof -t -i:7000`
 	kill -9 `lsof -t -i:8000`

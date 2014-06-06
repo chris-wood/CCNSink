@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.5.30)  5 JUN 2014 16:14
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.5.30)  5 JUN 2014 16:20
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -958,7 +958,7 @@ Overfull \hbox (17.62457pt too wide) in paragraph at lines 1--1
 []\secfnt MOTVATING IN-TER-OP-ER-A-BLE HET-ERO-
  []
 
-<./images/hourglass_conn.pdf, id=20, 756.8275pt x 369.38pt>
+<./images/hourglass_conn.pdf, id=17, 756.8275pt x 369.38pt>
 File: ./images/hourglass_conn.pdf Graphic file (type pdf)
 
 <use ./images/hourglass_conn.pdf>
@@ -1025,11 +1025,7 @@ Package mdframed Info: mdframed inside float
  mdframed uses option nobreak mdframed on input line 109.
 Package mdframed Info: mdframed inside a box 
  mdframed uses option nobreak mdframed on input line 109.
-
-Underfull \vbox (badness 6396) has occurred while \output is active []
-
- [4]
-<./images/island_tunnel.pdf, id=50, 486.81876pt x 202.7575pt>
+[4] <./images/island_tunnel.pdf, id=48, 486.81876pt x 202.7575pt>
 File: ./images/island_tunnel.pdf Graphic file (type pdf)
 
 <use ./images/island_tunnel.pdf>
@@ -1041,7 +1037,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 136--137
  []
 
 [5 <./images/island_tunnel.pdf>]
-<./images/gateway_group.pdf, id=71, 546.04pt x 238.8925pt>
+<./images/gateway_group.pdf, id=69, 546.04pt x 238.8925pt>
 File: ./images/gateway_group.pdf Graphic file (type pdf)
 
 <use ./images/gateway_group.pdf>
@@ -1063,7 +1059,7 @@ LaTeX Font Info:    Try loading font information for T1+aess on input line 2.
 (/usr/local/texlive/2013/texmf-dist/tex/latex/ae/t1aess.fd
 File: t1aess.fd 1997/11/16 Font definitions for T1/aess.
 )
-<./images/pipeline.pdf, id=72, 961.5925pt x 355.3275pt>
+<./images/pipeline.pdf, id=70, 961.5925pt x 355.3275pt>
 File: ./images/pipeline.pdf Graphic file (type pdf)
 
 <use ./images/pipeline.pdf>
@@ -1075,34 +1071,32 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
  [7 <./images/pipeline.pdf>]) (./05-performance.tex) (./icn2014.bbl) [8] (./icn
 2014.aux) ) 
 Here is how much of TeX's memory you used:
- 18794 strings out of 493315
- 345554 string characters out of 6137904
- 394778 words of memory out of 5000000
- 21798 multiletter control sequences out of 15000+600000
- 57228 words of font info for 83 fonts, out of 8000000 for 9000
+ 18767 strings out of 493315
+ 345307 string characters out of 6137904
+ 394777 words of memory out of 5000000
+ 21783 multiletter control sequences out of 15000+600000
+ 51766 words of font info for 66 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
- 63i,13n,80p,1540b,582s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 63i,11n,80p,1540b,582s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2013/texmf-dist/fonts/enc/dvips/base/8r.enc}</us
 r/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr
 /local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/
 local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/lo
 cal/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/loca
-l/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/t
-exlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmsl10.pfb></usr/local/te
-xlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmss10.pfb></usr/local/tex
-live/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texl
-ive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/local/texliv
-e/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive
-/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive/
-2013/texmf-dist/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/local/texlive/2013/te
-xmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/local/texlive/2013/texmf-dis
-t/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2013/texmf-dist/fonts/ty
-pe1/urw/times/utmr8a.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/urw/ti
-mes/utmri8a.pfb>
-Output written on icn2014.pdf (8 pages, 418668 bytes).
+l/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmsl10.pfb></usr/local
+/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmss10.pfb></usr/local/
+texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/t
+exlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/te
+xlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/tex
+live/2013/texmf-dist/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/local/texlive/20
+13/texmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/local/texlive/2013/texm
+f-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2013/texmf-dist/fon
+ts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/u
+rw/times/utmri8a.pfb>
+Output written on icn2014.pdf (8 pages, 401305 bytes).
 PDF statistics:
- 176 PDF objects out of 1000 (max. 8388607)
- 129 compressed objects within 2 object streams
+ 168 PDF objects out of 1000 (max. 8388607)
+ 123 compressed objects within 2 object streams
  0 named destinations out of 1000 (max. 500000)
  33 words of extra memory for PDF output out of 10000 (max. 10000000)
 
