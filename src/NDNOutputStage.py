@@ -73,7 +73,7 @@ class NDNFetcher(threading.Thread):
 		if (msg.tag in stage.bridgeFIT):
 			stage.bridgeFIT[msg.tag][1] = content
 			print("Value = " + str(stage.bridgeFIT[msg.tag][0].get_value()))
-			stage.bridgeFIT[msg.tag][0].set()
+			stage.bridgeFIT[msg.tag][0].release()
 
 class NDNOutputStage(PipelineStage, threading.Thread):
 	def __init__(self, name, table = None, paramMap = {}):
