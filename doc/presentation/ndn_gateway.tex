@@ -25,7 +25,7 @@
 \input{bnf}
 
 
-\title[NDN Gateway]{Multipurpose IP/NDN Gateway and Bridge \\ for Heterogeneous Network Interoperability}
+\title[{\sf CCNSink}]{{\sf CCNSink}: Application-Layer Middleware \\ for TCP/IP and Content Centric Network Interoperability}
 \institute[Donald Bren School of Information and Computer Sciences \\ UC Irvine]{}
 \date{\today}
 %\subtitle{}
@@ -45,11 +45,9 @@
 	\titlepage
 \end{frame}
 
-% \begin{frame}{Agenda}
-% 	\tableofcontents
-% \end{frame}
-
-%% 6-8 slides each
+\begin{frame}{Agenda}
+	\tableofcontents
+\end{frame}
 
 \section{Overview}
 \begin{frame}{Today's Internet: Communication Networks as Distribution Networks}
@@ -68,17 +66,17 @@
 	\emph{NDN is a new architecture designed for content-centric networking}
 \end{frame}
 
-% \begin{frame}{Data vs Communication Networks}
-% 	Distribution/data (DN) and communication (CN) networks differ in several key ways:
-% 	\begin{table}
-% 		\begin{tabular}{c|c|c} \hline
-% 		~ & CN & DN \\ \hline
-% 		Naming & Endpoints & Content \\
-% 		Memory & Invisible \& limited & Explicit (storage = wires) \\
-% 		Security & Communication process/channel & Content \\ \hline
-% 		\end{tabular}
-% 	\end{table}
-% \end{frame}
+\begin{frame}{Data vs Communication Networks}
+	Distribution/data (DN) and communication (CN) networks differ in several key ways:
+	\begin{table}
+		\begin{tabular}{c|c|c} \hline
+		~ & CN & DN \\ \hline
+		Naming & Endpoints & Content \\
+		Memory & Invisible \& limited & Explicit (storage = wires) \\
+		Security & Communication process/channel & Content \\ \hline
+		\end{tabular}
+	\end{table}
+\end{frame}
 
 \begin{frame}{NDN Overview}
 	Content-centric networking flips around the host-based model of the Internet architecture
@@ -93,68 +91,75 @@
 	\end{itemize}
 \end{frame}
 
-% \begin{frame}{NDN Overview (continued)}
-% 	How is data actually retrieved? 
-% 	\begin{itemize}
-% 		\item A consumer $C$ sends out an \emph{interest} for content they desire.
-% 		\item A router $R_i$ use the information in their forwarding information base (FIB) table and data in cached in their content store (CS) to handle incoming interests:
-% 		\begin{enumerate}
-% 			\item If content with the same name matches what's stored in the CS, return that content
-% 			\item Else, store the interest in their pending interest table (PIT) (including the downstream router $R_{i-1}$ or consumer $C$ that made the request), and forward the request upstream to the next router $R_{i+1}$ based on their FIB.
-% 			\item FIBs are configured using protocol similar to OSPF
-% 		\end{enumerate}
-% 		\item Once the interest is satisfied in $R_i$, the PIT entry is cleared, the content is cached, and the data is sent downstream to $C$ or $R_{i-1}$. 
-%  	\end{itemize}
-% \end{frame}
+\begin{frame}{NDN Overview (continued)}
+	How is data actually retrieved? 
+	\begin{itemize}
+		\item A consumer $C$ sends out an \emph{interest} for content they desire.
+		\item A router $R_i$ use the information in their forwarding information base (FIB) table and data in cached in their content store (CS) to handle incoming interests:
+		\begin{enumerate}
+			\item If content with the same name matches what's stored in the CS, return that content
+			\item Else, store the interest in their pending interest table (PIT) (including the downstream router $R_{i-1}$ or consumer $C$ that made the request), and forward the request upstream to the next router $R_{i+1}$ based on their FIB.
+			\item FIBs are configured using protocol similar to OSPF
+		\end{enumerate}
+		\item Once the interest is satisfied in $R_i$, the PIT entry is cleared, the content is cached, and the data is sent downstream to $C$ or $R_{i-1}$. 
+ 	\end{itemize}
+\end{frame}
 
-% \begin{frame}{Interest Format}
-% 	\begin{itemize}
-% 		\item Interests are similar to URLs: 
-% 		\begin{center}
-% 			{\tt ccnx://rit/gccis/cs/spr/ramsey\_survey}
-% 		\end{center}
-% 		\item The {\tt /} character is a delimeter that separates name \emph{components}
-% 		\item A component can be \emph{anything}, including binary data (e.g. ciphertext)
-% 		\item Interests are matched to providers in FIBs using a standard longest-prefix rule (to my knowledge, interests in CSs must match completely)
-% 	\end{itemize}
-% \end{frame}
+\begin{frame}{Interest Format}
+	\begin{itemize}
+		\item Interests are similar to URLs: 
+		\begin{center}
+			{\tt ccnx://rit/gccis/cs/spr/ramsey\_survey}
+		\end{center}
+		\item The {\tt /} character is a delimeter that separates name \emph{components}
+		\item A component can be \emph{anything}, including binary data (e.g. ciphertext)
+		\item Interests are matched to providers in FIBs using a standard longest-prefix rule (to my knowledge, interests in CSs must match completely)
+	\end{itemize}
+\end{frame}
 
-%% TODO: images of this happening 
-% \begin{frame}
-% 	\frametitle{NDN in Action - \#1}
-% 	\begin{figure}[h]
-% 		\includegraphics[scale=0.4]{img/ccn_img1.pdf}
-% 	\end{figure}
-% \end{frame}
+% TODO: images of this happening 
+\begin{frame}
+	\frametitle{NDN in Action - \#1}
+	\begin{figure}[h]
+		\includegraphics[scale=0.4]{img/ccn_img1.pdf}
+	\end{figure}
+\end{frame}
 
-% \begin{frame}
-% 	\frametitle{NDN in Action - \#2}
-% 	\begin{figure}[h]
-% 		\includegraphics[scale=0.4]{img/ccn_img2.pdf}
-% 	\end{figure}
-% \end{frame}
+\begin{frame}
+	\frametitle{NDN in Action - \#2}
+	\begin{figure}[h]
+		\includegraphics[scale=0.4]{img/ccn_img2.pdf}
+	\end{figure}
+\end{frame}
 
-% \begin{frame}
-% 	\frametitle{NDN in Action - \#3}
-% 	\begin{figure}[h]
-% 		\includegraphics[scale=0.4]{img/ccn_img3.pdf}
-% 	\end{figure}
-% \end{frame}
+\begin{frame}
+	\frametitle{NDN in Action - \#3}
+	\begin{figure}[h]
+		\includegraphics[scale=0.4]{img/ccn_img3.pdf}
+	\end{figure}
+\end{frame}
 
-% \begin{frame}
-% 	\frametitle{NDN in Action - \#4}
-% 	\begin{figure}[h]
-% 		\includegraphics[scale=0.4]{img/ccn_img4.pdf}
-% 	\end{figure}
-% \end{frame}
+\begin{frame}
+	\frametitle{NDN in Action - \#4}
+	\begin{figure}[h]
+		\includegraphics[scale=0.4]{img/ccn_img4.pdf}
+	\end{figure}
+\end{frame}
 
-% \begin{frame}{NDN at a Larger Scale}
-% 	\begin{figure}[h]
-% 		\includegraphics[scale=0.3]{img/ndn_dist.pdf}
-% 	\end{figure}
-% \end{frame}
+\begin{frame}{NDN at a Larger Scale}
+	\begin{figure}[h]
+		\includegraphics[scale=0.3]{img/ndn_dist.pdf}
+	\end{figure}
+\end{frame}
 
-\begin{frame}{Motivation for NDN Gateway/Bridge}
+\begin{frame}{Underlying Network Differences}
+	How will similar applications on both networks communicate with vastly different network stacks?
+	\begin{figure}[h]
+		\includegraphics[scale=0.32]{./img/hourglass_conn.pdf}
+	\end{figure}
+\end{frame}
+
+\begin{frame}{Motivation for {\sf CCNSink}}
 	\textbf{Question}: If adopted, how will NDN be deployed?
 	\begin{enumerate}	
 		\item ``Turn off'' the Internet, swap in new hardware, and then flip the switch again
@@ -167,8 +172,19 @@
 			\item ...and how to do this without re-writing the transport/network layer of IP-based applications to use CCNx (i.e., implement NDN functionality on top of IP)?
 		\end{itemize}
 	\end{enumerate}
+\end{frame}
 
-	{\bf Answer}: Use a NDN-network edge gateways to hide the details of NDN/IP communication mechanics and translate IP messages to compliant NDN interests (and vice versa), and use NDN-network edge bridges to connect isolated NDN ``islands''.
+\begin{frame}{Motivation for {\sf CCNSink}}
+	\textbf{Question}: If adopted, how will NDN be deployed?
+
+	\medskip
+
+	{\bf Answer} (in other words, what {\sf CCNSink} does): 
+	\begin{itemize}
+		\item Use NDN-network edge gateways to hide the details of NDN/IP communication mechanics
+		\item Translate IP messages to compliant NDN interests (and vice versa)
+		\item Use NDN-network edge bridges to connect isolated NDN ``islands''
+	\end{itemize}
 \end{frame}
 
 \section{Modes of Operation}
@@ -201,7 +217,9 @@ Interests are encoded according to a special grammar to enable the gateway to pa
 \begin{figure}
 \begin{mdframed}
 \begingrammar
+
 \noindent
+
 <ip-interest>:	'/$\dots$/ip/'<protocol>.
 
 <protocol>:	'http/'<http-cmd>[{'/'<http-path>}] | 'tcp/'<tcp-ident>'/'<uri-encoded-string>. 
@@ -241,32 +259,144 @@ Interests are encoded according to a special grammar to enable the gateway to pa
 \end{frame}
 
 \subsection{Bridge Functionality}
-\begin{frame}{Bridging NDN Islands}
+\begin{frame}{Bridging NDN Networks}
+	{\sf CCNSink} is used to bridge interests and their corresponding content across physically disjoint NDN networks.
+
+	\medskip
+
+	... But the devil is in the details
+	\begin{itemize}
+		\item NDN stipulates that all content is signed by its producers
+		\begin{itemize}
+			\item Content must be signed and verified as it crosses between two bridges, and then \emph{re-signed} before sent to the intended NDN consumer
+		\end{itemize}
+		\item Bridging should incur minimal overhead and handle high loads
+		\begin{itemize}
+			\item Use keyed MAC algorithms (e.g., HMAC) to tag and verify content as it traverses bridges (instead of digital signatures)
+		\end{itemize}
+		\item Bridges must be able to locate and connect to other bridges
+		\begin{itemize}
+			\item Use a central directory service to maintain knowledge of all bridges (updated periodically via heartbeat messages)
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{The Bridge}
+	Bridges establish persistent TCP connections to stream interests and content between disjoint networks. 
 	\begin{figure}[h]
 		\includegraphics[scale=0.5]{img/island_tunnel.pdf}
 	\end{figure}
 \end{frame}
 
-% \section{Internal Design}
-% \begin{frame}{Pipeline-Based Load Balancing Design}
-% 	\begin{figure}[h]
-% 		\includegraphics[scale=0.37]{img/pipeline.pdf}
-% 	\end{figure}
-% \end{frame}
+\begin{frame}{The Bridge Directory (and the Director)}
+	A central directory (to help establish pair-wise keys) or directory (to help establish a shared group key) can be used to manage the bridges and their keys.
+	\begin{figure}[h]
+		\includegraphics[scale=0.5]{img/gateway_group.pdf}
+	\end{figure}
+\end{frame}
 
-\section{Experimental Setups}
-\begin{frame}{Performance Measurement: Experiments and Metrics}
-	We will assess the design and implementation performance with the following experiments:
+\section{Internal Design and Implementation}
+\begin{frame}{Pipeline-Based Load Balancing Design}
+	\begin{figure}[h]
+		\includegraphics[scale=0.34]{img/pipeline.pdf}
+	\end{figure}
+\end{frame}
+
+\begin{frame}{Design Highlights}
+	\begin{enumerate}
+		\item Simple pipeline stage interface:
+		\begin{itemize}
+			\item Thread-safe input buffer queue of {\tt OutgoingMessage} objects
+			\item Reference to ``next'' stage
+		\end{itemize}
+		\item Simple (and extensible) NDN-to-IP protocol multipliexing encoding
+		\item Intuitive IP-to-NDN encoding method via HTTP GET requests
+		\item All (IP and NDN) messages are handled asynchronously
+		\begin{itemize}
+			\item But synchronization primitives (semaphores/events) are used to wait for message responses
+		\end{itemize}
+	\end{enumerate}	
+\end{frame}
+
+\begin{frame}{Implementation Highlights}
+	\begin{itemize}
+		\item {\sf CCNSink} gateway/bridge: 
+		\begin{itemize}
+			\item Multi-threaded application written entirely in Python 
+			\begin{itemize}
+				\item Uses native Python libraries for thread synchronization primitives, IP-based communication (e.g., httplib)
+			\end{itemize}
+			\item Uses CCNx 0.82 for NDN communication
+		\end{itemize}
+		\item {\sf CCNSink} bridge directory: 
+		\begin{itemize}
+			\item Written entirely in Python
+			\item Uses Python Flask library to communicate with bridge clients using HTTP
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\section{Experiments}
+\begin{frame}{Performance: Experiments and Metrics}
+	We assessed the design and implementation performance with the following experiments:
 	\begin{itemize}
 		\item Bidirectional ``application-layer'' and ``transport-layer'' communication across the gateway
 		\item Unidirectional messages sent from IP and NDN hosts
 	\end{itemize}
-	We will collect the following metrics and model them as a function of the number of gateways $n$ and estimated clients $m$:
+	We collected the following metrics:
 	\begin{itemize}
 		\item Unidirectional message translation overhead
-		\item Unidirectional message trip time
+		\item Unidirectional message trip time (RTT)
 		\item Bridge mode message latency (RTT)
 		\item Bridge mode symmetric key establishment overhead time
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Translation Overhead}
+	\begin{itemize}
+		\item IP-to-NDN translation: $\approx$0.00078s for interest names composed of one (1) to five (5) components
+		\item NDN-to-IP translation: $\approx$0.0005s.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{RTT Results}
+	\begin{figure}
+	\begin{center}
+	\includegraphics[scale=0.4]{./img/small.png}
+	\label{fig:perf1}
+	\end{center}
+	\end{figure}
+	Average RTT times for IP-to-NDN, NDN-to-IP, and bridge messages when requesting content of approximately 1MB in size.
+\end{frame}
+
+\begin{frame}{RTT Results (cont'd)}
+	\begin{figure}
+	\begin{center}
+	\includegraphics[scale=0.4]{./img/large.png}
+	\label{fig:perf2}
+	\end{center}
+	\end{figure}
+	Average RTT times for IP-to-NDN, NDN-to-IP, and bridge messages when requesting content of 10MB in size.
+\end{frame}
+
+\begin{frame}{Key Establishment Overhead}
+	\begin{itemize}
+		\item TODO
+	\end{itemize}
+\end{frame}
+
+\section{Future Work}
+\begin{frame}{Future Work}
+	Project paper submitted to ACM ICN 2014.
+
+	\medskip
+
+	Next tasks include:
+	\begin{itemize}
+		\item Implement group-based key establishment routine for bridges
+		\item Expand NDN-to-IP encoding grammar to support more TCP/IP protocols
+		\item Test current {\sf CCNSink} implementation under heavy message load with geographically distributed hosts
+		\item Test {\sf CCNSink} on top of actual NDN hardware (i.e., not using CCNx as NDN interface)
 	\end{itemize}
 \end{frame}
 
