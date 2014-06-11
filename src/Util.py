@@ -4,7 +4,7 @@
 import hmac
 
 def generateHMACTag(key, content):
-	digester = hmac.new(key)
+	digester = hmac.new(str(key))
 	digester.update(content)
 	return digester.hexdigest()
 

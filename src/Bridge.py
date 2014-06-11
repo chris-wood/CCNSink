@@ -70,7 +70,7 @@ class BridgeHandler(SocketServer.BaseRequestHandler):
 			# Compute and save our key
 			theirs = int(data) # it was written as a string
 			key = modExp(ours, int(theirs), mod)
-			bridgeServer.stage.keyMap[self.client_address[0]] = key
+			bridgeServer.stage.keyMap[self.client_address[0]] = str(key)
 			
 			return
 		elif (dtype == 'i'):
@@ -277,7 +277,7 @@ class Bridge(threading.Thread):
 			if (not (targetAddress in self.keyMap)):
 				keyStart = time.time()
 				key = self.generatePairwiseKey(sock)
-				self.keyMap[targetAddress] = key
+				self.keyMap[targetAddress] = str(key)
 				keyEnd = time.time()
 				diff = keyEnd - keyStart
 				logger.info('BRIDGE-KEY-EST: ' + str(diff))

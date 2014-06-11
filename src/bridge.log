@@ -7,3 +7,6 @@
 2014-06-05 20:36:00,682 INFO BridgeHandler closing
 2014-06-11 15:07:04,077 INFO Socket retrieved - sending data
 2014-06-11 15:08:58,776 INFO Socket retrieved - sending data
+2014-06-11 15:10:50,773 INFO Socket retrieved - sending data
+2014-06-11 15:10:50,780 INFO BRIDGE-KEY-EST: 0.00687789916992
+2014-06-11 15:10:50,781 INFO New key established: 154729386380020284763730594984715153868
