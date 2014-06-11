@@ -59,7 +59,7 @@ class BridgeHandler(SocketServer.BaseRequestHandler):
 			bits = bridgeServer.bits
 			rand = random.randint(0, mod)
 			power = (rand % (2 ** bits))
-			ours = modExp(gen, power, mod)
+			ours = iterModExp(gen, power, mod)
 
 			# Send our half back on down
 			fout = self.request.makefile()
@@ -69,7 +69,7 @@ class BridgeHandler(SocketServer.BaseRequestHandler):
 			
 			# Compute and save our key
 			theirs = int(data) # it was written as a string
-			key = modExp(ours, int(theirs), mod)
+			key = iterModExp(ours, int(theirs), mod)
 			bridgeServer.stage.keyMap[self.client_address[0]] = str(key)
 			
 			return
@@ -233,7 +233,7 @@ class Bridge(threading.Thread):
 	def generatePairwiseKey(self, sock):
 		rand = random.randint(0, self.mod)
 		power = (rand % (2 ** self.bits))
-		ours = modExp(self.gen, power, self.mod)
+		ours = iterModExp(self.gen, power, self.mod)
 
 		# Send our half of the share to the other guy
 		sharestr = str(ours)
@@ -253,7 +253,7 @@ class Bridge(threading.Thread):
 
 
 		# Compute and save the key
-		key = modExp(ours, theirs, self.mod)
+		key = iterModExp(ours, theirs, self.mod)
 		return key
 
 	# Messages are sent as follows: |name length|name|
