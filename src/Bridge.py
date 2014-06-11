@@ -10,8 +10,8 @@ import logging
 import random
 import multiprocessing
 import SocketServer
-# from asyncio import *
 from OutgoingMessage import *
+from Util import *
 from multiprocessing import Queue
 
 # Setup logging redirection
@@ -26,18 +26,6 @@ logger.setLevel(logging.INFO)
 bridgeServer = None
 FIT = {} # map from interest name to (semaphore, content) tuples (this blocks the exit bridge)
 PIT = {} # map from interest name to (semaphore, content) tuples (this blocks the entry bridge)
-
-def modExp(a, b, m):
-	a %= m
-	ret = None
-	if b == 0:
-		ret = 1
-	elif b % 2:
-		ret = a * modExp(a, b-1, m)
-	else:
-		ret = modExp(a, b//2, m)
-		ret *= ret
-	return (ret % m)
 
 class BridgeHandler(SocketServer.BaseRequestHandler):
 
@@ -61,14 +49,10 @@ class BridgeHandler(SocketServer.BaseRequestHandler):
 			fin = self.request.makefile()
 			bytes = ""
 			byte = fin.read(1)
-			print("read: " + byte)
 			while (byte != "\n"):
 				bytes = bytes + byte
 				byte = fin.read(1)
-				print("read: " + byte)
 			data = bytes
-
-			print("key = " + bytes)
 
 			mod = bridgeServer.mod
 			gen = bridgeServer.gen
@@ -82,13 +66,11 @@ class BridgeHandler(SocketServer.BaseRequestHandler):
 			returnData = str(ours) + "\n"
 			fout.write(returnData)
 			fout.flush()
-			# self.request.send(ours)
 			
 			# Compute and save our key
 			theirs = int(data) # it was written as a string
 			key = modExp(ours, int(theirs), mod)
 			bridgeServer.stage.keyMap[self.client_address[0]] = key
-			print("key = " + str(key))
 			
 			return
 		elif (dtype == 'i'):
@@ -101,31 +83,29 @@ class BridgeHandler(SocketServer.BaseRequestHandler):
 				bytes = bytes + byte
 				byte = fin.read(1)
 			interestName = bytes
-			print(interestName)
 
 			msg = OutgoingMessage(None, None, interestName, None, True)
-			# semaphore = multiprocessing.BoundedSemaphore(0)
-			# semaphore = asyncio.Event()
-			# semaphore.clear()
 			event = threading.Event()
 
 			# Send the interest now and block
 			bridgeServer.stage.ndnOutputStage.put(msg, event)
-			print("BLOCKING AND WAITING FOR CONTENT")
 			event.clear()
 			event.wait()
-			# semaphore.acquire()
-			print("AAAAAND we're back")
 
 			# We've returned - fetch the content
-			content = str(bridgeServer.stage.ndnOutputStage.bridgeFIT[msg.tag][1]) + "\n"
+			content = str(bridgeServer.stage.ndnOutputStage.bridgeFIT[msg.tag][1])
 
-			###### TODO: need to sign the content here
+			# Sign the content using the key for the bridge
+			if (bridgeServer.stage.keyMap[self.client_address[0]] != None):
+				sig = generateHMACTag(bridgeServer.stage.keyMap[self.client_address[0]], content)
 
-			fout = self.request.makefile()
-			fout.write(content)
-			fout.flush()
-			# self.request.send(content)
+				# Send the content and the signature to the other bridge
+				fout = self.request.makefile()
+				fout.write(content + "\n")
+				fout.write(sig + "\n")
+				fout.flush()
+			else:
+				raise RuntimeError()
 
 			return
 
@@ -133,39 +113,9 @@ class BridgeHandler(SocketServer.BaseRequestHandler):
 		logger.info("BridgeHandler closing")
 		return SocketServer.BaseRequestHandler.finish(self)
 
-	# # self.request is the TCP socket connected to the client
-	# def handle_read(self):
-	# 	print >> sys.stderr, "inside handle_read"
-	# 	data = None
-	# 	if (not self.started):
-
-	# 		# retrieve key material
-	# 		length = self.recv(4)
-	# 		theirs = self.recv(length) # receive their DH half
-	# 		key = (self.ours ** int(theirs)) % self.mod
-	# 		self.bridge.keyMap[self.address] = key
-	# 		print >> sys.stderr, "established key: " + str(key)
-	# 		logger.info("established key: " + str(key))
-
-	# 		# retrieve interest
-	# 		length = self.recv(4)
-	# 		interest = self.recv(length) # receive their DH half
-	# 		print >> sys.stderr, "received interest = " + str(interest)
-	# 		logger.info("received interest = " + str(interest))
-
-	# 	# Shove the data into the output buffer
-	# 	if (data != None):
-	# 		self.out_bfufer = data
-
 class BridgeServer(SocketServer.TCPServer, threading.Thread):
 	def __init__(self, host, port, mod, gen, bits, stage, handler_class = BridgeHandler):
-		# asyncore.dispatcher.__init__(self)
 		threading.Thread.__init__(self)
-		# self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
-		# self.set_reuse_addr()
-		# self.bind((host, port))
-		# self.addr = (host, port)
-		# self.listen(5) # this is the server queue size
 		self.gen = gen
 		self.mod = mod
 		self.bits = bits
@@ -200,51 +150,6 @@ class BridgeServer(SocketServer.TCPServer, threading.Thread):
 
 	def close_request(self, request_address):
 		return SocketServer.TCPServer.close_request(self, request_address)
-
-	# def handle_accept(self):
-	# 	pair = self.accept()
-	# 	if pair is not None:
-	# 		sock, addr = pair
-	# 		print >> sys.stderr, 'Incoming connection from %s' % repr(addr)
-	# 		logger.info('Incoming connection from %s' % repr(addr))
-	# 		handler = BridgeHandler(sock) # spins off a thread in the background
-	# 		handler.setup(self.bridge, addr)
-
-	# def run(self):
-	# 	print >> sys.stderr, "Starting BridgeServer on " + str(self.addr) + "\n"
-	# 	logger.info("Starting BridgeServer on " + str(self.addr))
-	# 	self.serve_forever()
-
-	# def serve_forever(self):
-	# 	asyncore.loop()
-
-	# def handle_close(self):
-	# 	self.close()
-
-# class BridgeClient(asyncore.dispatcher_with_send):
-# 	def __init__(self, host, port, data):
-# 		asyncore.dispatcher.__init__(self)
-# 		print >> sys.stderr, "Establishing socket connection to " + str(host)
-# 		logger.info("Establishing socket connection to " + str(host))
-# 		self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
-# 		self.connect((host, port))
-# 		self.receiveBuffer = []
-# 		self.out_buffer = str(data)
-
-# 	# def send_data(self, data):
-# 	# 	print >> sys.stderr, "Sending: " + str(data)
-# 	# 	self.out_buffer = data
-
-# 	def handle_close(self):
-# 		self.close()
-
-# 	def handle_read(self):
-# 		length = self.recv(4)
-# 		self.receiveBuffer.append(length)
-# 		data = str(self.recv(length))
-# 		self.receiveBuffer.append(data)
-# 		print >> sys.stderr, "Received: "  + str(data)
-# 		self.close()
 
 class Bridge(threading.Thread):
 	def __init__(self, paramMap, ndnOutputStage):
@@ -310,7 +215,6 @@ class Bridge(threading.Thread):
 	def updateGateways(self):
 		resp = self.sendMsg("GET", "/list-gateways", None, None)
 		list = resp.read()
-		print(list)
 		dic = json.loads(list)
 		self.gateways = []
 		for gateway in dic["gateways"]:
@@ -327,25 +231,18 @@ class Bridge(threading.Thread):
 
 	# Generate our half of the DH share
 	def generatePairwiseKey(self, sock):
-		# rand = int(os.urandom(self.bits).encode('hex'), 16)
 		rand = random.randint(0, self.mod)
 		power = (rand % (2 ** self.bits))
-		# ours = (self.gen ** power) % self.mod
 		ours = modExp(self.gen, power, self.mod)
 
 		# Send our half of the share to the other guy
 		sharestr = str(ours)
-		print >> sys.stderr, "sending data..."
 		payload = "k" + sharestr + "\n"
-		print("sending: " + payload)
 		fout = sock.makefile()
 		fout.write(payload)
 		fout.flush()
-		# sock.send_data(len(sharestr))
-		# sock.send_data(sharestr)
 
 		# Receive their share
-		print >> sys.stderr, "receving data...."
 		fin = sock.makefile()
 		bytes = ""
 		byte = fin.read(1)
@@ -354,11 +251,8 @@ class Bridge(threading.Thread):
 			byte = fin.read(1)
 		theirs = int(bytes)
 
-		# length = int(sock.recv(4))
-		# theirs = sock.recv(length)
 
 		# Compute and save the key
-		# key = (ours ** int(theirs)) % mod
 		key = modExp(ours, theirs, self.mod)
 		return key
 
@@ -367,7 +261,6 @@ class Bridge(threading.Thread):
 		global PIT
 
 		interest = str(interest)
-		print >> sys.stderr, "sending interest"
 
 		if (targetAddress != self.paramMap["PUBLIC_IP"]): # don't forward to ourselves..
 			sock = None
@@ -390,29 +283,14 @@ class Bridge(threading.Thread):
 				# Refresh the socket
 				sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 				sock.connect((targetAddress, int(self.paramMap["BRIDGE_LOCAL_PORT"])))
-				# fout = sock.makefile()
-
-			# Wait until the content is retrieved
-			# semaphore = multiprocessing.BoundedSemaphore(0)
-			# PIT[interest] = (semaphore, None) 
 
 			# Send the interest now
 			payload = "i" + interest + "\n"
-			# sock.send(len(interest))
-			# sock.send(interest)
-			# fout.write(payload)
-			# fout.flush()
-			print("sending: " + payload)
-			# sock.send(payload)
 			fout = sock.makefile()
 			fout.write(payload)
 			fout.flush()
 
-			# Block and wait for the content 
-			# TODO: should implement a timeout mechanism here
-			# length = int(sock.recv(4))
-			# content = sock.recv(length)
-
+			# Block and wait for the content and then its signature
 			fin = sock.makefile()
 			bytes = ""
 			byte = fin.read(1)
@@ -420,9 +298,22 @@ class Bridge(threading.Thread):
 				bytes = bytes + byte
 				byte = fin.read(1)
 			content = str(bytes)
-			print("retrieved content = " + content)
-			
-			return content
+
+			# Signature
+			byte = fin.read(1)
+			bytes = ""
+			while (byte != "\n"):
+				bytes = bytes + byte
+				byte = fin.read(1)
+			sig = str(bytes)
+
+			# Verify the signature (tag)
+			tag = generateHMACTag(self.keyMap[targetAddress], content)
+			if (tag != sig):
+				print >> sys.stderr, "MAC tag verification failed (exp, got): " + str(tag) + ", " + str(sig)
+				return None
+			else:
+				return content
 		else:
 			return None
 

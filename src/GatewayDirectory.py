@@ -88,8 +88,7 @@ def post_connect():
 			gid = str(match[0]['gateway_id'])
 			query_db('update gateways set last_update = "' + time + '" where gateway_id = ' + gid + ';')
 		
-		# TOOD: authenticate the client
-		# cert = data["certificate"]
+		# TOOD: authenticate the client in the future
 
 		return jsonify(result = {"status" : 200})
 	except Exception as e:

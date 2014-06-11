@@ -1,0 +1,38 @@
+http://conferences2.sigcomm.org/acm-icn/2014/cfp.php
+
+Topics:
+The fundamental concept of Information Centric Networking (ICN) is a transformational architectural shift from the focus on where - addresses and hosts in today’s Internet architecture - to what - the content that users and applications care about. As the number of networked computing devices increases continuously, and many of those devices lose their fixed “where” (address) and become mobile, they desire to directly retrieve information objects by names in a secure, reliable, scalable, and efficient way.
+
+Over the last few years significant efforts have been devoted to ICN exploration, and a global research and development community for ICN has been formed. A number of specific architectural proposals have been formulated. Some designs propose an overlay model whose information dissemination relies on an underlay network such as today’s global IP network; other efforts use name-based retrieval to replace IP as the narrow waist in the hour-glass shaped Internet architecture. However, among the numerous ICN research contributions that have been published so far, most have focused on specific pieces in an isolated setting; very few efforts have tackled fundamental architectural design choices, comparisons between different design proposals, or security challenges. With ACM ICN-2014 we hope to see advances specifically in these areas.
+
+ACM ICN-2014 calls for submissions on the research results in all aspects of ICN research, with particular emphasis on contributions to architectural designs and evaluations. It will be a single track conference featuring paper and poster presentations, panel discussions and demonstrations. We invite submissions describing significant research contributions including but not limited to the following topics:
+
+Architecture design and evaluation
+Comparison of different ICN architecture proposals
+Limits and limitations of ICN architectures
+ICN evaluation methodology and metrics
+Evaluation of ICN benefits w.r.t. current technologies
+Analysis of scalability issues in ICN
+ICN enabled applications
+Routing in ICN networks
+Mobility support
+Trust management
+Access control mechanisms
+ICN economics and business models
+Tools, experimentation facilities, and measurement methodology for ICN
+Experience from implementations and experiments
+Specific scenarios and implementations approaches for ICN
+Feasibility studies of ICN for high speed networking
+Privacy
+ICN Deployment
+ICN APIs
+
+Submission:
+Full paper submissions are expected to report new research contributions that have not been published elsewhere. Submissions can be up to 10 pages in length following the SIGCOMM format. The detailed submission instructions can be found TBD.
+
+Note that, for certain accepted papers, the TPC may recommend them to be shortened to 6 pages for the final publication. Some papers may also be accepted for poster presentations accompanied with a 2-page extended abstract.
+Demo proposals are expected to report novel results from experimentation and simulations. Submissions should be a 2-page extended abstract. The detailed submission instructions can be found TBD.
+
+ACM ICN-2014 also invites proposals for tutorials and panel sessions. Please see Call for Tutorials and Call for Panels for details.
+
+Download this call as a PDF.

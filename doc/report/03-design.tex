@@ -1,0 +1,202 @@
+\section{Motvating Interoperable Heterogeneous Networks}
+Consider the typical hourglass network stack in IP-based networks as shown in left-hand image of Figure 1. This layered design with a thin-waist infrastructure (IP packets for traffic flow) is what enabled the Internet to grow and expand at such a rapid rate; higher layers in the protocol stack extend this communication medium with support for a variety of applications and networking features (e.g., reliable message traversal via TCP). While the NDN architecture introduces a fundamental paradigm shift in the way information is published and retrieved on a network, its design, shown at a high level in the right-hand image of Figure 1, borrows the same hourglass design as IP networks. Observe that upper layers of the network stack still promote the development of robust applications based on the underlying communication layers. The difference, however, is that network traffic flow management (i.e., to enable reliable and stable communication) and security are \emph{built into} the network stack. These architectural differences mean that application, transport, and network layer protocol semantics in IP-based networks are distinct from protocol semantics in NDN networks. \sink\ is intended to bridge between IP and NDN networks by performing this semantic translation between protocols. 
+
+\begin{figure}[ht!]
+\begin{center}
+\includegraphics[scale=0.32]{./images/hourglass_conn.pdf}
+\label{fig:hourglass}
+\caption{A visual comparison of the network stacks for the IP and NDN network architectures (figure from \cite{ndn-techreport}).}
+\end{center}
+\end{figure}
+
+Assuming that NDN is not to be deployed over IP, but instead as a separate network stack entirely, the need for such a gateway cannot be understated. Consider two instances of an application, $A_1$ and $A_2$, that wish to send data back and forth to each other. Application $A_1$ is running on a host with only an IP interface, and application $A_2$ is running on a host with only an NDN interface. What does it mean for application $A_1$ to establish a TCP connection stream with application $A_2$ and what does it mean for application $A_2$ to issue an interest to application $A_1$ when neither application speaks the network language of the other? In order for these two applications to communicate, the semantics of a TCP stream-oriented connection must be translated to a stream of contiguous interests, and vice versa. Now consider the alternative scenario in which applications on two or more physically disjoint NDN networks need to communicate to distribute content, but such networks can only be connected via the IP-based Internet. Strategically placed \sink\ gateways at the edges of these NDN networks can establish bridges across the Internet to enable cross-network interest issuance and content retrieval. Given these two seemingly unavoidable scenarios in an incremental deployment of NDN networks, \sink\ will enable continual application operation with minimal application and transport layer software changes. In the following sections we describe the gateway design that facilitates such interoperability.
+
+% The gateway middleware is designed so as to support bi-directional traffic flowing from both types of networks. In what follows we describe how traffic in both directions will be supported internally by the gateway.
+
+% \begin{table}[t]
+%     \begin{tabular}{|c||c|c|}
+%     \hline
+%     ~    & {\bf IP} & {\bf NDN} \\ \hline
+%     {\bf HTTP} & ~ & ~ \\ \hline
+%     {\bf FTP}  & ~ & ~ \\ \hline
+%     {\bf SMTP} & ~ & ~ \\ \hline
+%     {\bf DNS}  & ~ & ~ \\ \hline
+%     \end{tabular}
+% \end{table}
+
+% \todo[inline]{gateway is two-sided facade}
+
+\section{Network Semantic Translations at the Gateway} \label{sec:gateway}
+As already emphasized, traditional IP-based applications and existing NDN-based applications treat both the network and content in significantly different ways. In IP-based settings, application and transport layer mechanisms and protocols leverage the underlying IP network layer to send packets to specific hosts. In contrast, in NDN-based settings, there are no straightforward application or transport layer analogs; the network layer, responsible for the issuance of interests and retrieval of content, is abstracted to authenticated (i.e., digitally signed) content objects or streams of data that are consumed by applications. From this perspective, there is no clear bijection between application and transport layer communication in IP-based settings and content and stream-centric data retrieval in NDN-settings. Therefore, to support the interoperability of these two networking paradigms, we need a mechanism to translate the semantics of IP-based communication to and from NDN-based content retrieval. 
+
+The direction of traffic across the gateway has a strong influence on how this semantic translation is done: IP-to-NDN application and transport layer protocols will be mapped to corresponding NDN-interests, and NDN-to-IP traffic (in the form of interests) will be encoded so as to map to the appropriate IP-based application or transport layer protocol. Stateless protocols such as HTTP greatly simplify the job of the gateway because it need not maintain any state to support communication across both networks. However, stateful protocols, such as TCP, naturally require the \sink\ gateway to maintain state so as to emulate the behavior of an endpoint or host that implements such protocols. For instance, if an IP-based application wishes to establish a TCP connection with an application running on an NDN network to retrieve data, then the gateway must maintain stateful information needed to transform streams of data retrieved over a TCP socket to (packed) discrete and contiguous interests in the NDN network. In what follows we describe the semantic translation details for application and transport layer protocols in both directions across the gateway. 
+
+\subsection{IP-to-NDN Semantic Translation}
+The current CCNx libraries enable IP-based hosts to communicate with applications running on NDN-enabled hosts. However, the engineering effort to retrofit the entire networking layer or subsystem of an existing application or system could be quite significant. \sink\ gateways are designed to minimize the effect of modifying the network components of such applications to still communicate with NDN hosts. In particular, they enable existing IP-based protocols to be used as is or with slight variations (e.g., TCP connections require additional overhead to setup) to communicate with NDN hosts through the gateway. In this way, the semantic translation of IP-based messages to NDN-based interests and content is offloaded to the gateway, rather than done in the application itself. In the following sections we describe the steps necessary to interoperate with the gateway at both the application and transport layers.
+
+% TODO: could link in CCNx library and re-write networking code, but that requires too much work, instead we re-use existing protocols for encoding interests
+
+\subsubsection{Application Layer}
+Translating IP-based application layer messages to NDN interests is highly dependent on the particular application protocol in question. There is an intuitive NDN-friendly encoding of HTTP GET requests in which human-readable URIs are parsed as interest names. Stateless application-layer protocols enable such direct mappings. Therefore, the gateway supports IP-to-NDN application layer messaging by encoding interests in HTTP GET requests as follows. NDN content objects with names ``ccnx:/name/of/content'' are issued via the gateway by sending a HTTP GET request with the following format to the gateway (in this example, the gateway IP address X.X.X.X is known or can be obtained via DNS):
+\begin{center}
+{\tt GET X.X.X.X:80/ndn/ccnx/name/of/content}
+\end{center}
+Since HTTP requests and NDN interests are stateless, the gateway will parse the URI of the request to determine that (1) it corresponds to an NDN interest, and (2) the full interest name is explicitly ``ccnx:/name/of/content''. Upon reception, the gateway will store the key-value pair $(\mathsf{name}, (\mathsf{source-IP}, \mathsf{source-port}))$ in an IP pending message table and issue an interest with the given name to the NDN network. Upon receipt of a piece of content, a NDN content handler callback recovers the IP address and port from the IP pending message table using the content name as the index, and then writes the raw content back to the client over the same incoming HTTP TCP connection. Since it is not required that the HTTP request uses a persistent TCP connection, the HTTP message handler is a synchronous procedure that blocks while the NDN interest is satisfied so that the same TCP connection can be used to write the response. If an NDN interest times out, the gateway returns an appropriate error code to the consumer.
+
+\subsubsection{Transport Layer} % ip to ndn
+Since interests can be overloaded to contain arbitrary data, \sink\ gateways exploit this characteristic to carry transport-layer streams of data from applications on IP hosts to supporting applications on NDN-hosts. IP is a host-based protocol, however, and so establishing a ``virtual'' TCP connection between two such applications must be done in two steps: (1) a TCP socket from the IP client to the gateway must be established, and (2) the first chunk of data sent from the client must be the NDN host prefix to which data will be sent. The gateway parses this path and stores it internally for each open TCP socket. Let $C$ be the IP client generating data in the socket $\mathsf{socket}$ from source address and port $(A, P)$, and let $G$ be the \sink\ gateway forwarding data on behalf of $C$. The connection establishment phase proceeds as follows:
+%
+\begin{compactenum}
+	\item $C$ opens a TCP socket connection $\mathsf{socket}$ to $G$. Let $\mathsf{id}$ be a unique identifier for the TCP socket in both $C$ and $G$.
+	\item $C$ sends $\mathsf{prefix}/\mathsf{EOM}$ to $G$ over $\mathsf{socket}$, where $\mathsf{EOM}$ is an end-of-message indicator.
+	\item $G$ reads and parses data from $\mathsf{socket}$, and stores the key-value pair $(\mathsf{id}, \mathsf{prefix})$ in the TCP connection map.
+	% ??? need to send path and public key (we then compute the hash and save the TCP session identifier)
+\end{compactenum}
+%
+With $\mathsf{prefix}$ and $\mathsf{id}$ generated during the connection establishment phase, all subsequent data chunks are then forwarded to this NDN host using the following steps:
+%
+\begin{compactenum}
+	\item $C$ sends a chunk of $b$ bytes to $G$ over the socket $\mathsf{socket}$.
+	\item $G$ reads $b$ bytes of data from $b$ and encodes it in Base64 format. Let $\mathsf{data}$ be the resulting encoded content.
+	\item $G$ generates a uniformly random string $\mathsf{nonce}$ of $k$ bits from $\{0,1\}^k$ ($k$ is usually small - 32 bits - for short-lived TCP connections). 
+	\item $G$ retrieves $\mathsf{prefix}$ from the TCP connection map using the TCP socket ID $\mathsf{id}$, uses it to build an interest with the name $\mathsf{prefix}/\mathsf{nonce}/\mathsf{data}$, and issues the interest to the NDN network.
+\end{compactenum}
+%
+By incorporating a fresh random string in each new interest name, the probability that any issued interest will be satisfied from a network cache instead of the desired NDN host is negligible. Therefore, all data sent over the socket $\mathsf{socket}$ will reach the NDN host, and the receiving application can parse the last component of the interest as fresh data. Note that since this is strictly IP-to-NDN communication, there is no state information persisted in the session table. This is because the NDN host application may not respond with data since the gateway is forwarding \emph{transport} layer data, unlike the case where application-layer queries are forwarded. If the target application wishes to respond, it may do so by retrieving the TCP session identifier from the interest name and responding with a properly formatted interest as specified below in Section \ref{sec:ndn-to-ip}. Also, this design assumes the NDN application receiving data will always treat the last component of an interest name as the data sent from the IP application. 
+
+% TODO: interests can be overloaded to contain content, some NDN applications will accept some interests, applications using raw TCP streams to send data to NDN applications, so client opens up TCP socket to gateway and all data is partitioned/packed in an interest/forwarded, setting up TCP connection requires hooking up socket to gateway/sending producer root as first message chunk in TCP stream/and then sending streams of data continually
+
+\subsection{NDN-to-IP Layer Semantic Translation}\label{sec:ndn-to-ip}
+Due to their architectural differences, there does not exist a native correspondence between NDN interests and IP-based application layer protocol messages. For example, there is no standard way for a client to represent an HTTP GET request in the format of an NDN interest. To make this type of semantic translation possible, the NDN-to-IP application layer bridge in \sink\ leverages the human-readable names of content to encode IP-based application layer protocol specifics. The grammar for encoding for HTTP and FTP semantic translations is specified in EBNF form in Figure 2; other application-layer protocols can easily be supported by extending this grammar in the natural way.
+
+% \todo[inline]{Command pattern}
+
+\begin{figure*}
+\begin{mdframed}
+\begingrammar
+\noindent
+
+<ip-interest>:	'/$\dots$/ip/'<protocol>.
+
+<protocol>:	'http/'<http-cmd>[{'/'<http-path>}] | 'tcp/'<tcp-ident>'/'<uri-encoded-string>. 
+
+<http-cmd>: 'GET' | 'PUT' | 'POST' | 'DELETE'.
+
+% <ftp-cmd>: 'ascii' | 'binary' | 'bye' | 'cd' | 'close' | 'delete' | 'get' | 'help' | 'lcd' | 'ls' | 'mkdir' | 'mget' | 'open' | 'put' | 'pwd' | 'quit' | 'rmdir'.
+
+<http-path>: <uri> | <ip-address>[port]['/'<uri-encoded-string>]
+
+<tcp-ident>: <SHA256-hash>'/'<nonce>'/'<public-key>. % nonce is the random ID associated with the TCP socket for constant-time lookup when going from ndn-to-ip, this must be set during the connection establishment phase from ip-to-ndn (if it doesn't exist in the TCP state table, then the NDN-side is creating the connection in one shot)
+
+% <tcp-param>: <uri-encoded-string>.
+
+% <number>:	<real-number>;
+% 		"$\{$" <real-number> "," <real-number> "$\}$";
+% 		{$\backslash$}b[01][01]+;
+% 		{$\backslash$}o[07][07]+;
+% 		\$[0-9A-Fa-f][0-9A-Fa-f]+.
+
+%<real-number>:	[\+--]?[0-9][0-9]+[\.[0-9]+]?[[eE][0-9][0-9]+].
+
+% <operator>:	"*" |	 "/"	|     "$\backslash$"	| "\%";
+% 		"==" |	 "!="	|     "$>$" 		| "$<$"  
+% 		| "$<$=" | "$>$=";
+% 		"\ul ="	| "\ul !=" |  "\ul $<$" | "\ul $>$" 
+% 		| "\ul$<$=" | "\ul$>$=";
+% 		"\&"	 | "$\vert$"  | "$\uparrow\uparrow$";
+% 		"\&\&"	| "$\Vert$"  | "\ul$\uparrow$".
+		
+\endgrammar
+\end{mdframed}
+\caption{NDN-to-IP application-layer translation encoding grammar.}
+\end{figure*}
+
+Interests encoded using this grammar are intercepted in the NDNInputStage of the gateway (see Figure \ref{fig:pipeline}). Upon reception, the gateway parses the message, stores a new entry in the NDN pending message table, and forwards the decoded message contents to the appropriate IPOutputStage pipeline stage. Upon reception, the IP response is retrieved in the IPInputStage and forwarded inwards to the NDNOutputStage, where the corresponding entry in the NDN pending message table is indexed using the contents of the arriving message to retrieve the original incoming interest name. Once fetched, the gateway creates and signs a new content object with the IP network response, and then forwards the content downstream to its intended consumer. 
+
+Unlike traditional NDN routing, the gateway pending message table does not collapse interests by default. The reason for this is that application-protocol interests are often issued when \emph{new} state needs to change (i.e., cached responses not generated on demand from the intended IP recipient are not acceptable). 
+
+It is important to note that stateful protocols such as TCP must explicitly embed identifying information about the consumer in order to operate correctly. This is because one TCP stream must be associated with at most one consumer, and since NDN does not have any notion of host addresses or identifiers, the consumer application must explicitly encode its identity in the interest. Our grammar enforces identities based on consumer public keys and a corresponding digital signature of the entire interest for such protocols so that consumers can be explicitly identified and their sessions cannot be hijacked by other consumers (doing so would require compromising a consumer and its private key).
+
+\section{Bridging Isolated Networks} \label{sec:bridge}
+The second type of interoperability scenario that may arise during the deployment of NDN networks is when two or more physically disjoint NDN networks need to communicate with each other. Let $I_i$ and $I_j$ be two such disjoint NDN networks, and let $A_i$ and $A_j$ be two applications running on hosts in $I_i$ and $I_j$, respectively. Without any additional mechanisms, $A_i$ and $A_j$ would not be able to communicate. However, if there existed two bridges $B_i$ and $B_j$ at the edges of $I_i$ and $I_j$, each of which connected to the same IP-based network (i.e., the Internet), then interests from $A_i$ ($A_j$) could be sent to $A_j$ ($A_i)$ as follows:
+\begin{compactenum} 
+	\item An interest from $A_i$ is intercepted a bridge $B_i$.
+	\item $B_i$ encapsulates the interest in an IP packet sent to bridge $B_j$.
+	\item $B_j$ unwraps and re-issues the interest and waits for the content to be retrieved from $A_j$. Upon reception, the content's signature is verified and the content is signed and sent to $G_i$. 
+	\item $G_i$ verifies the signature of the packet, creates and signs a new content object, and sends the content object back downstream to $A_i$.
+\end{compactenum}
+A visual depiction of this scenario is shown in Figure \ref{fig:islands}. To increase interest throughput across the bridge, each bridge uses persistent content-oriented TCP connections between other adjacent bridges. In order to authenticate content sent between bridge, we have the option of establishing a secure connection via SSL/TLS so that all content messages will be authenticated below the application-layer of the bridge, or we can manually sign and verify content separately from transport mechanism. Since NDN/CCN stipulates that content is only signed (as a form of authentication), we do not need the additional overhead of encrypting content as it moves between bridges. This is why we provide support for secure and insecure persistent connections. 
+
+\begin{figure}[ht!]
+\begin{center}
+\includegraphics[scale=0.45]{./images/island_tunnel.pdf}
+\label{fig:islands}
+\caption{Visual depiction of a bridge between NDN islands.}
+\end{center}
+\end{figure}
+
+In the latter case, one issue is the method for locating and retrieving cryptographic keys used for digital signatures. Our design permits three variations for authenticating content between bridges: (1) full PKI-based based digital signatures, (2) keyed MAC tags sourced by keys generated from authenticated symmetric key agreement protocols (i.e., Diffie Hellman key agreement), and (3) keyed MAC tags sourced by a \emph{shared} symmetric key bridge group key generated using a group key agreement protocol (i.e., Tree-Based Group Diffie Hellman \cite{kim2004tree}). In what follows we describe each of these three variants in more detail; modifications to the content authentication procedure described above between bridges change in the obvious way (i.e., keyed MAC tags are replace digital signatures for MAC-based variants) Figure \ref{fig:gateway-groups} shows a visual depiction of the variants (1) and (2). \\
+
+\begin{description}
+
+	\item[\textbf{Full PKI-based Digital Signatures}:] The only modification required for this variant is that bridges must be given the certificate for each bridge with which it will communicate. Certificates are exchanged and stored via the control channel between adjacent bridges.
+
+	\item[\textbf{Pair-Wise Keyed MAC Tags}:] In this variant, each pair of bridges will run the DH protocol to establish a shared common symmetric key to use for generating MAC tags. The DH protocol is run over the control channel between adjacent bridges. With $n$ bridge routers, this variant requires $\frac{n(n-1)}{2}$ key pairs. MAC keys need to only be refreshed when they expire out or the bridge connectivity changes. New bridges can discover all other bridges by querying a central ``gateway directory'' server, obtaining a list of all corresponding IP addresses, and then initiating control channel connections with them.
+
+	\item[\textbf{Group-Based Keyed MAC Tags}:] When all groups share a common key, the ``bridge directory'' server is repurposed as a distributed director for all registered bridges that is responsible for coordinating group key agreement protocols (i.e., TGDH \cite{kim2004tree}). After a single invocation of TGDH, each gateway will possess the same MAC key $k$ used for tagging and verifying content. Each individual bridge is also required to periodically send heartbeat messages to the director in order to maintain an active list of available bridges. The director will initiate new instances of the TGDH protocol to establish a new shared group key whenever bridge connectivity changes, i.e., when new bridges are added or time out. 
+
+\end{description}
+
+\begin{figure}[ht!]
+\begin{center}
+\includegraphics[scale=0.45]{./images/gateway_group.pdf}
+\label{fig:gateway-groups}
+\caption{The left figure shows the deployment strategy with a fixed global directory that exists merely for obtaining bridge addresses, and the right figure shows the deployment strategy in which a distributed directory coordinates group key agreement protocols between all bridges.}
+\end{center}
+\end{figure}
+
+Another issue is that incoming interests need to be directed to bridges connected to the desired endpoint network. We achieve this by maintaining a prefix-bridge mapping $\mathsf{PTGMap}$ in each bridge $B_i$ about interest prefixes and the associated bridges from which they can be satisfied. If an incoming interest to bridge $B_i$ has no key in $\mathsf{PTGMap}$, i.e., a previous interest with the prefix $\mathsf{p}$ was never received by $B_i$, then the interest is broadcast to all known bridges. Whenever a response is retrieved from a source bridge $B_j$, the key-value pair $(\mathsf{p}, G_j)$ is inserted into $\mathsf{PTGMap}$. All subsequent interests with the prefix $\mathsf{p}$ received by bridge $B_i$ will be sent directly to bridge $B_j$. If an interest times out, the $\mathsf{PTGMap}$ entry is removed, and the broadcast procedure is retried. 
+
+% \begin{algorithm}[ht!]
+%   \caption{EstablishBridge}
+%   \begin{algorithmic}[1]
+%     \Require{Anonymous routers $r_1,r_2,\dots,r_n$ ($n \geq 1$) with public keys $pk_1,pk_2,\dots,pk_n$.}
+    
+% % \medskip
+
+% % \Function{{\sf InitHandler}}{$\mathsf{int}$} %// Server-side at router $i$
+% %     \State $(k, E_{k_i}, M_{k_i}, M_{k_{i+1}}, \mathsf{EIV}_i, \mathsf{SIV}_i^1, \mathsf{session}_i, \mathsf{SIndex}_i^1) := \mathcal{D}_{sk_i}(\mathsf{int})$
+% %   \State Persist $(\mathsf{session}_i, E_{k_i}, M_{k_i}, M_{k_{i+1}}, \mathsf{EIV}_i, \mathsf{SIV}_i)$ to state, and store $(\mathsf{SIndex}_i, \mathsf{session}_i, \mathsf{SIV}_i)$ in the session table $\mathsf{ST}_i$
+% %   \State $\mathsf{resp} \gets \mathsf{Encrypt}_{k}(\mathsf{session}_i, E_{k_i}, M_{k_i}, \mathsf{EIV}_i, \mathsf{SIV}_i)$
+% %   \State \Return $\mathsf{resp}$
+% %  \EndFunction
+
+% % \medskip
+
+% % \Function{{\sf Init}}{$r_i$, $M_{k_{i+1}}$} %// Client-side
+% %   \State $E_{k_i} \gets \{0,1\}^{\kappa}, M_{k_i} \gets \{0,1\}^{\kappa}$
+% %   \State $\mathsf{EIV}_i \gets \{0,1\}^{\kappa}, \mathsf{SIV}_i^1 \gets \{0,1\}^{\kappa}$ %// session IV
+% %   \State $x \gets \{0,1\}^{\kappa}, \mathsf{session}_i := H(x)$ %// session ID
+% %   \State $\mathsf{SIndex}_i^1 := H(\mathsf{session}_i + \mathsf{SIV}_i)$
+% %   \State $\mathsf{PAYLOAD} := \mathcal{E}_{pk_i}(k, E_{k_i}, M_{k_i}, M_{k_{i+1}}, \mathsf{EIV}_i, \mathsf{SIV}_i, \mathsf{session}_i, \mathsf{SIndex}_i^1)$
+% %   \State $\mathsf{int} := \mathsf{namespace}_i/\mathsf{CREATEInitHandlerSION}/\mathsf{PAYLOAD}$
+% %   \State $\mathsf{resp} := \mathsf{ccnget}(\mathsf{int})$ %// reach out to the AR
+% %   \State \Return $(E_{k_i}, M_{k_i}, x_i, \mathsf{session}_i, \mathsf{IV}_i)$
+% % \EndFunction
+
+% % \medskip
+
+% % \Function{{\sf EstablishCircuit}}{$r_1,\dots,r_n$} %// Main procedure
+% % \State $(E_{k_n}, M_{k_n}, c_n, \mathsf{session}_n, \mathsf{IV}_n) := \mathsf{Init}(r_n)$
+% % \For{$i = n - 1$ \textbf{ downto } $1$}
+% %   \If{$i = n-1$}
+% %     \State $(E_{k_i}, M_{k_i}, \mathsf{EIV}_i, \mathsf{session}_i, \mathsf{SIV}_i) := \mathsf{Init}(r_i, \perp)$
+% %   \Else
+% %     \State $(E_{k_i}, M_{k_i}, \mathsf{EIV}_i, \mathsf{session}_i, \mathsf{SIV}_i) := \mathsf{Init}(r_i, M_{k_{i+1}})$
+% %   \EndIf
+% % \EndFor
+% % \EndFunction
+
+%   \end{algorithmic}
+%   \label{alg:init}
+% \end{algorithm}
