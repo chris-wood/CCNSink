@@ -279,7 +279,7 @@ class Bridge(threading.Thread):
 				key = self.generatePairwiseKey(sock)
 				self.keyMap[targetAddress] = key
 				keyEnd = time.time()
-				diff = end - keyStart
+				diff = keyEnd - keyStart
 				logger.info('BRIDGE-KEY-EST: ' + str(diff))
 				print >> sys.stderr, "New key establsihed: " + str(key)
 				logger.info("New key established: " + str(key))
