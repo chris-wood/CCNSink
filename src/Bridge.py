@@ -275,10 +275,14 @@ class Bridge(threading.Thread):
 
 			# Check to see if we need to establish a key
 			if (not (targetAddress in self.keyMap)):
+				keyStart = time.time()
 				key = self.generatePairwiseKey(sock)
 				self.keyMap[targetAddress] = key
+				keyEnd = time.time()
+				diff = end - keyStart
+				logger.info('BRIDGE-KEY-EST: ' + str(diff))
 				print >> sys.stderr, "New key establsihed: " + str(key)
-				logger.info("New key established")
+				logger.info("New key established: " + str(key))
 
 				# Refresh the socket
 				sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
