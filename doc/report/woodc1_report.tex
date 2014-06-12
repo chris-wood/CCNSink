@@ -1,11 +1,13 @@
-\documentclass{sigcomm}
+\documentclass[10pt]{article}
 
 \usepackage{todonotes}
 \usepackage{algorithm}
 \usepackage{url}
+\usepackage[margin=1in]{geometry}
 \usepackage[noend]{algpseudocode}
 \usepackage{mdframed}
 \usepackage{amsmath}
+\usepackage{amsthm}
 \usepackage{paralist}
 \input{bnf}
 
@@ -21,16 +23,7 @@
 
 % ccn gateway and bridge
 \title{CCNSink: Application-Layer Middleware for TCP/IP and Content Centric Network Interoperability}
-
-\numberofauthors{1} 
-\author{
-\alignauthor
-Christopher A. Wood\\ %\titlenote{NSF GRFP blurb.}
-       \affaddr{University of California Irvine}
-       % \affaddr{Irvine, CA, USA}\\
-       % \email{woodc1@uci.edu}
-}
-
+\author{Christopher A. Wood \\ {\tt woodc1@uci.edu}}
 \date{\today}
 
 \maketitle
@@ -40,8 +33,7 @@ With the growing presence of data streaming services and applications in today's
 
 % \category{H.4}{TODO}{TODO}
 % \category{D.2.8}{TODO}{TODO}[TODO]
-
-\terms{NDN/CCN; CCN Deployment; Network Gateway; Middleware}
+% \terms{NDN/CCN; CCN Deployment; Network Gateway; Middleware}
 
 %\keywords{TODO} % NOT required for Proceedings
 
@@ -54,7 +46,9 @@ With the growing presence of data streaming services and applications in today's
 \section{Conclusion}
 We presented \sink\ , a middleware application that enables TCP/IP and NDN/CCN network interoperability. \sink\ is expected to aid incremental deployment of pure NDN/CCN networking resources by allowing applications implemented on top of different networking stacks to communicate with each other almost transparently using existing protocols via the middleware; for example, the use of overlay network libraries such as CCNx does not need to be implemented in each TCP/IP application that wishes to communicate with applications running on NDN/CCN hosts. Furthermore, the design and implementation of \sink\ is simple and flexible enough to permit more meaningful semantic translations between different network protocols while introducing minimal performance overhead in message latency. 
 
-While the design is still rudimentary, there are several opportunities for improvement. From a design perspective, for example, the NDN-to-IP translation encoding grammar can be expanded to support additional TCP/IP application layer protocols, such as FTP, DNS, etc. From an implementation perspective, the the bridge directory can be implemented as a set of distributed servers for increased performance under a large number of bridge clients generating heavy loads. Furthermore, pair-wise bridge keys can be replaced with shared group keys instantiated via group-key agreement protocols such as to TGDH. 
+While the design is still rudimentary, there are several opportunities for improvement. From a design perspective, for example, the NDN-to-IP translation encoding grammar can be expanded to support additional TCP/IP application layer protocols, such as FTP, DNS, etc. The difficulty in encoding these types of application-layer protocols is that some of them require stored state and private client identification information. For example, if an anonymous FTP server is to be accessed via an NDN-based application, the \sink\ gateway must maintain a persistent FTP connection to the target server so that all issued commands can be executed. For example, the gateway must (1) establish a connection to the FTP server, (2) associate the connection with a \emph{single} NDN consumer, which can be identified via a hash of their public key, and (3) use this connection whenever the NDN consumer issues new commands (e.g., ``cd'' commands). The current design does not include a storage for such application-layer protocol state, but this could easily be fixed by including a helper state management class that is referenced by the appropriate pipeline stage. 
+
+From an implementation perspective, the the bridge directory can be implemented as a set of distributed servers for increased performance under a large number of bridge clients generating heavy loads. Since we did not have access to a large set of clients to stress test the bridge directory, we are not sure how well the current implementation will scale. Such tests will also help us identify an appropriate frequency at which ``heartbeat'' messages are sent to the bridge directory. That is, if the design does not scale well under heavy loads, we can reduce the rate at which heartbeat update messages are sent to avoid self-induced denial-of-service attacks. Furthermore, pair-wise bridge keys can be replaced with shared group keys instantiated via group-key agreement protocols such as to TGDH. We are unaware of any open implementations of these cryptographic primitives, so we would need to construct them using the Python cryptographic libraries. 
 
 % \section{Acknowledgments}
 

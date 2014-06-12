@@ -3,7 +3,7 @@ Consider the typical hourglass network stack in IP-based networks as shown in le
 
 \begin{figure}[ht!]
 \begin{center}
-\includegraphics[scale=0.32]{./images/hourglass_conn.pdf}
+\includegraphics[scale=0.45]{./images/hourglass_conn.pdf}
 \label{fig:hourglass}
 \caption{A visual comparison of the network stacks for the IP and NDN network architectures (figure from \cite{ndn-techreport}).}
 \end{center}
@@ -27,7 +27,15 @@ Assuming that NDN is not to be deployed over IP, but instead as a separate netwo
 % \todo[inline]{gateway is two-sided facade}
 
 \section{Network Semantic Translations at the Gateway} \label{sec:gateway}
-As already emphasized, traditional IP-based applications and existing NDN-based applications treat both the network and content in significantly different ways. In IP-based settings, application and transport layer mechanisms and protocols leverage the underlying IP network layer to send packets to specific hosts. In contrast, in NDN-based settings, there are no straightforward application or transport layer analogs; the network layer, responsible for the issuance of interests and retrieval of content, is abstracted to authenticated (i.e., digitally signed) content objects or streams of data that are consumed by applications. From this perspective, there is no clear bijection between application and transport layer communication in IP-based settings and content and stream-centric data retrieval in NDN-settings. Therefore, to support the interoperability of these two networking paradigms, we need a mechanism to translate the semantics of IP-based communication to and from NDN-based content retrieval. 
+As already emphasized, traditional IP-based applications and existing NDN-based applications treat both the network and content in significantly different ways. In IP-based settings, application and transport layer mechanisms and protocols leverage the underlying IP network layer to send packets to specific hosts. In contrast, in NDN-based settings, there are no straightforward application or transport layer analogs; the network layer, responsible for the issuance of interests and retrieval of content, is abstracted to authenticated (i.e., digitally signed) content objects or streams of data that are consumed by applications. From this perspective, there is no clear bijection between application and transport layer communication in IP-based settings and content and stream-centric data retrieval in NDN-settings. Therefore, to support the interoperability of these two networking paradigms, we need a mechanism to translate the semantics of IP-based communication to and from NDN-based content retrieval, as shown in Figure \ref{fig:translation}. 
+
+\begin{figure}[ht!]
+\begin{center}
+\includegraphics[scale=0.5]{./images/gateway_highlevel.pdf}
+\label{fig:translation}
+\caption{\sink\ system context diagram.}
+\end{center}
+\end{figure}
 
 The direction of traffic across the gateway has a strong influence on how this semantic translation is done: IP-to-NDN application and transport layer protocols will be mapped to corresponding NDN-interests, and NDN-to-IP traffic (in the form of interests) will be encoded so as to map to the appropriate IP-based application or transport layer protocol. Stateless protocols such as HTTP greatly simplify the job of the gateway because it need not maintain any state to support communication across both networks. However, stateful protocols, such as TCP, naturally require the \sink\ gateway to maintain state so as to emulate the behavior of an endpoint or host that implements such protocols. For instance, if an IP-based application wishes to establish a TCP connection with an application running on an NDN network to retrieve data, then the gateway must maintain stateful information needed to transform streams of data retrieved over a TCP socket to (packed) discrete and contiguous interests in the NDN network. In what follows we describe the semantic translation details for application and transport layer protocols in both directions across the gateway. 
 
@@ -131,7 +139,7 @@ A visual depiction of this scenario is shown in Figure \ref{fig:islands}. To inc
 \begin{center}
 \includegraphics[scale=0.45]{./images/island_tunnel.pdf}
 \label{fig:islands}
-\caption{Visual depiction of a bridge between NDN islands.}
+\caption{Visual depiction of a bridge between CCN islands.}
 \end{center}
 \end{figure}
 
@@ -149,7 +157,7 @@ In the latter case, one issue is the method for locating and retrieving cryptogr
 
 \begin{figure}[ht!]
 \begin{center}
-\includegraphics[scale=0.45]{./images/gateway_group.pdf}
+\includegraphics[scale=0.6]{./images/gateway_group.pdf}
 \label{fig:gateway-groups}
 \caption{The left figure shows the deployment strategy with a fixed global directory that exists merely for obtaining bridge addresses, and the right figure shows the deployment strategy in which a distributed directory coordinates group key agreement protocols between all bridges.}
 \end{center}
