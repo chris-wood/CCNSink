@@ -80,7 +80,7 @@ def post_connect():
 
 		# Insert the address into the database - don't overwrite if already there
 		match = query_db('select * from gateways where address = "' + str(addr) + '";')
-		if (match == None):
+		if (match == None or len(match) == 0):
 			query_db('insert into gateways(address, last_update) values ("' + str(addr) + '", "' + str(datetime.datetime.now()) + '");')
 		else: # update the last_update time
 			debug(str(match))
