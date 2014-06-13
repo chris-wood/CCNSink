@@ -352,10 +352,11 @@ Interests are encoded according to a special grammar to enable the gateway to pa
 	\end{itemize}
 \end{frame}
 
-\begin{frame}{Translation Overhead}
+\begin{frame}{Relevant Overhead}
 	\begin{itemize}
 		\item IP-to-NDN translation: $\approx$0.00078s for interest names composed of one (1) to five (5) components
 		\item NDN-to-IP translation: $\approx$0.0005s.
+		\item Key agreement overhead: $\approx$0.186s.
 	\end{itemize}
 \end{frame}
 
@@ -379,10 +380,14 @@ Interests are encoded according to a special grammar to enable the gateway to pa
 	Average RTT times for IP-to-NDN, NDN-to-IP, and bridge messages when requesting content of 10MB in size.
 \end{frame}
 
-\begin{frame}{Key Establishment Overhead}
-	\begin{itemize}
-		\item TODO
-	\end{itemize}
+\begin{frame}{Bridge RTT Results for 100MB Content}
+	\begin{figure}
+	\begin{center}
+	\includegraphics[scale=0.3]{./img/huge.png}
+	\label{fig:perf3}
+	\end{center}
+	\end{figure}
+	Average RTT time for bridge messages when requesting content of 100MB in size.
 \end{frame}
 
 \section{Future Work}
