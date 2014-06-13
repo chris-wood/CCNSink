@@ -7,7 +7,8 @@ prefix = str(sys.argv[2])
 n = int(sys.argv[3])
 data = []
 for i in range(n):
-	url = prefix + "/" + str(i)
+	url = prefix # + "/" + str(i)
+	print(url)
 	start = time.time()
 	conn.request("GET", url)
 	resp = conn.getresponse()

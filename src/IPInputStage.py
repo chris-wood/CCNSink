@@ -25,6 +25,7 @@ class IPInputStageHTTPHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 		cmd = self.command
 		path = self.path
 		targetInterestName = (stage.paramMap["NDN_URI_PREFIX"] + str(path)).replace("//", "/")
+		print(targetInterestName)
 
 		# Build the message and drop it into the table
 		myAddr = (stage.paramMap["PUBLIC_IP"], stage.paramMap["HTTP_PORT"])

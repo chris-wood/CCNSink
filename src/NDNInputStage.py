@@ -64,6 +64,7 @@ class NDNHandle(pyccn.Closure):
 			for c in path:
 				realPath = c + "/"
 			print(realPath)
+			realPath = realPath[0:len(realPath) - 1] # take off the last slash
 			msg = OutgoingMessage(srcInfo, dstInfo, realPath, protocol)
 			return msg
 		# elif (protocol == "tcp"):
@@ -149,8 +150,9 @@ class NDNHandle(pyccn.Closure):
 		data = None
 		if (entry != None):
 			self.stage.table.clearNDNEntry(msg.tag)
-			#data = entry[2]
-			data = "test...."
+			data = entry[2]
+			print(str(data))
+			# data = "test...."
 			co = self.buildContentObject(info.Interest.name, data)
 			print(co.content)
 			self.handle.put(co)

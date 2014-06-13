@@ -25,10 +25,11 @@ n = int(sys.argv[2])
 data = []
 for i in range(n):
 	start = time.time()
-	name = pyccn.Name(prefix + "/?nonce=" + str(i))
+	name = pyccn.Name(prefix) #+ "/?nonce=" + str(i))
 	interest = pyccn.Interest(name = name, minSuffixComponents = 1)
 	print(interest.name)
 	co = handle.handle.get(name = interest.name, template = interest)
+	print(co.content)
 	end = time.time()
 	data.append((n, str(interest.name), co.content, (end - start)))
 
