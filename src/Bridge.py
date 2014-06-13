@@ -97,12 +97,12 @@ class BridgeHandler(SocketServer.BaseRequestHandler):
 
 			# Sign the content using the key for the bridge
 			if (bridgeServer.stage.keyMap[self.client_address[0]] != None):
-				sig = generateHMACTag(bridgeServer.stage.keyMap[self.client_address[0]], content)
+				# sig = generateHMACTag(bridgeServer.stage.keyMap[self.client_address[0]], content)
 
 				# Send the content and the signature to the other bridge
 				fout = self.request.makefile()
 				fout.write(content + "\n")
-				fout.write(sig + "\n")
+				# fout.write(sig + "\n")
 				fout.flush()
 			else:
 				raise RuntimeError()
@@ -304,20 +304,21 @@ class Bridge(threading.Thread):
 			content = str(bytes)
 
 			# Signature
-			byte = fin.read(1)
-			bytes = ""
-			while (byte != "\n"):
-				bytes = bytes + byte
-				byte = fin.read(1)
-			sig = str(bytes)
+			# byte = fin.read(1)
+			# bytes = ""
+			# while (byte != "\n"):
+			# 	bytes = bytes + byte
+			# 	byte = fin.read(1)
+			# sig = str(bytes)
 
 			# Verify the signature (tag)
-			tag = generateHMACTag(self.keyMap[targetAddress], content)
-			if (tag != sig):
-				print >> sys.stderr, "MAC tag verification failed (exp, got): " + str(tag) + ", " + str(sig)
-				return None
-			else:
-				return content
+			# tag = generateHMACTag(self.keyMap[targetAddress], content)
+			# if (tag != sig):
+			# print >> sys.stderr, "MAC tag verification failed (exp, got): " + str(tag) + ", " + str(sig)
+			# return None
+			# else:
+			
+			return content
 		else:
 			return None
 
