@@ -5,8 +5,6 @@ app = Flask(__name__)
 
 GATEWAY_DB = './directory.db'
 GATEWAY_SCHEMA = './directory_schema.sql'
-COORDINATOR_DB = './coordinator.db'
-COORDINATOR_SCHEMA = './coordinator_schema.sql'
 
 def connect_db(database):
 	return sqlite3.connect(database)
@@ -21,6 +19,5 @@ def init_db(database, schema):
 
 if __name__ == "__main__":
 	init_db(GATEWAY_DB, GATEWAY_SCHEMA)
-	# init_db(COORDINATOR_DB, COORDINATOR_SCHEMA)
 
 
