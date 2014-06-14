@@ -30,7 +30,6 @@ class NDNGateway(threading.Thread):
 		ndnOutput.start()
 		ipOutput = IPOutputStage("IPOutputStage", table, paramMap) # there is no next stage after output
 		self.stages.append(ipOutput)
-		# ipOutput.start()
 
 		# IP input pipeline and connect it to the output stage
 		ipInput = IPInputStage("IPInputStage", ndnOutput, table, paramMap)
@@ -74,8 +73,6 @@ def main():
 	# Create the gateway
 	gateway = NDNGateway(paramMap = paramMap)
 	gateway.start()
-
-	#### TODO: wait for initialization
 
 	# Start command prompt to handle all runtime user input
 	prompt = GatewayPrompt(gateway)

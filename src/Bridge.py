@@ -190,7 +190,6 @@ class Bridge(threading.Thread):
 				self.updateGateways()
 
 			# Sleep it off man...
-			print >> sys.stderr, "Resting..."
 			time.sleep(int(self.paramMap["BRIDGE_SERVER_UPDATE_FREQ"]))
 
 	def connectToServer(self):

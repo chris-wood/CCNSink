@@ -63,19 +63,18 @@ class NDNHandle(pyccn.Closure):
 			realPath = ""
 			for c in path:
 				realPath = c + "/"
-			print(realPath)
 			realPath = realPath[0:len(realPath) - 1] # take off the last slash
 			msg = OutgoingMessage(srcInfo, dstInfo, realPath, protocol)
 			return msg
-		# elif (protocol == "tcp"):
-		# 	# srcInfo = (self.paramMap["HTTP_HOST"], self.paramMap["HTTP_PORT"])
-		# 	# dstInfo = (name.components[self.baseOffset + 1], name.components[self.baseOffset + 2])
-		# 	# path = str(name.components[self.baseOffset + 3:])
-		# 	# if (len(path[0] == 0)):
-		# 	# 	path = "/" # workaround
-		# 	# msg = OutgoingMessage(srcInfo, dstInfo, path, protocol)
-		# 	# return msg
-		# 	return None
+		elif (protocol == "tcp"):
+			# srcInfo = (self.paramMap["HTTP_HOST"], self.paramMap["HTTP_PORT"])
+			# dstInfo = (name.components[self.baseOffset + 1], name.components[self.baseOffset + 2])
+			# path = str(name.components[self.baseOffset + 3:])
+			# if (len(path[0] == 0)):
+			# 	path = "/" # workaround
+			# msg = OutgoingMessage(srcInfo, dstInfo, path, protocol)
+			# return msg
+			return None
 		else: # invalid case
 			raise RuntimeError()
 
@@ -115,7 +114,6 @@ class NDNHandle(pyccn.Closure):
 			return pyccn.RESULT_ERR
 
 		# Extract the interest information and shove it into the pipeline
-		print(info.Interest)
 		if (len(info.Interest.name.components) <= self.baseOffset):
 			start = time.time()
 			print >> sys.stderr, "Error: No protocol specified in name: " + str(info.Interest.name)
@@ -141,7 +139,6 @@ class NDNHandle(pyccn.Closure):
 		semaphore = multiprocessing.BoundedSemaphore(0)
 		self.stage.table.insertNDNEntry(msg, semaphore, start)
 		tup = (protocol, msg)
-		print("inserting msg to next stage")
 		self.stage.nextStage.put(tup)
 		semaphore.acquire()
 
@@ -151,10 +148,7 @@ class NDNHandle(pyccn.Closure):
 		if (entry != None):
 			self.stage.table.clearNDNEntry(msg.tag)
 			data = entry[2]
-			print(str(data))
-			# data = "test...."
 			co = self.buildContentObject(info.Interest.name, data)
-			print(co.content)
 			self.handle.put(co)
 			return pyccn.RESULT_INTEREST_CONSUMED
 		else:
