@@ -1,10 +1,21 @@
 \begin{thebibliography}{1}
 
+\bibitem{INS}
+W.~Adjie-Winoto, E.~Schwartz, H.~Balakrishnan, and J.~Lilley.
+\newblock The design and implementation of an intentional naming system.
+\newblock In {\em Proceedings of the Seventeenth ACM Symposium on Operating
+  Systems Principles}, SOSP '99, pages 186--201, New York, NY, USA, 1999. ACM.
+
 \bibitem{pyccn}
 J.~Burke and D.~Kulinski.
 \newblock {PyCCN - Python CCNx Bindings}.
 \newblock {\em {University of California, Los Angeles}},
   https://github.com/named-data/PyCCN.
+
+\bibitem{eugster2003many}
+P.~T. Eugster, P.~A. Felber, R.~Guerraoui, and A.-M. Kermarrec.
+\newblock The many faces of publish/subscribe.
+\newblock {\em ACM Computing Surveys (CSUR)}, 35(2):114--131, 2003.
 
 \bibitem{ghali2014elements}
 C.~Ghali, G.~Tsudik, and E.~Uzun.
@@ -30,6 +41,12 @@ PARC.
 \newblock {CCNx}.
 \newblock Available online at: \url{https://github.com/ProjectCCNx/ccnx}, May
   2014.
+
+\bibitem{wang2010implementing}
+J.~Wang, C.~Peng, C.~Li, E.~Osterweil, R.~Wakikawa, P.-c. Cheng, and L.~Zhang.
+\newblock Implementing instant messaging using named data.
+\newblock In {\em Proceedings of the Sixth Asian Internet Engineering
+  Conference}, pages 40--47. ACM, 2010.
 
 \bibitem{ndn-techreport}
 L.~Zhang, D.~Estrin, J.~Burke, V.~Jacobson, J.~D. Thornton, D.~K. Smetters,

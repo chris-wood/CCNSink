@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.5.30)  12 JUN 2014 15:18
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.5.30)  14 JUN 2014 16:54
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -8,8 +8,8 @@ LaTeX2e <2011/06/27>
 Babel <3.9f> and hyphenation patterns for 78 languages loaded.
 (/usr/local/texlive/2013/texmf-dist/tex/latex/base/article.cls
 Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
-(/usr/local/texlive/2013/texmf-dist/tex/latex/base/size10.clo
-File: size10.clo 2007/10/19 v1.4h Standard LaTeX file (size option)
+(/usr/local/texlive/2013/texmf-dist/tex/latex/base/size11.clo
+File: size11.clo 2007/10/19 v1.4h Standard LaTeX file (size option)
 )
 \c@part=\count79
 \c@section=\count80
@@ -894,12 +894,12 @@ e
 * \topmargin=-37.0pt
 * \headheight=12.0pt
 * \headsep=25.0pt
-* \topskip=10.0pt
+* \topskip=11.0pt
 * \footskip=30.0pt
-* \marginparwidth=65.0pt
-* \marginparsep=11.0pt
+* \marginparwidth=59.0pt
+* \marginparsep=10.0pt
 * \columnsep=10.0pt
-* \skip\footins=9.0pt plus 4.0pt minus 2.0pt
+* \skip\footins=10.0pt plus 4.0pt minus 2.0pt
 * \hoffset=0.0pt
 * \voffset=0.0pt
 * \mag=1000
@@ -921,33 +921,27 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ) (./01-intro.tex [1
 
 {/usr/local/texlive/2013/texmf-var/fonts/map/pdftex/updmap/pdftex.map}])
-(./02-prelims.tex) (./03-design.tex [2]
-<./images/hourglass_conn.pdf, id=27, 756.8275pt x 369.38pt>
+(./02-prelims.tex [2]) (./03-design.tex [3]
+<./images/hourglass_conn.pdf, id=28, 756.8275pt x 369.38pt>
 File: ./images/hourglass_conn.pdf Graphic file (type pdf)
 
 <use ./images/hourglass_conn.pdf>
 Package pdftex.def Info: ./images/hourglass_conn.pdf used on input line 6.
 (pdftex.def)             Requested size: 340.56923pt x 166.21945pt.
- [3 <./images/hourglass_conn.pdf>]
-<./images/gateway_highlevel.pdf, id=48, 690.58pt x 439.6425pt>
+ [4 <./images/hourglass_conn.pdf>]
+<./images/gateway_highlevel.pdf, id=49, 690.58pt x 439.6425pt>
 File: ./images/gateway_highlevel.pdf Graphic file (type pdf)
 
 <use ./images/gateway_highlevel.pdf>
 Package pdftex.def Info: ./images/gateway_highlevel.pdf used on input line 34.
 (pdftex.def)             Requested size: 345.28915pt x 219.82071pt.
- [4 <./images/gateway_highlevel.pdf>]
-Overfull \hbox (42.95862pt too wide) in paragraph at lines 52--53
-\OT1/cmr/m/n/10 ``ccnx:/name/of/content''. Upon re-cep-tion, the gate-way will 
-store the key-value pair $([]\OML/cmm/m/it/10 ; \OT1/cmr/m/n/10 ([]\OML/cmm/m/i
-t/10 ; []\OT1/cmr/m/n/10 ))$
- []
-
-[5]
+ [5 <./images/gateway_highlevel.pdf>]
+[6]
 Package mdframed Info: mdframed inside float 
  mdframed uses option nobreak mdframed on input line 118.
 Package mdframed Info: mdframed inside a box 
  mdframed uses option nobreak mdframed on input line 118.
- [6] <./images/island_tunnel.pdf, id=86, 486.81876pt x 202.7575pt>
+ [7] <./images/island_tunnel.pdf, id=86, 486.81876pt x 202.7575pt>
 File: ./images/island_tunnel.pdf Graphic file (type pdf)
 
 <use ./images/island_tunnel.pdf>
@@ -958,92 +952,87 @@ Underfull \hbox (badness 10000) in paragraph at lines 146--147
 
  []
 
-<./images/gateway_group.pdf, id=87, 546.04pt x 238.8925pt>
+[8] <./images/gateway_group.pdf, id=91, 546.04pt x 238.8925pt>
 File: ./images/gateway_group.pdf Graphic file (type pdf)
 
 <use ./images/gateway_group.pdf>
 Package pdftex.def Info: ./images/gateway_group.pdf used on input line 160.
 (pdftex.def)             Requested size: 327.62653pt x 143.3366pt.
- [7 <./images/island_tunnel.pdf>])
-(./04-implementation.tex
-<./images/pipeline.pdf, id=113, 961.5925pt x 355.3275pt>
+) (./04-implementation.tex [9 <./images/island_tunnel.pdf>] <./images/pipeline.
+pdf, id=116, 961.5925pt x 355.3275pt>
 File: ./images/pipeline.pdf Graphic file (type pdf)
 
 <use ./images/pipeline.pdf>
 Package pdftex.def Info: ./images/pipeline.pdf used on input line 9.
 (pdftex.def)             Requested size: 432.71263pt x 159.89589pt.
- [8 <./images/gateway_group.pdf>]
+ [10 <./images/gateway_group.pdf>] [11 <./images/pipeline.pdf>]
 LaTeX Font Info:    Try loading font information for OMS+cmr on input line 28.
-
-(/usr/local/texlive/2013/texmf-dist/tex/latex/base/omscmr.fd
+ (/usr/local/texlive/2013/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
-LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10.95> not available
 (Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 28.
- [9 <./images/pipeline.pdf>]) (./05-performance.tex [10]
-<./images/experiment.pdf, id=163, 708.6475pt x 347.2975pt>
+
+[12]) (./05-performance.tex
+<./images/experiment.pdf, id=167, 708.6475pt x 347.2975pt>
 File: ./images/experiment.pdf Graphic file (type pdf)
 
 <use ./images/experiment.pdf>
 Package pdftex.def Info: ./images/experiment.pdf used on input line 19.
 (pdftex.def)             Requested size: 283.45398pt x 138.91653pt.
-
-<./images/small.png, id=164, 602.25pt x 372.39125pt>
+ [13]
+<./images/small.png, id=172, 602.25pt x 372.39125pt>
 File: ./images/small.png Graphic file (type png)
  <use ./images/small.png>
 Package pdftex.def Info: ./images/small.png used on input line 29.
 (pdftex.def)             Requested size: 421.57211pt x 260.67209pt.
 
-[11 <./images/experiment.pdf>]
-<./images/large.png, id=191, 602.25pt x 372.39125pt>
+<./images/large.png, id=174, 602.25pt x 372.39125pt>
 File: ./images/large.png Graphic file (type png)
  <use ./images/large.png>
 Package pdftex.def Info: ./images/large.png used on input line 37.
 (pdftex.def)             Requested size: 421.57211pt x 260.67209pt.
 
-<./images/huge.png, id=192, 933.4875pt x 372.39125pt>
+<./images/huge.png, id=175, 933.4875pt x 372.39125pt>
 File: ./images/huge.png Graphic file (type png)
  <use ./images/huge.png>
 Package pdftex.def Info: ./images/huge.png used on input line 45.
 (pdftex.def)             Requested size: 466.74261pt x 186.19516pt.
 )
-[12 <./images/small.png>] [13 <./images/large.png> <./images/huge.png>]
-(./woodc1_report.bbl) [14] (./woodc1_report.aux) ) 
+(./related.tex [14 <./images/experiment.pdf>] [15 <./images/small.png> <./image
+s/large.png>]) [16 <./images/huge.png>] (./woodc1_report.bbl) [17]
+(./woodc1_report.aux) ) 
 Here is how much of TeX's memory you used:
- 18712 strings out of 493315
- 347013 string characters out of 6137904
- 401588 words of memory out of 5000000
- 21744 multiletter control sequences out of 15000+600000
- 15309 words of font info for 58 fonts, out of 8000000 for 9000
+ 18726 strings out of 493315
+ 347223 string characters out of 6137904
+ 401620 words of memory out of 5000000
+ 21753 multiletter control sequences out of 15000+600000
+ 17047 words of font info for 64 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
- 63i,8n,68p,1708b,320s stack positions out of 5000i,500n,10000p,200000b,80000s
-</usr/local/texlive/2013/texm
-f-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2013/texmf
--dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2013/texmf-
-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb></usr/local/texlive/2013/texmf-di
-st/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2013/texmf-dis
-t/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/texlive/2013/texmf-dist/
-fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2013/texmf-dist/fo
-nts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2013/texmf-dist/font
-s/type1/public/amsfonts/cm/cmr17.pfb></usr/local/texlive/2013/texmf-dist/fonts/
-type1/public/amsfonts/cm/cmr6.pfb></usr/local/texlive/2013/texmf-dist/fonts/typ
-e1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/
-public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/pub
-lic/amsfonts/cm/cmr9.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public
-/amsfonts/cm/cmsl10.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/
-amsfonts/cm/cmss10.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/a
-msfonts/cm/cmss9.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/ams
-fonts/cm/cmsy10.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsf
-onts/cm/cmsy7.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfon
-ts/cm/cmti10.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfont
-s/cm/cmti8.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/
-cm/cmtt10.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/c
-m/cmtt12.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/sy
-mbols/msbm10.pfb>
-Output written on woodc1_report.pdf (14 pages, 593856 bytes).
+ 63i,8n,68p,1711b,320s stack positions out of 5000i,500n,10000p,200000b,80000s
+</usr/local/texlive/2013/texmf-dist/fonts/type1/public/a
+msfonts/cm/cmbx10.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/am
+sfonts/cm/cmbx12.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/ams
+fonts/cm/cmmi10.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsf
+onts/cm/cmmi8.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfon
+ts/cm/cmr10.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts
+/cm/cmr12.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/c
+m/cmr17.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/
+cmr6.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmr
+8.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.p
+fb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmsl10.pf
+b></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmss10.pfb
+></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
+</usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></
+usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></u
+sr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmti9.pfb></usr
+/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/
+local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb></usr/l
+ocal/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
+Output written on woodc1_report.pdf (17 pages, 569382 bytes).
 PDF statistics:
- 275 PDF objects out of 1000 (max. 8388607)
- 198 compressed objects within 2 object streams
+ 272 PDF objects out of 1000 (max. 8388607)
+ 195 compressed objects within 2 object streams
  0 named destinations out of 1000 (max. 500000)
  58 words of extra memory for PDF output out of 10000 (max. 10000000)
 
