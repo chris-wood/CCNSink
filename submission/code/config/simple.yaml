@@ -1,0 +1,29 @@
+# Shared host configuration
+LOCALHOST: localhost
+
+# IP configuration
+HTTP_PORT: 7000
+
+# IP transport configuration
+TCP_POST: 8000
+TCP_LISTEN: 5
+TCP_MSGLEN: 1024
+TCP_END_OF_PATH_CHAR: 0x00
+
+# NDN configuration
+NDN_URI_PREFIX: ccnx:/
+NDN_URI_ROOT: ccnx:/gateway/
+NDN_URI_ROOT_ALL: ccnx:/
+NDN_CACHE_TIME: 900 # 15 * 60 = 15 minutes
+
+# Bridge configuration options
+BRIDGE_MODE: 0
+BRIDGE_SERVER_UPDATE_FREQ: 20
+BRIDGE_SERVER_ADDRESS: 128.195.4.37:5000
+BRIDGE_LOCAL_PORT: 9000
+
+# Crypto params
+# 512 bit prime N/N_(2^512)
+KEYGEN_KEY_BITS: 128
+KEYGEN_GROUP_GENERATOR: 3
+KEYGEN_GROUP_MODULUS: 322805928809357593344970803075133430759
