@@ -1,4 +1,4 @@
-NDNGateway
+CCNSink
 ==========
 
-IP-to-NDN gateway application to support NDN integration into existing IP-based networks
+IP-to-CCN gateway application to support CCN integration into existing IP-based networks
